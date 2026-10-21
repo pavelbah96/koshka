@@ -72,21 +72,18 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
   padding:14px 0 calc(env(safe-area-inset-bottom,0px) + 16px)}
 #deckL{grid-area:l;justify-content:flex-start;padding-left:max(20px,env(safe-area-inset-left,0px))}
 #deckR{grid-area:r;justify-content:flex-end;padding-right:max(20px,env(safe-area-inset-right,0px))}
-.actions{position:relative;width:168px;height:144px}
+.actions{position:relative;width:124px;height:124px}
 .act{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;touch-action:none;color:var(--label);
   background:#1c1c22;border:.5px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .08s ease,background .12s}
 .act span{font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--label2)}
 .act svg{display:block}
-#hookBtn{left:0;bottom:0;width:96px;height:96px}
+#hookBtn{left:0;top:6px;width:112px;height:112px}
 #hookBtn svg{width:34px;height:34px}
-#swordBtn{right:0;top:0;width:70px;height:70px}
-#swordBtn svg{width:26px;height:26px}
 .act.on{transform:scale(.92);background:#3a3a44}
 #hookBtn.hooked{background:#ff375f;border-color:#ff6d8a}
 #hookBtn.hooked span{color:#fff}
 #hookBtn.kick{background:#30d158;border-color:#7dffa0}
 #hookBtn.kick span{color:#03200c}
-#swordBtn.cool{opacity:.55}
 #dpad{position:relative;width:148px;height:148px;border-radius:50%;touch-action:none;background:#1c1c22;border:.5px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
 #dpad .ch{position:absolute;width:44px;height:44px;display:grid;place-items:center;color:var(--label2);transition:color .08s,transform .08s}
 #dpad .ch svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -94,16 +91,18 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .ch-u{left:52px;top:4px}.ch-d{left:52px;bottom:4px}.ch-l{left:4px;top:52px}.ch-r{right:4px;top:52px}
 #dpad .glow{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .1s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.26),rgba(255,255,255,0) 46%)}
 #dpad.active .glow{opacity:1}
-#dpad .knob{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#2c2c34;border:.5px solid rgba(255,255,255,.14);transition:transform .06s}
+#dpad .knob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:#2c2c34;border:.5px solid rgba(255,255,255,.14);transition:transform .06s,background .1s;display:grid;place-items:center;color:var(--label2)}
+#dpad .knob svg{width:22px;height:22px}
+#dpad .knob.slash{background:#bf5af2;color:#fff}
+#dpad .knob.cool{opacity:.55}
 #dpad .mode{display:none}
 @media (orientation:landscape) and (max-height:560px){
   #app{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr);grid-template-areas:"l view r"}
   .deck{padding:calc(env(safe-area-inset-top,0px) + 8px) 14px calc(env(safe-area-inset-bottom,0px) + 8px);align-items:flex-end}
   #deckL{padding-left:max(14px,env(safe-area-inset-left,0px))}
   #deckR{padding-right:max(14px,env(safe-area-inset-right,0px))}
-  .actions{width:110px;height:178px}
-  #hookBtn{left:0;bottom:0;width:90px;height:90px}
-  #swordBtn{left:10px;right:auto;top:auto;bottom:104px;width:70px;height:70px}
+  .actions{width:104px;height:104px}
+  #hookBtn{left:0;top:0;width:104px;height:104px}
   #dpad{width:140px;height:140px}
   .ch-u,.ch-d{left:48px}.ch-l,.ch-r{top:48px}
 }
@@ -188,13 +187,12 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
   <div class="deck" id="deckL" hidden>
     <div class="actions">
       <button class="act" id="hookBtn" aria-label="Кошка: выстрел или отцеп"><svg><use href="#i-hook"/></svg><span id="hookLbl">Держи</span></button>
-      <button class="act" id="swordBtn" aria-label="Удар мечом"><svg><use href="#i-sword"/></svg><span>Меч</span></button>
     </div>
   </div>
   <div class="deck" id="deckR" hidden>
     <div id="dpad" role="group" aria-label="Крестовина">
       <div class="glow"></div>
-      <div class="knob" id="knob"></div>
+      <div class="knob" id="knob" aria-label="Удар мечом"><svg><use href="#i-sword"/></svg></div>
       <div class="ch ch-u" data-k="u"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></div>
       <div class="ch ch-r" data-k="r"><svg viewBox="0 0 24 24" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></div>
       <div class="ch ch-d" data-k="d"><svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><use href="#i-chev"/></svg></div>
@@ -217,7 +215,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
         <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.6"><use href="#i-hook"/></svg></span><span class="t">Кошка — левый палец<small>Держишь — висишь, отпустил — летишь. Зажми в полёте — зацепится, как только будет за что</small></span></li>
         <li><span class="chip" style="background:#0a84ff"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v3M12 14v3M7 12h3M14 12h3"/></svg></span><span class="t">Крестовина — правый палец<small>Без верёвки: куда стрелять. На верёвке: ← → качаться, ↑ подтянуться, ↓ оттолкнуться</small></span></li>
         <li><span class="chip" style="background:#30d158"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="t">Шест и отскок<small>Зацепись рядом за пол или стену и держи ↓ — верёвка оттолкнёт тебя, как шест. Отцепись на взлёте. Стрелка ↓ без верёвки целит кошку вниз</small></span></li>
-        <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t">Меч<small>Тени убивают касанием. Руби их первым</small></span></li>
+        <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t">Меч — тап по центру крестовины<small>Тени убивают касанием. Руби их первым</small></span></li>
       </ul>
     </div>
   </section>
@@ -797,7 +795,7 @@ function update(dt) {
     for (const e of L.enemies) {
       if (!e.alive) continue;
       const ex = e.x, ey = ecy(e), dh = hyp(ex - w.x, ey - w.y);
-      if (!ninjaHinted && dh < 380 && !save.ninja) { ninjaHinted = true; save.ninja = true; persist(); hint('Тень! Касание убивает. Руби её кнопкой <b>Меч</b> первой.', 5); }
+      if (!ninjaHinted && dh < 380 && !save.ninja) { ninjaHinted = true; save.ninja = true; persist(); hint('Тень! Касание убивает. Руби её первой: <b>тап по центру крестовины</b>.', 5); }
       if (hero.slash > 0 && (hyp(ex - sx, ey - sy) < 36 || dh < R + 20)) { killEnemy(e); continue; }
       if (dh < R + 12 && hero.inv <= 0) { die(); break; }
     }
@@ -1135,7 +1133,7 @@ function updateHud(force) {
     hb.classList.toggle('hooked', deck === 'on' || deck === 'fly'); hb.classList.toggle('kick', deck === 'kick');
     $('#hookLbl').textContent = deck === 'aim' ? 'Держи' : deck === 'kick' ? 'Отпусти!' : 'Держу';
   }
-  $('#swordBtn').classList.toggle('cool', hero.slashCd > 0);
+  knob.classList.toggle('cool', hero.slashCd > 0 && hero.slash <= 0); knob.classList.toggle('slash', hero.slash > 0);
 }
 let hintTimer = 0, popTimer = 0;
 function hint(html, secs) {
@@ -1198,14 +1196,14 @@ $('#bAgain').onclick = () => play(L.n);
 $('#bLevels').onclick = toMenu;
 
 // ---------- input: d-pad (right thumb) + hook & sword (left thumb) ----------
-const dpad = $('#dpad'), knob = $('#knob'), dpPtrs = new Map(), chev = {};
+const dpad = $('#dpad'), knob = $('#knob'), dpPtrs = new Map(), chev = {}, DP_CENTER = .36;
 dpad.querySelectorAll('.ch').forEach(c => chev[c.dataset.k] = c);
 function dpRefresh() {
   let l = 0, r = 0, u = 0, d = 0, kx = 0, ky = 0;
   const rc = dpad.getBoundingClientRect(), cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2, rad = rc.width / 2;
   for (const p of dpPtrs.values()) {
     const dx = (p.x - cx) / rad, dy = (p.y - cy) / rad, m = hyp(dx, dy);
-    if (m < .16) continue;
+    if (m < DP_CENTER) continue;
     kx = dx / Math.max(m, 1); ky = dy / Math.max(m, 1);
     const s = ((Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) % 8) + 8) % 8;
     if (s === 0 || s === 1 || s === 7) r = 1;
@@ -1220,7 +1218,13 @@ function dpRefresh() {
   dpad.style.setProperty('--gx', (50 + kx * 34) + '%'); dpad.style.setProperty('--gy', (50 + ky * 34) + '%');
 }
 function clearPad() { dpPtrs.clear(); dpRefresh(); }
-dpad.addEventListener('pointerdown', e => { e.preventDefault(); audio(); try { dpad.setPointerCapture(e.pointerId); } catch (_) {} dpPtrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); dpRefresh(); });
+dpad.addEventListener('pointerdown', e => {
+  e.preventDefault(); audio(); try { dpad.setPointerCapture(e.pointerId); } catch (_) {}
+  // a tap in the centre of the d-pad swings the sword; sliding out from there still steers
+  const rc = dpad.getBoundingClientRect(), m = hyp(e.clientX - rc.left - rc.width / 2, e.clientY - rc.top - rc.height / 2) / (rc.width / 2);
+  if (m < DP_CENTER) slashPress();
+  dpPtrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); dpRefresh();
+});
 dpad.addEventListener('pointermove', e => { if (dpPtrs.has(e.pointerId)) { dpPtrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); dpRefresh(); } });
 const dpEnd = e => { if (dpPtrs.delete(e.pointerId)) dpRefresh(); };
 dpad.addEventListener('pointerup', dpEnd); dpad.addEventListener('pointercancel', dpEnd); dpad.addEventListener('lostpointercapture', dpEnd);
@@ -1230,7 +1234,6 @@ function bindAct(el, fn) {
   el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('pointerleave', end);
   el.addEventListener('click', e => { if (e.detail === 0) fn(); });
 }
-bindAct($('#swordBtn'), slashPress);
 {
   const hb = $('#hookBtn');
   hb.addEventListener('pointerdown', e => { e.preventDefault(); try { hb.setPointerCapture(e.pointerId); } catch (_) {} hb.classList.add('on'); hookDown(); });
