@@ -187,7 +187,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
 
   <div class="deck" id="deckL" hidden>
     <div class="actions">
-      <button class="act" id="hookBtn" aria-label="Кошка: выстрел или отцеп"><svg><use href="#i-hook"/></svg><span id="hookLbl">Кошка</span></button>
+      <button class="act" id="hookBtn" aria-label="Кошка: выстрел или отцеп"><svg><use href="#i-hook"/></svg><span id="hookLbl">Держи</span></button>
       <button class="act" id="swordBtn" aria-label="Удар мечом"><svg><use href="#i-sword"/></svg><span>Меч</span></button>
     </div>
   </div>
@@ -214,7 +214,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
       <div class="levels" id="levels"></div>
       <div class="title">Как играть</div>
       <ul class="list">
-        <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.6"><use href="#i-hook"/></svg></span><span class="t">Кошка — левый палец<small>Сама ищет опору впереди и сверху. Нажми ещё раз, чтобы отцепиться</small></span></li>
+        <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.6"><use href="#i-hook"/></svg></span><span class="t">Кошка — левый палец<small>Держишь — висишь, отпустил — летишь. Зажми в полёте — зацепится, как только будет за что</small></span></li>
         <li><span class="chip" style="background:#0a84ff"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v3M12 14v3M7 12h3M14 12h3"/></svg></span><span class="t">Крестовина — правый палец<small>Без верёвки: куда стрелять. На верёвке: ← → качаться, ↑ подтянуться, ↓ оттолкнуться</small></span></li>
         <li><span class="chip" style="background:#30d158"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="t">Шест и отскок<small>Зацепись рядом за пол или стену и держи ↓ — верёвка оттолкнёт тебя, как шест. Отцепись на взлёте. Стрелка ↓ без верёвки целит кошку вниз</small></span></li>
         <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t">Меч<small>Тени убивают касанием. Руби их первым</small></span></li>
@@ -605,7 +605,7 @@ function startLevel(n) {
   cam.x = w.x; cam.y = w.y;
   tut = (n === 1 && !save.tut) ? 0 : -1; tutT = 0;
   updateHud(true);
-  if (tut === 0) hint('Жми <b>Кошка</b> левым пальцем. Она сама найдёт опору впереди и сверху.');
+  if (tut === 0) hint('<b>Держи Кошку</b> левым пальцем: она выстрелит и будет держать. Отпустишь — отцепится.');
   else hint(`Уровень ${n} · ${THEMES[(n - 1) % THEMES.length].name} · путь ${KIND_LABEL[L.kind]}`, 3);
 }
 function respawn() {
@@ -625,10 +625,16 @@ function computeAim() {
     if (h) { hero.hookAng = a; hero.hookHit = h; break; }
   }
 }
-function hookPress() {
-  audio();
+// hold to hook: pressing fires and holds on, letting go releases
+let hookHeld = false, missT = 9;
+function hookDown() {
+  audio(); hookHeld = true;
   if (state !== 'play' || finished || dead > 0) return;
-  if (rope.st === 'none') { computeAim(); fire(); return; }
+  if (rope.st === 'none') { computeAim(); fire(); }
+}
+function hookUp() {
+  hookHeld = false;
+  if (rope.st === 'none' || state !== 'play') return;
   const kick = rope.st === 'on' && contactT < KICK_WINDOW;
   release();
   if (kick) {
@@ -653,10 +659,10 @@ function attach(x, y) {
   SFX.hook();
   for (let i = 0; i < 6; i++) parts.push({ x, y, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, life: .3, max: .3, col: 'rgba(255,240,200,.9)', s: 2, g: 200 });
   if (tut === 0) { tut = 1; tutT = 0; hint('Правый палец: <b>← →</b> раскачка, <b>↑</b> подтянуться, <b>↓</b> удлинить и оттолкнуться.'); }
-  else if (tut === 3 && !w.ground) { tut = 4; tutT = 0; hint('Шест: зацепись рядом за пол или стену и держи <b>↓</b> — верёвка оттолкнёт тебя вверх. Отцепись на взлёте.', 9); }
+  else if (tut === 3 && !w.ground) { tut = 4; tutT = 0; hint('Шест: зацепись рядом за пол или стену и держи <b>↓</b> — верёвка оттолкнёт тебя вверх. Отпусти Кошку на взлёте.', 9); }
 }
 function release() {
-  if (rope.st === 'on' && tut === 2) { tut = 3; hint('Сразу жми <b>Кошка</b> снова, прямо в полёте. Стрелкой можно выбрать направление.'); }
+  if (rope.st === 'on' && tut === 2) { tut = 3; hint('В полёте снова <b>зажми</b> Кошку. Пока держишь, она сама зацепится за первое, до чего достанет.'); }
   rope.st = 'none'; rope.pts = [];
 }
 function constrain(iy, h) {
@@ -714,7 +720,7 @@ function update(dt) {
       const x = rope.sx + rope.dx * t, y = rope.sy + rope.dy * t;
       if (solid(x, y)) { attach(rope.sx + rope.dx * (t - 1.5), rope.sy + rope.dy * (t - 1.5)); hit = true; break; }
     }
-    if (!hit) { rope.d = end; if (end >= ROPE_MAX) { rope.st = 'none'; SFX.miss(); } }
+    if (!hit) { rope.d = end; if (end >= ROPE_MAX) { rope.st = 'none'; missT = 0; SFX.miss(); } }
   }
 
   w.vy += G * dt;
@@ -766,7 +772,7 @@ function update(dt) {
   hero.walk += w.ground ? Math.abs(w.vx) * dt * .12 : 0;
 
   // tutorial
-  if (tut === 1 && rope.st === 'on') { tutT += dt; if (tutT > 3) { tut = 2; hint('Раскачалась? Жми <b>Кошка</b> ещё раз, чтобы отцепиться и лететь.'); } }
+  if (tut === 1 && rope.st === 'on') { tutT += dt; if (tutT > 3) { tut = 2; hint('Раскачалась? <b>Отпусти</b> Кошку в верхней точке — полетишь.'); } }
   if (tut === 4) { tutT += dt; if (tutT > 9) { tut = -1; save.tut = true; persist(); } }
 
   // progress
@@ -802,6 +808,7 @@ function update(dt) {
 }
 function die() {
   if (hero.inv > 0 || dead > 0) return;
+  hookHeld = false;
   dead = .9; SFX.hurt(); release(); shake = 6;
   for (let i = 0; i < 26; i++) { const a = Math.random() * 6.28, s = 60 + Math.random() * 260; parts.push({ x: w.x, y: w.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 100, life: 1, max: 1, col: i % 3 ? '#ffffff' : '#ffc2d4', s: 3, g: 500 }); }
 }
@@ -1126,7 +1133,7 @@ function updateHud(force) {
     lastDeck = deck;
     const hb = $('#hookBtn');
     hb.classList.toggle('hooked', deck === 'on' || deck === 'fly'); hb.classList.toggle('kick', deck === 'kick');
-    $('#hookLbl').textContent = deck === 'aim' ? 'Кошка' : deck === 'kick' ? 'Отскок' : 'Отцеп';
+    $('#hookLbl').textContent = deck === 'aim' ? 'Держи' : deck === 'kick' ? 'Отпусти!' : 'Держу';
   }
   $('#swordBtn').classList.toggle('cool', hero.slashCd > 0);
 }
@@ -1178,7 +1185,7 @@ function showDone() {
   $('#bNext').hidden = L.n >= LEVELS;
   show('done');
 }
-function pause() { if (state !== 'play') return; state = 'pause'; clearPad(); $('#bSound').textContent = 'Звук: ' + (save.muted ? 'выкл' : 'вкл'); show('pause'); }
+function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); $('#bSound').textContent = 'Звук: ' + (save.muted ? 'выкл' : 'вкл'); show('pause'); }
 
 $('#bPlay').onclick = () => { audio(); play(save.best[1] ? Math.min(save.unlocked, LEVELS) : 1); };
 $('#bPause').onclick = pause;
@@ -1223,7 +1230,13 @@ function bindAct(el, fn) {
   el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('pointerleave', end);
   el.addEventListener('click', e => { if (e.detail === 0) fn(); });
 }
-bindAct($('#hookBtn'), hookPress); bindAct($('#swordBtn'), slashPress);
+bindAct($('#swordBtn'), slashPress);
+{
+  const hb = $('#hookBtn');
+  hb.addEventListener('pointerdown', e => { e.preventDefault(); try { hb.setPointerCapture(e.pointerId); } catch (_) {} hb.classList.add('on'); hookDown(); });
+  const up = () => { if (!hb.classList.contains('on')) return; hb.classList.remove('on'); hookUp(); };
+  hb.addEventListener('pointerup', up); hb.addEventListener('pointercancel', up); hb.addEventListener('lostpointercapture', up);
+}
 for (const el of [cv, $('#deckL'), $('#deckR')]) {
   el.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
   el.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
@@ -1234,12 +1247,12 @@ const KM = { ArrowLeft: 'l', ArrowRight: 'r', ArrowUp: 'u', ArrowDown: 'd', KeyA
 addEventListener('keydown', e => {
   if (KM[e.code]) { keys[KM[e.code]] = 1; dpRefresh(); e.preventDefault(); }
   if (state === 'play' && !e.repeat) {
-    if (e.code === 'Space' || e.code === 'KeyJ') { hookPress(); e.preventDefault(); }
+    if (e.code === 'Space' || e.code === 'KeyJ') { hookDown(); e.preventDefault(); }
     if (e.code === 'KeyK' || e.code === 'KeyX' || e.code === 'Enter') { slashPress(); e.preventDefault(); }
   }
   if (e.code === 'Escape') state === 'play' ? pause() : state === 'pause' && $('#bResume').click();
 });
-addEventListener('keyup', e => { if (KM[e.code]) { keys[KM[e.code]] = 0; dpRefresh(); } });
+addEventListener('keyup', e => { if (KM[e.code]) { keys[KM[e.code]] = 0; dpRefresh(); } if (e.code === 'Space' || e.code === 'KeyJ') hookUp(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
 addEventListener('resize', resize);
 if (window.ResizeObserver) new ResizeObserver(resize).observe(view);
@@ -1250,7 +1263,10 @@ function frame(t) {
   const dt = Math.min(.05, (t - last) / 1000); last = t; lastFrameDt = dt;
   if (state === 'play' || state === 'done') {
     acc += dt; while (acc >= STEP) { update(STEP); acc -= STEP; }
+    missT += dt;
     if (rope.st !== 'on' && dead <= 0) computeAim();
+    // while the button is held in the air, the hook latches on to the first thing in reach
+    if (hookHeld && state === 'play' && rope.st === 'none' && dead <= 0 && !finished && hero.hookHit && missT > .12) fire();
     updateHud(false);
   } else clock += dt;
   updateCam(dt); render();
@@ -1261,7 +1277,7 @@ resize();
 buildLevel(save.last || 1); placeEnemies(L); checkpoint = L.lanterns[0]; respawn();
 toMenu();
 requestAnimationFrame(frame);
-window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookPress, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; } };
+window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; } };
 })();
 </script>
 
