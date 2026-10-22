@@ -40,8 +40,8 @@
 }
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--bg);color:var(--label);font-family:var(--sf);-webkit-font-smoothing:antialiased;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-#app{position:fixed;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) auto;grid-template-areas:"view view" "l r";background:#000;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
-#view{grid-area:view;position:relative;min-height:0;min-width:0;overflow:hidden}
+#app{position:fixed;inset:0;background:#000;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
+#view{position:absolute;inset:0;overflow:hidden}
 #c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;border:0;background:none;padding:0}
 button:focus-visible{outline:2px solid var(--label);outline-offset:3px}
@@ -64,47 +64,52 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .toast{position:absolute;left:50%;transform:translate(-50%,0);z-index:3;max-width:min(460px,calc(100% - 32px));width:max-content;border-radius:18px;padding:11px 16px;font-size:15px;line-height:1.38;text-align:center;pointer-events:none;transition:opacity .3s,transform .3s;text-wrap:balance;color:var(--label)}
 .toast.off{opacity:0;transform:translate(-50%,8px)}
 .toast b{font-weight:600;color:var(--gold)}
-#hint{bottom:14px}
+#hint{bottom:var(--deck,24px)}
 #pop{top:calc(env(safe-area-inset-top,0px) + 66px);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;border-radius:14px}
 
-/* Controls: solid black deck docked under the scene, reaching the screen edge */
-.deck{background:#000;display:flex;align-items:center;touch-action:none;
-  padding:14px 0 calc(env(safe-area-inset-bottom,0px) + 16px)}
-#deckL{grid-area:l;justify-content:flex-start;padding-left:max(20px,env(safe-area-inset-left,0px))}
-#deckR{grid-area:r;justify-content:flex-end;padding-right:max(20px,env(safe-area-inset-right,0px))}
-.actions{position:relative;width:124px;height:124px}
-.act{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;touch-action:none;color:var(--label);
-  background:#1c1c22;border:.5px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .08s ease,background .12s}
-.act span{font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--label2)}
-.act svg{display:block}
-#hookBtn{left:0;top:6px;width:112px;height:112px}
-#hookBtn svg{width:34px;height:34px}
-.act.on{transform:scale(.92);background:#3a3a44}
-#hookBtn.hooked{background:#ff375f;border-color:#ff6d8a}
-#hookBtn.hooked span{color:#fff}
-#hookBtn.kick{background:#30d158;border-color:#7dffa0}
-#hookBtn.kick span{color:#03200c}
-#dpad{position:relative;width:148px;height:148px;border-radius:50%;touch-action:none;background:#1c1c22;border:.5px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-#dpad .ch{position:absolute;width:44px;height:44px;display:grid;place-items:center;color:var(--label2);transition:color .08s,transform .08s}
+/* Controls: liquid-glass buttons floating over the scene */
+.lg{background:linear-gradient(160deg,rgba(255,255,255,.26),rgba(255,255,255,.07) 46%,rgba(255,255,255,.12));
+  -webkit-backdrop-filter:blur(12px) saturate(190%) brightness(1.06);backdrop-filter:blur(12px) saturate(190%) brightness(1.06);
+  border:.5px solid rgba(255,255,255,.42);
+  box-shadow:inset 0 1px 1.5px rgba(255,255,255,.6),inset 0 -2px 4px rgba(0,0,0,.14),0 10px 28px rgba(0,0,0,.24)}
+.scrim{position:absolute;left:0;right:0;bottom:0;height:230px;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.22))}
+.deck{position:absolute;bottom:0;z-index:3;pointer-events:none;touch-action:none;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px)}
+.deck > *{pointer-events:auto}
+#deckL{left:0;padding-left:max(22px,env(safe-area-inset-left,0px))}
+#deckR{right:0;padding-right:max(22px,env(safe-area-inset-right,0px))}
+.act{position:relative;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;touch-action:none;color:#fff;transition:transform .09s ease,background .12s}
+.act span{font-size:11px;font-weight:700;letter-spacing:.02em;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.act svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+#hookBtn{width:108px;height:108px}
+#hookBtn svg{width:36px;height:36px}
+.act.on{transform:scale(.92)}
+#hookBtn.hooked{background:linear-gradient(160deg,rgba(255,120,150,.75),rgba(255,55,95,.6));border-color:rgba(255,170,190,.8)}
+#hookBtn.kick{background:linear-gradient(160deg,rgba(120,255,160,.8),rgba(48,209,88,.65));border-color:rgba(170,255,200,.9)}
+#hookBtn.kick span,#hookBtn.kick svg{color:#032a10}
+#dpad{position:relative;width:152px;height:152px;border-radius:50%;touch-action:none}
+#dpad .ch{position:absolute;width:44px;height:44px;display:grid;place-items:center;color:rgba(255,255,255,.8);transition:color .08s,transform .08s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
 #dpad .ch svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-#dpad .ch.on{color:#fff;transform:scale(1.18)}
-.ch-u{left:52px;top:4px}.ch-d{left:52px;bottom:4px}.ch-l{left:4px;top:52px}.ch-r{right:4px;top:52px}
-#dpad .glow{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .1s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.26),rgba(255,255,255,0) 46%)}
+#dpad .ch.on{color:#fff;transform:scale(1.2)}
+.ch-u{left:54px;top:5px}.ch-d{left:54px;bottom:5px}.ch-l{left:5px;top:54px}.ch-r{right:5px;top:54px}
+#dpad .glow{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .1s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.4),rgba(255,255,255,0) 46%)}
 #dpad.active .glow{opacity:1}
-#dpad .knob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:#2c2c34;border:.5px solid rgba(255,255,255,.14);transition:transform .06s,background .1s;display:grid;place-items:center;color:var(--label2)}
-#dpad .knob svg{width:22px;height:22px}
-#dpad .knob.slash{background:#bf5af2;color:#fff}
+#dpad .knob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;transition:transform .06s,background .1s;display:grid;place-items:center;color:#fff}
+#dpad .knob svg{width:22px;height:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+#dpad .knob.slash{background:linear-gradient(160deg,rgba(214,150,255,.85),rgba(175,82,222,.7))}
 #dpad .knob.cool{opacity:.55}
 #dpad .mode{display:none}
+.pw{display:flex;gap:6px;flex-wrap:wrap}
+.pchip{height:30px;border-radius:15px;padding:0 10px 0 7px;display:flex;align-items:center;gap:5px;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.pchip svg{width:18px;height:18px}
+.pchip i{font-style:normal;font-size:10px;color:var(--label2);font-weight:700}
 @media (orientation:landscape) and (max-height:560px){
-  #app{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr);grid-template-areas:"l view r"}
-  .deck{padding:calc(env(safe-area-inset-top,0px) + 8px) 14px calc(env(safe-area-inset-bottom,0px) + 8px);align-items:flex-end}
-  #deckL{padding-left:max(14px,env(safe-area-inset-left,0px))}
-  #deckR{padding-right:max(14px,env(safe-area-inset-right,0px))}
-  .actions{width:104px;height:104px}
-  #hookBtn{left:0;top:0;width:104px;height:104px}
-  #dpad{width:140px;height:140px}
-  .ch-u,.ch-d{left:48px}.ch-l,.ch-r{top:48px}
+  .deck{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}
+  #deckL{padding-left:max(16px,env(safe-area-inset-left,0px))}
+  #deckR{padding-right:max(16px,env(safe-area-inset-right,0px))}
+  #hookBtn{width:96px;height:96px}
+  #dpad{width:138px;height:138px}
+  .ch-u,.ch-d{left:47px}.ch-l,.ch-r{top:47px}
+  .scrim{display:none}
 }
 
 /* Sheets */
@@ -112,6 +117,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
   padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .sheet{width:min(440px,100%);max-height:100%;overflow:auto;border-radius:30px;padding:24px 20px 20px;display:flex;flex-direction:column;gap:16px;
   background:var(--sheet);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);border:.5px solid var(--stroke);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.sheet > *{flex-shrink:0}
 .head{display:flex;align-items:center;gap:14px}
 .appicon{width:64px;height:64px;border-radius:15px;flex:none;background:linear-gradient(160deg,#ffd1dc,#ff375f 60%,#c7123f);display:grid;place-items:center;box-shadow:inset 0 .5px 0 rgba(255,255,255,.6),0 6px 18px rgba(255,55,95,.35)}
 .appicon svg{width:36px;height:36px}
@@ -212,10 +218,67 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
 .screen,.sheet{touch-action:pan-y}
 #c.st-pixel{image-rendering:pixelated;image-rendering:crisp-edges}
 #c.st-ink,.pv.st-ink{filter:grayscale(1) brightness(1.2) contrast(2.1)}
+#c.st-pocket,.pv.st-pocket{filter:grayscale(1) contrast(1.6) sepia(1) hue-rotate(40deg) saturate(2.4) brightness(.92)}
 #c.st-synth,.pv.st-synth{filter:sepia(1) hue-rotate(255deg) saturate(4.5) contrast(1.35) brightness(.88)}
 .fx{position:absolute;inset:0;pointer-events:none;z-index:1}
 .fx-ink{background:radial-gradient(ellipse at 50% 45%,rgba(255,250,235,0) 55%,rgba(110,80,40,.28)),#f4ead6;mix-blend-mode:multiply}
 .fx-synth{background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,rgba(0,0,0,0) 1px 3px),linear-gradient(180deg,rgba(0,255,255,.12),rgba(0,0,0,0) 40%,rgba(255,0,170,.16)),radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(30,0,50,.6))}
+
+/* Results */
+.res-top{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#dList li{transition:opacity .25s,transform .25s}
+#dList li.hide{opacity:0;transform:translateY(8px)}
+.total{transition:opacity .3s}
+.slot{border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(150deg,rgba(255,55,95,.22),rgba(255,214,10,.14));border:.5px solid rgba(255,255,255,.16);transition:opacity .35s,transform .35s}
+.slot.hide{opacity:0;transform:translateY(10px);pointer-events:none}
+.slot-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.slot-head b{font-family:var(--sfd);font-size:20px;font-weight:800;letter-spacing:-.01em}
+.slot-head small{color:var(--label2);font-size:13px;text-align:right}
+.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;border-radius:16px;background:rgba(0,0,0,.35);box-shadow:inset 0 2px 8px rgba(0,0,0,.4)}
+.reel{height:72px;overflow:hidden;border-radius:12px;background:linear-gradient(180deg,#1b1b22,#2a2a34 50%,#1b1b22);position:relative}
+.reel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.45));pointer-events:none}
+.reel.win{box-shadow:inset 0 0 0 2px var(--gold),0 0 18px rgba(255,214,10,.45)}
+.strip{will-change:transform}
+.strip div{height:72px;display:grid;place-items:center;font-size:40px;line-height:1}
+.prize{border-radius:14px;padding:11px 13px;background:rgba(0,0,0,.3);display:flex;align-items:center;gap:10px;font-size:15px;line-height:1.3}
+.prize .t{flex:1;min-width:0;font-weight:600}
+.prize small{display:block;color:var(--label2);font-weight:500;font-size:13px}
+.prize button{height:34px;padding:0 14px;border-radius:17px;background:#fff;color:#000;font-weight:700;font-size:14px;flex:none}
+.cta.gold{background:var(--gold);color:#241a00}
+.cta.gold .mon-i{color:#241a00}
+.cta:disabled{opacity:.5}
+/* Wardrobe */
+.ward{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:2px 20px 4px;touch-action:pan-x}
+.ward::-webkit-scrollbar{display:none}
+.wchip{flex:none;width:68px;border-radius:16px;background:var(--fill2);display:flex;flex-direction:column;align-items:center;padding:4px 0 6px;gap:2px;position:relative;transition:transform .08s}
+.wchip:active{transform:scale(.95)}
+.wchip canvas{width:60px;height:64px;display:block}
+.wchip span{font-size:10.5px;font-weight:600;color:var(--label2);max-width:62px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wchip.on{box-shadow:inset 0 0 0 2px var(--tint);background:rgba(255,55,95,.16)}
+.wchip.on span{color:#fff}
+.wchip.lock canvas{opacity:.35}
+.wchip .lk{position:absolute;top:22px;left:0;right:0;text-align:center;font-size:12px;font-weight:800;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:3px}
+.wchip .lk .mon-i{width:12px;height:12px}
+.new{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:6px;background:var(--tint);color:#fff;font-size:10px;font-weight:800;letter-spacing:.04em;vertical-align:2px}
+/* Settings */
+.gear{width:40px;height:40px;border-radius:50%;background:var(--fill);display:grid;place-items:center;flex:none;align-self:flex-start}
+.gear svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.set li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.set label{font-size:15px;font-weight:600}
+.set label small{display:block;color:var(--label2);font-weight:500;font-size:12.5px;margin-top:1px}
+.set output{font-variant-numeric:tabular-nums;color:var(--label2);font-weight:600;font-size:14px}
+.set input[type=range]{grid-column:1/-1}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;margin:0;touch-action:pan-x}
+input[type=range]:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:8px}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--tint) var(--p,50%),rgba(255,255,255,.18) var(--p,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;margin-top:-11.5px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+input[type=range]::-moz-range-track{height:5px;border-radius:3px;background:rgba(255,255,255,.18)}
+input[type=range]::-moz-range-progress{height:5px;border-radius:3px;background:var(--tint)}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radius:50%;background:#fff}
+.switch{width:51px;height:31px;border-radius:16px;background:rgba(120,120,128,.32);position:relative;flex:none;transition:background .15s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3);transition:transform .15s}
+.switch[aria-checked="true"]{background:var(--green)}
+.switch[aria-checked="true"]::after{transform:translateX(20px)}
 @media (prefers-reduced-motion:reduce){.toast,.cta,.sec,.act,.lv,.prog i,#dpad .ch{transition:none}}
 </style>
 
@@ -227,6 +290,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
     <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1.4"/><rect x="14" y="4.5" width="4" height="15" rx="1.4"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11.3-7.2c.6-.4.6-1.3 0-1.7L8.6 3.9C7.9 3.5 7 4 7 4.8z"/></symbol>
     <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></symbol>
   </defs>
@@ -236,6 +300,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
   <div id="view">
   <canvas id="c"></canvas>
   <div id="fx" class="fx"></div>
+  <div class="scrim" id="scrim" hidden></div>
 
   <div id="hud" hidden>
     <div class="hud-row">
@@ -247,6 +312,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
       <button class="round glass" id="bPause" aria-label="Пауза"><svg class="i" viewBox="0 0 24 24"><use href="#i-pause"/></svg></button>
     </div>
     <div class="prog-row"><div class="prog" aria-hidden="true"><i id="hProg"></i></div><span class="ptime" id="hTime">0:00.0</span></div>
+    <div class="pw" id="pw"></div>
   </div>
 
   <div id="hint" class="toast glass off" role="status"></div>
@@ -254,19 +320,16 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
   </div>
 
   <div class="deck" id="deckL" hidden>
-    <div class="actions">
-      <button class="act" id="hookBtn" aria-label="Кошка: выстрел или отцеп"><svg><use href="#i-hook"/></svg><span id="hookLbl">Держи</span></button>
-    </div>
+    <button class="act lg" id="hookBtn" aria-label="Кошка: держи, чтобы висеть"><svg><use href="#i-hook"/></svg><span id="hookLbl">Держи</span></button>
   </div>
   <div class="deck" id="deckR" hidden>
-    <div id="dpad" role="group" aria-label="Крестовина">
+    <div id="dpad" class="lg" role="group" aria-label="Крестовина">
       <div class="glow"></div>
-      <div class="knob" id="knob" aria-label="Удар мечом"><svg><use href="#i-sword"/></svg></div>
+      <div class="knob lg" id="knob" aria-label="Удар"><svg><use href="#i-sword"/></svg></div>
       <div class="ch ch-u" data-k="u"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></div>
       <div class="ch ch-r" data-k="r"><svg viewBox="0 0 24 24" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></div>
       <div class="ch ch-d" data-k="d"><svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><use href="#i-chev"/></svg></div>
       <div class="ch ch-l" data-k="l"><svg viewBox="0 0 24 24" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg></div>
-      <div class="mode" id="padMode"></div>
     </div>
   </div>
 
@@ -275,6 +338,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
       <div class="head">
         <div class="appicon"><svg style="color:#fff"><use href="#i-hook"/></svg></div>
         <div style="flex:1;min-width:0"><h1>Кошка</h1><p class="sub">Самурайка, верёвка и катана. Пролети пещеры до ворот тории.</p></div>
+        <button class="gear" id="bSettings" aria-label="Настройки"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
       </div>
       <div><span class="wallet" id="mWallet"></span></div>
       <div class="gift" id="gift" hidden><span class="t">Подарок дня · <span id="giftAmt">+100 рё</span><small id="giftSub">Заходи каждый день, подарок растёт</small></span><button id="bGift">Забрать</button></div>
@@ -282,6 +346,8 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
         <button class="cta" id="bPlay"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg><span id="bPlayLbl">Играть</span></button>
         <button class="shopbtn" id="bShop" aria-label="Лавка"><svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg>Лавка<span class="dot" id="shopDot" hidden></span></button>
       </div>
+      <div class="title">Образ</div>
+      <div class="ward" id="wardM"></div>
       <div class="title">Уровни</div>
       <div class="levels" id="levels"></div>
       <div class="title">Как играть</div>
@@ -290,6 +356,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
         <li><span class="chip" style="background:#0a84ff"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v3M12 14v3M7 12h3M14 12h3"/></svg></span><span class="t">Крестовина — правый палец<small>Без верёвки: куда стрелять. На верёвке: ← → качаться, ↑ подтянуться, ↓ оттолкнуться</small></span></li>
         <li><span class="chip" style="background:#30d158"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="t">Шест и отскок<small>Зацепись рядом за пол или стену и держи ↓ — верёвка оттолкнёт тебя, как шест. Отцепись на взлёте. Стрелка ↓ без верёвки целит кошку вниз</small></span></li>
         <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t">Меч — тап по центру крестовины<small>Тени убивают касанием. Руби их первым</small></span></li>
+        <li><span class="chip" style="background:#ff9f0a"><svg class="i" viewBox="0 0 24 24"><path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></svg></span><span class="t">Оружие на карте<small>Сюрикены, лисьи огни, цепной хлыст, оберег. Подбирай подряд: оружие копится и усиливается, бьёт вместе с мечом</small></span></li>
         <li><span class="chip" style="background:#ffd60a;color:#3a2a00"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><rect x="10" y="10" width="4" height="4"/></svg></span><span class="t">Рё и лавка<small>Монета 10, тень 25, в полёте +15, комбо растёт. За скорость, чистое прохождение и всё собранное — бонусы</small></span></li>
       </ul>
     </div>
@@ -300,22 +367,50 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
       <h2>Пауза</h2>
       <button class="cta" id="bResume"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg>Продолжить</button>
       <div class="btns"><button class="sec" id="bRestart">Заново</button><button class="sec" id="bMenu">Уровни</button></div>
-      <button class="sec" id="bSound">Звук: вкл</button>
+      <div class="btns"><button class="sec" id="bSetP">Настройки</button><button class="sec" id="bQuit">Закончить забег</button></div>
     </div>
   </section>
 
   <section id="done" class="screen" hidden>
     <div class="sheet">
       <div class="eyebrow" id="dLabel">Уровень 1</div>
-      <h2>Ворота пройдены</h2>
-      <div class="bigtime" id="dTime">0:00.0</div>
-      <div class="stars" id="dStars"></div>
+      <h2 id="dTitle">Ворота пройдены</h2>
+      <div class="res-top"><div class="bigtime" id="dTime">0:00.0</div><div class="stars" id="dStars"></div></div>
       <ul class="list" id="dList"></ul>
-      <div class="total"><b id="dTotal">+0</b><span id="dWallet"></span></div>
+      <div class="total" id="dTotalRow"><b id="dTotal">+0</b><span id="dWallet"></span></div>
+      <div class="slot hide" id="slot">
+        <div class="slot-head"><b>Барабан удачи</b><small id="slotHint">Один прокрут бесплатно</small></div>
+        <div class="reels"><div class="reel"><div class="strip"></div></div><div class="reel"><div class="strip"></div></div><div class="reel"><div class="strip"></div></div></div>
+        <div class="prize" id="prize" hidden></div>
+        <button class="cta gold" id="bSpin">Крутить</button>
+      </div>
+      <div class="title">Образ на следующий забег</div>
+      <div class="ward" id="wardD"></div>
       <button class="cta" id="bNext">Следующий уровень</button>
       <div class="btns3"><button class="sec" id="bAgain">Ещё раз</button><button class="sec" id="bShopD">Лавка</button><button class="sec" id="bLevels">Уровни</button></div>
     </div>
   </section>
+
+  <section id="settings" class="screen" hidden>
+    <div class="sheet">
+      <div class="shop-head">
+        <button class="back" id="bSetBack" aria-label="Назад"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg>Назад</button>
+        <h2>Настройки</h2>
+      </div>
+      <div class="title">Кошка и верёвка</div>
+      <ul class="list set">
+        <li><label for="sReel">Подтягивание<small>Как быстро ↑ укорачивает верёвку</small></label><output id="oReel"></output><input type="range" id="sReel" min="40" max="180" step="5"></li>
+        <li><label for="sPole">Толчок шестом<small>Сила ↓, когда верёвка упирается</small></label><output id="oPole"></output><input type="range" id="sPole" min="40" max="180" step="5"></li>
+        <li><label for="sSwing">Раскачка<small>Сила ← →, пока висишь</small></label><output id="oSwing"></output><input type="range" id="sSwing" min="50" max="160" step="5"></li>
+        <li><label for="sSoft">Мягкость верёвки<small>0 — жёсткий рывок, больше — пружинит и гасит рывки</small></label><output id="oSoft"></output><input type="range" id="sSoft" min="0" max="100" step="5"></li>
+        <li><label for="sSmooth">Плавность нажатий<small>Насколько постепенно кнопки набирают силу</small></label><output id="oSmooth"></output><input type="range" id="sSmooth" min="0" max="100" step="5"></li>
+      </ul>
+      <div class="title">Звук</div>
+      <ul class="list"><li><span class="t">Звуки игры</span><button class="switch" id="sSound" role="switch" aria-checked="true" aria-label="Звуки игры"></button></li></ul>
+      <button class="sec" id="bSetReset">Вернуть как было</button>
+    </div>
+  </section>
+
   <section id="shop" class="screen" hidden>
     <div class="sheet">
       <div class="shop-head">
@@ -383,6 +478,8 @@ const SFX = {
   coin: () => { tone(988, 988, .07, 'square', .045); tone(1319, 1319, .14, 'square', .045, .07); },
   lantern: () => { [523, 784, 1047].forEach((f, i) => tone(f, f, .18, 'sine', .07, i * .08)); },
   hurt: () => { noise(.35, .25, 2500, .1); tone(300, 80, .3, 'sawtooth', .06); },
+  power: () => { [660, 990, 1320].forEach((f, i) => tone(f, f * 1.02, .09, 'triangle', .07, i * .05)); noise(.15, .08, 5000, .5); },
+  shot: () => { noise(.07, .1, 6000, .4, 'highpass'); tone(1400, 700, .06, 'triangle', .04); },
   win: () => { [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, f, .16, 'triangle', .08, i * .1)); },
 };
 
@@ -681,7 +778,7 @@ const inX = () => finished ? 0 : clamp((pad.r || keys.r) - (pad.l || keys.l), -1
 const inY = () => finished ? 0 : clamp((pad.d || keys.d) - (pad.u || keys.u), -1, 1);
 
 function startLevel(n) {
-  buildLevel(n); placeEnemies(L); applyUpgrades(); resetRun();
+  buildLevel(n); placeEnemies(L); placePowers(L); applyUpgrades(); resetRun(); resetPowers();
   save.last = n; persist();
   checkpoint = L.lanterns[0];
   respawn();
@@ -731,7 +828,7 @@ function slashPress() {
   audio();
   if (state !== 'play' || finished || dead > 0 || hero.slashCd > 0) return;
   const ix = inX(); if (rope.st !== 'on' && ix) hero.face = Math.sign(ix);
-  hero.slash = SLASH_T; hero.slashCd = weapon().cd; SFX.slash(); started = true;
+  hero.slash = SLASH_T; hero.slashCd = weapon().cd; SFX.slash(); started = true; firePowers();
 }
 function fire() {
   rope.st = 'fly'; rope.sx = w.x; rope.sy = w.y; rope.dx = Math.cos(hero.hookAng); rope.dy = Math.sin(hero.hookAng); rope.d = R; rope.pts = []; rope.seg = 0;
@@ -756,13 +853,15 @@ function constrain(iy, h) {
   if (d < .01) return;
   const nx = dx / d, ny = dy / d, vr = w.vx * nx + w.vy * ny;
   if (d > free) {
-    w.x = a.x + nx * free; w.y = a.y + ny * free;
-    if (vr > 0) { w.vx -= nx * vr; w.vy -= ny * vr; }
-  } else if (iy > 0) {
+    // a soft rope only takes back part of the stretch each step, so jerks are cushioned
+    const soft = save.set.soft, k = 1 - soft * .8;
+    w.x -= nx * (d - free) * k; w.y -= ny * (d - free) * k;
+    if (vr > 0) { const rm = vr * (1 - soft * .55); w.vx -= nx * rm; w.vy -= ny * rm; }
+  } else if (iy > .05) {
     // pole: extending the rope pushes the hero away from the hook, even against gravity
-    const t = Math.min(free, d + extendV * h);
+    const ev = extendV * save.set.pole * iy, t = Math.min(free, d + ev * h);
     w.x = a.x + nx * t; w.y = a.y + ny * t; rope.len = t + rope.seg;
-    if (vr < extendV) { w.vx += nx * (extendV - vr); w.vy += ny * (extendV - vr); }
+    if (vr < ev) { w.vx += nx * (ev - vr); w.vy += ny * (ev - vr); }
   }
 }
 function wrap() {
@@ -799,6 +898,7 @@ function update(dt) {
   if (dead > 0) { dead -= dt; if (dead <= 0) respawn(); return; }
 
   const ix = inX(), iy = inY();
+  smoothInput(ix, iy, dt);
   if (rope.st === 'fly') {
     const end = Math.min(rope.d + ROPE_SPEED * dt, ropeMax); let hit = false;
     for (let t = rope.d; t <= end; t++) {
@@ -812,9 +912,9 @@ function update(dt) {
   if (rope.st === 'on') {
     const a = rope.pts[rope.pts.length - 1];
     const dx = w.x - a.x, dy = w.y - a.y, l = hyp(dx, dy) || 1, tx = dy / l, ty = -dx / l;
-    const f = tx * ix * SWING;
+    const f = tx * inS.x * SWING * save.set.swing;
     w.vx += tx * f * dt; w.vy += ty * f * dt;
-    rope.len = clamp(rope.len + iy * (iy > 0 ? extendV : REEL) * dt, rope.seg + 14, ropeTotal);
+    rope.len = clamp(rope.len + inS.y * (inS.y > 0 ? extendV * save.set.pole : REEL * save.set.reel) * dt, rope.seg + 14, ropeTotal);
     if (ix) hero.face = Math.sign(ix);
   } else {
     if (ix) hero.face = Math.sign(ix);
@@ -827,7 +927,7 @@ function update(dt) {
   w.ground = false;
   for (let k = 0; k < n; k++) {
     w.x += w.vx * h; w.y += w.vy * h;
-    if (rope.st === 'on') constrain(iy, h);
+    if (rope.st === 'on') constrain(inS.y, h);
     if (overlaps()) {
       let nx = 0, ny = 0;
       for (const o of OFFS) if (solid(w.x + o[0], w.y + o[1])) { nx -= o[0]; ny -= o[1]; }
@@ -860,7 +960,7 @@ function update(dt) {
   if (tut === 1 && rope.st === 'on') { tutT += dt; if (tutT > 3) { tut = 2; hint('Раскачалась? <b>Отпусти</b> Кошку в верхней точке — полетишь.'); } }
   if (tut === 4) { tutT += dt; if (tutT > 9) { tut = -1; save.tut = true; persist(); } }
 
-  updateTrail(dt);
+  updateTrail(dt); updatePowers(dt);
   // progress
   const S = L.samples; let best = progIdx, bd = 1e12;
   for (let i = Math.max(0, progIdx - 160); i < Math.min(S.length, progIdx + 160); i++) { const q = hyp(S[i].x - w.x, S[i].y - w.y); if (q < bd) { bd = q; best = i; } }
@@ -926,13 +1026,23 @@ function win() {
 
 // ---------- camera ----------
 let W = 0, H = 0, DPR = 1, camCY = 0, hudH = 0;
+let deckH = 0;
 function layout() {
-  const hudEl = $('#hud');
-  hudH = hudEl.hidden ? 0 : hudEl.getBoundingClientRect().bottom - view.getBoundingClientRect().top;
-  camCY = clamp((hudH + H) / 2, H * .35, H * .6);
+  const hudEl = $('#hud'), top = view.getBoundingClientRect().top;
+  hudH = hudEl.hidden ? 0 : hudEl.getBoundingClientRect().bottom - top;
+  const portrait = !matchMedia('(orientation:landscape) and (max-height:560px)').matches;
+  deckH = 0;
+  if (!$('#deckL').hidden) {
+    const t = Math.min($('#hookBtn').getBoundingClientRect().top, $('#dpad').getBoundingClientRect().top) - top;
+    deckH = Math.max(0, H - t);
+  }
+  // keep the heroine in the open part of the screen: below the HUD, above the glass controls
+  const bottom = portrait ? H - deckH * .85 : H;
+  camCY = clamp((hudH + bottom) / 2, H * .3, H * .6);
+  app.style.setProperty('--deck', (deckH ? deckH + 10 : 24) + 'px');
 }
 function resize() {
-  const r = view.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height); DPR = save.eq.style === 'pixel' ? .34 : Math.min(2, window.devicePixelRatio || 1);
+  const r = view.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height); DPR = save.eq.style === 'pixel' || save.eq.style === 'pocket' ? .34 : Math.min(2, window.devicePixelRatio || 1);
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   layout();
 }
@@ -1003,6 +1113,7 @@ function render() {
   drawGate(false);
   for (const c of L.coins) if (!c.got) drawCoin(c);
   for (const e of L.enemies || []) if (e.alive) e.t === 'ninja' ? drawNinja(e) : drawSpirit(e);
+  drawPowers();
   if (state === 'play' && rope.st === 'none' && dead <= 0 && !finished) drawAim();
   drawRope();
   for (let i = 0; i < ghosts.length; i++) { ghosts[i].alpha = .08 + .28 * (i + 1) / ghosts.length; drawHeroP(ctx, ghosts[i]); }
@@ -1140,9 +1251,9 @@ function hint(html, secs) {
 }
 function pop(text) { const el = $('#pop'); clearTimeout(popTimer); el.textContent = text; el.classList.remove('off'); popTimer = setTimeout(() => el.classList.add('off'), 1100); }
 function show(id) {
-  for (const s of ['menu', 'pause', 'done', 'shop']) $('#' + s).hidden = s !== id;
-  const inGame = id === null || id === 'pause' || id === 'done';
-  $('#hud').hidden = !inGame; $('#deckL').hidden = !inGame; $('#deckR').hidden = !inGame;
+  for (const s of ['menu', 'pause', 'done', 'shop', 'settings']) $('#' + s).hidden = s !== id;
+  const inGame = id === null || id === 'pause';
+  $('#hud').hidden = !inGame; $('#deckL').hidden = !inGame; $('#deckR').hidden = !inGame; $('#scrim').hidden = !inGame;
   resize();
 }
 function buildMenu() {
@@ -1159,6 +1270,7 @@ function buildMenu() {
   $('#bPlayLbl').textContent = save.best[1] ? `Играть · уровень ${Math.min(save.unlocked, LEVELS)}` : 'Играть';
   $('#mWallet').innerHTML = `${MON}<span>${fmtR(save.ryo)}</span>`;
   $('#shopDot').hidden = !canAffordSomething();
+  renderWardrobe('#wardM', 'menu');
   const g = giftInfo();
   $('#gift').hidden = !g;
   if (g) { $('#giftAmt').textContent = `+${fmtR(g.amount)} рё`; $('#giftSub').textContent = g.streak > 1 ? `${g.streak}-й день подряд. Завтра будет больше` : 'Заходи каждый день, подарок растёт'; }
@@ -1169,31 +1281,15 @@ function toMenu() {
   buildMenu(); show('menu');
 }
 function play(n) { show(null); state = 'load'; hint('Строю пещеру…'); setTimeout(() => { startLevel(n); state = 'play'; layout(); }, 40); }
-function showDone() {
-  state = 'done';
-  const st = time <= L.par ? 3 : time <= L.par * 1.6 ? 2 : 1;
-  save.stars[L.n] = Math.max(save.stars[L.n] || 0, st); persist();
-  $('#dLabel').textContent = `Уровень ${L.n} из ${LEVELS}`;
-  $('#dTime').textContent = fmt(time);
-  $('#dStars').innerHTML = [1, 2, 3].map(i => starSvg(i <= st)).join('');
-  const { rows, total } = settle(st);
-  $('#dList').innerHTML = rows.map(([t, sub, v]) => `<li><span class="t">${t}${sub ? `<small>${sub}</small>` : ''}</span><span class="v">+${fmtR(v)}</span></li>`).join('')
-    + `<li class="rec"><span class="t">${L.newBest ? 'Новый рекорд' : 'Рекорд'}${st < 3 ? `<small>три звезды быстрее ${fmt(L.par)}</small>` : ''}</span><span class="v">${fmt(save.best[L.n])}</span></li>`;
-  const tot = $('#dTotal'), t0 = performance.now();
-  const tick = now => { const k = Math.min(1, (now - t0) / 900), e = 1 - Math.pow(1 - k, 3); tot.innerHTML = `${MON}+${fmtR(total * e)}`; if (k < 1) requestAnimationFrame(tick); };
-  requestAnimationFrame(tick);
-  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
-  $('#bNext').hidden = L.n >= LEVELS;
-  show('done');
-}
-function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); $('#bSound').textContent = 'Звук: ' + (save.muted ? 'выкл' : 'вкл'); show('pause'); }
+function showDone() { showResults(true); }
+function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); show('pause'); }
 
 $('#bPlay').onclick = () => { audio(); play(save.best[1] ? Math.min(save.unlocked, LEVELS) : 1); };
 $('#bPause').onclick = pause;
 $('#bResume').onclick = () => { state = 'play'; show(null); };
+$('#bMenu').onclick = toMenu;
 $('#bRestart').onclick = () => play(L.n);
 $('#bMenu').onclick = toMenu;
-$('#bSound').onclick = () => { save.muted = !save.muted; persist(); $('#bSound').textContent = 'Звук: ' + (save.muted ? 'выкл' : 'вкл'); };
 $('#bNext').onclick = () => play(Math.min(LEVELS, L.n + 1));
 $('#bAgain').onclick = () => play(L.n);
 $('#bLevels').onclick = toMenu;
@@ -1283,32 +1379,37 @@ function frame(t) {
 // ---------- catalog ----------
 const SKINS = {
   shiro: { name: 'Белая тень', price: 0, desc: 'Белое кимоно, каре и чёрная маска.', top: '#fbfbf6', shade: '#dcdfe8', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#121016', belt: '#17151d', knot: '#d83a2e', sock: '#fbfbf6', eye: '#3b6fd4' },
-  aka: { name: 'Алая гейша', price: 300, desc: 'Красное кимоно, чёрные волосы, золотой пояс.', top: '#e8323f', shade: '#a71d2b', hair: '#1d1820', hair2: '#3a3040', mask: 'domino', maskC: '#121016', belt: '#ffd36a', knot: '#ffd36a', sock: '#fbfbf6', eye: '#8a4a22' },
-  kuro: { name: 'Чёрный лотос', price: 700, desc: 'Ночной наряд и алая маска.', top: '#2a2633', shade: '#4a4460', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#e8323f', belt: '#e8323f', knot: '#e8323f', sock: '#2a2633', eye: '#e8323f' },
-  cyber: { name: 'Кибер-ронин', price: 1500, desc: 'Неоновый визор вместо маски.', top: '#1b1f2e', shade: '#34406a', hair: '#eef0ff', hair2: '#b9c0e6', mask: 'visor', maskC: '#39f3ff', belt: '#39f3ff', knot: '#ff2bd6', sock: '#1b1f2e', eye: '#39f3ff' },
-  kitsune: { name: 'Кицунэ', price: 2400, desc: 'Лисья маска, уши и пушистый хвост.', top: '#fff7ee', shade: '#efcfac', hair: '#ff8a3d', hair2: '#d5652a', mask: 'fox', maskC: '#ffffff', belt: '#d83a2e', knot: '#d83a2e', sock: '#fff7ee', eye: '#d83a2e', ears: true, tail: true },
-  gold: { name: 'Золотой сёгун', price: 4000, desc: 'Для тех, кто собрал все звёзды.', top: '#ffd36a', shade: '#c9952a', hair: '#fff6d8', hair2: '#e8d49a', mask: 'domino', maskC: '#3a2400', belt: '#8a1020', knot: '#8a1020', sock: '#ffd36a', eye: '#8a1020' },
+  aka: { name: 'Алая гейша', price: 0, desc: 'Красное кимоно, чёрные волосы, золотой пояс.', top: '#e8323f', shade: '#a71d2b', hair: '#1d1820', hair2: '#3a3040', mask: 'domino', maskC: '#121016', belt: '#ffd36a', knot: '#ffd36a', sock: '#fbfbf6', eye: '#8a4a22' },
+  kuro: { name: 'Чёрный лотос', price: 0, desc: 'Ночной наряд и алая маска.', top: '#2a2633', shade: '#4a4460', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#e8323f', belt: '#e8323f', knot: '#e8323f', sock: '#2a2633', eye: '#e8323f' },
+  cyber: { name: 'Кибер-ронин', price: 0, desc: 'Неоновый визор вместо маски.', top: '#1b1f2e', shade: '#34406a', hair: '#eef0ff', hair2: '#b9c0e6', mask: 'visor', maskC: '#39f3ff', belt: '#39f3ff', knot: '#ff2bd6', sock: '#1b1f2e', eye: '#39f3ff' },
+  kitsune: { name: 'Кицунэ', price: 0, desc: 'Лисья маска, уши и пушистый хвост.', top: '#fff7ee', shade: '#efcfac', hair: '#ff8a3d', hair2: '#d5652a', mask: 'fox', maskC: '#ffffff', belt: '#d83a2e', knot: '#d83a2e', sock: '#fff7ee', eye: '#d83a2e', ears: true, tail: true },
+  gold: { name: 'Золотой сёгун', price: 0, desc: 'Для тех, кто собрал все звёзды.', top: '#ffd36a', shade: '#c9952a', hair: '#fff6d8', hair2: '#e8d49a', mask: 'domino', maskC: '#3a2400', belt: '#8a1020', knot: '#8a1020', sock: '#ffd36a', eye: '#8a1020' },
+  yuki: { name: 'Снежная дева', price: 3000, isNew: true, desc: 'Ледяные волосы и синяя маска.', top: '#eef6ff', shade: '#b9d3f0', hair: '#cfe6ff', hair2: '#9cc3ea', mask: 'domino', maskC: '#2a4f8a', belt: '#5aa2ff', knot: '#ffffff', sock: '#eef6ff', eye: '#5aa2ff' },
+  oni: { name: 'Они', price: 5000, isNew: true, desc: 'Маска демона с рогами.', top: '#2a1416', shade: '#4a2226', hair: '#ff3b30', hair2: '#b0201a', mask: 'oni', maskC: '#d62b20', belt: '#ffd36a', knot: '#ffd36a', sock: '#2a1416', eye: '#ffd36a', horns: true },
 };
 const WEAPONS = {
   katana: { name: 'Катана', price: 0, desc: 'Быстрая и надёжная.', reach: 1, cd: .32, len: 27, blade: '#eef2f8', arc: '255,255,255' },
-  nodachi: { name: 'Нодати', price: 600, desc: 'Длинный клинок: дальность +35%.', reach: 1.35, cd: .36, len: 38, blade: '#f4f6fb', arc: '220,235,255' },
-  kama: { name: 'Кама', price: 1300, desc: 'Удар по кругу, достаёт и тех, кто сзади.', reach: 1.1, cd: .38, len: 16, wide: true, blade: '#d8dce6', arc: '200,170,255' },
-  plasma: { name: 'Плазменный клинок', price: 2800, desc: 'Дальность +50%, удары чаще.', reach: 1.5, cd: .24, len: 34, blade: '#d9fdff', arc: '57,243,255', glow: '#39f3ff' },
+  nodachi: { name: 'Нодати', price: 0, desc: 'Длинный клинок: дальность +35%.', reach: 1.35, cd: .36, len: 38, blade: '#f4f6fb', arc: '220,235,255' },
+  kama: { name: 'Кама', price: 0, desc: 'Удар по кругу, достаёт и тех, кто сзади.', reach: 1.1, cd: .38, len: 16, wide: true, blade: '#d8dce6', arc: '200,170,255' },
+  raijin: { name: 'Клинок Райдзина', price: 6000, isNew: true, desc: 'Молния: дальность +60%, самые частые удары.', reach: 1.6, cd: .22, len: 36, blade: '#fffbd0', arc: '255,230,80', glow: '#ffe14d' },
+  plasma: { name: 'Плазменный клинок', price: 0, desc: 'Дальность +50%, удары чаще.', reach: 1.5, cd: .24, len: 34, blade: '#d9fdff', arc: '57,243,255', glow: '#39f3ff' },
 };
 const ROPES = {
   hemp: { name: 'Пенька', price: 0, desc: 'Классическая верёвка и стальная кошка.', c0: '#2a1d12', c1: '#e6cf98', hook: '#b9bfcc' },
-  silk: { name: 'Алый шёлк', price: 250, desc: 'Красный шёлк и золотые когти.', c0: '#4a0a14', c1: '#ff375f', hook: '#ffd36a' },
-  chain: { name: 'Цепь', price: 700, desc: 'Тяжёлые звенья и воронёные когти.', kind: 'chain', hook: '#7d8496' },
-  kunai: { name: 'Кунай', price: 1100, desc: 'Вместо кошки метательный нож.', c0: '#101014', c1: '#f2f2f2', head: 'kunai', hook: '#d9dde6' },
-  neon: { name: 'Неон', price: 1800, desc: 'Светится в темноте пещер.', kind: 'neon', c1: '#39f3ff', glow: '#39f3ff', hook: '#39f3ff' },
-  rainbow: { name: 'Радуга', price: 2600, desc: 'Переливается на лету.', kind: 'rainbow', hook: '#ffffff' },
+  silk: { name: 'Алый шёлк', price: 0, desc: 'Красный шёлк и золотые когти.', c0: '#4a0a14', c1: '#ff375f', hook: '#ffd36a' },
+  chain: { name: 'Цепь', price: 0, desc: 'Тяжёлые звенья и воронёные когти.', kind: 'chain', hook: '#7d8496' },
+  kunai: { name: 'Кунай', price: 0, desc: 'Вместо кошки метательный нож.', c0: '#101014', c1: '#f2f2f2', head: 'kunai', hook: '#d9dde6' },
+  neon: { name: 'Неон', price: 0, desc: 'Светится в темноте пещер.', kind: 'neon', c1: '#39f3ff', glow: '#39f3ff', hook: '#39f3ff' },
+  rainbow: { name: 'Радуга', price: 0, desc: 'Переливается на лету.', kind: 'rainbow', hook: '#ffffff' },
+  dragon: { name: 'Драконья цепь', price: 3500, isNew: true, desc: 'Алая чешуя и золотые когти.', kind: 'dragon', hook: '#ffd36a' },
 };
 const TRAILS = {
   none: { name: 'Без следа', price: 0, desc: 'Только ветер в ушах.' },
-  petals: { name: 'Лепестки сакуры', price: 400, desc: 'Розовые лепестки за спиной.' },
-  sparks: { name: 'Искры', price: 800, desc: 'Огненный хвост на скорости.' },
-  stars: { name: 'Звёздная пыль', price: 1500, desc: 'Мерцающие звёзды.' },
-  ghost: { name: 'Тень-двойник', price: 2500, desc: 'За героиней летят её отражения.' },
+  petals: { name: 'Лепестки сакуры', price: 0, desc: 'Розовые лепестки за спиной.' },
+  sparks: { name: 'Искры', price: 0, desc: 'Огненный хвост на скорости.' },
+  stars: { name: 'Звёздная пыль', price: 0, desc: 'Мерцающие звёзды.' },
+  ghost: { name: 'Тень-двойник', price: 0, desc: 'За героиней летят её отражения.' },
+  phoenix: { name: 'Пламя феникса', price: 4000, isNew: true, desc: 'Огненные перья на скорости.' },
 };
 const UPGRADES = {
   rope: { name: 'Длинная верёвка', desc: '+40 к длине верёвки за каждый уровень.', costs: [400, 900, 1800] },
@@ -1319,12 +1420,13 @@ const UPGRADES = {
 };
 const STYLES = {
   paint: { name: 'Акварель', price: 0, desc: 'Мягкая 2D-графика.' },
-  pixel: { name: 'Пиксель-арт', price: 4000, desc: 'Мир как на старой приставке.' },
-  ink: { name: 'Тушь и бумага', price: 6000, desc: 'Японская живопись тушью.' },
-  synth: { name: 'Синтвейв', price: 9000, desc: 'Розовый неоновый мир и сканлайны.' },
+  pixel: { name: 'Пиксель-арт', price: 0, desc: 'Мир как на старой приставке.' },
+  ink: { name: 'Тушь и бумага', price: 0, desc: 'Японская живопись тушью.' },
+  pocket: { name: 'Карманная консоль', price: 7000, isNew: true, desc: 'Четыре оттенка зелёного и крупные пиксели.' },
+  synth: { name: 'Синтвейв', price: 0, desc: 'Розовый неоновый мир и сканлайны.' },
 };
 const CATS = [
-  { id: 'skin', name: 'Наряды', items: SKINS, verb: 'Надеть', on: 'Надето', blurb: 'Наряды меняют только внешний вид.' },
+  { id: 'skin', name: 'Наряды', items: SKINS, verb: 'Надеть', on: 'Надето', blurb: 'Почти всё открыто сразу. Новинки зарабатывай рё или выбивай на барабане удачи.' },
   { id: 'weapon', name: 'Оружие', items: WEAPONS, verb: 'Взять', on: 'В руках', blurb: 'Тап по центру крестовины. У каждого клинка своя дальность и скорость.' },
   { id: 'rope', name: 'Кошка', items: ROPES, verb: 'Взять', on: 'Выбрано', blurb: 'Как выглядят кошка и верёвка.' },
   { id: 'trail', name: 'След', items: TRAILS, verb: 'Выбрать', on: 'Выбрано', blurb: 'Что тянется за героиней на большой скорости.' },
@@ -1334,6 +1436,7 @@ const CATS = [
 const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
 
 save.ryo = save.ryo || 0;
+save.unlocked = LEVELS;
 save.owned = Object.assign({}, save.owned);
 save.eq = Object.assign({ skin: 'shiro', weapon: 'katana', rope: 'hemp', trail: 'none', style: 'paint' }, save.eq);
 save.up = Object.assign({ rope: 0, pole: 0, magnet: 0, eye: 0, shield: 0 }, save.up);
@@ -1408,6 +1511,7 @@ function updateTrail(dt) {
   const bx = w.x - w.vx * .015, by = w.y - w.vy * .015, r = () => Math.random() - .5;
   if (t === 'petals') parts.push({ x: bx + r() * 10, y: by + r() * 10, vx: -w.vx * .12 + r() * 50, vy: -w.vy * .12 + r() * 50, life: 1, max: 1, col: Math.random() < .5 ? '#ffb3cf' : '#ffd6e4', s: 3, g: 50, shape: 'petal', r: Math.random() * 6 });
   else if (t === 'sparks') parts.push({ x: bx + r() * 6, y: by + r() * 6, vx: -w.vx * .2 + r() * 80, vy: -w.vy * .2 + r() * 80, life: .45, max: .45, col: ['#ffe066', '#ff9f1a', '#ff4d2b'][Math.random() * 3 | 0], s: 2.6, g: 260 });
+  else if (t === 'phoenix') { for (let k = 0; k < 2; k++) parts.push({ x: bx + r() * 10, y: by + r() * 10, vx: -w.vx * .25 + r() * 70, vy: -w.vy * .25 + r() * 70 - 40, life: .6, max: .6, col: ['#fff3b0', '#ffb020', '#ff5a1f', '#d4161f'][Math.random() * 4 | 0], s: 4 + Math.random() * 3, g: -120, shape: 'petal', r: Math.random() * 6 }); }
   else if (t === 'stars') parts.push({ x: bx + r() * 14, y: by + r() * 14, vx: r() * 30, vy: r() * 30, life: .9, max: .9, col: Math.random() < .6 ? '#fff6c8' : '#9fe8ff', s: 3.4, g: 0, shape: 'star' });
 }
 function drawPart(c, p) {
@@ -1435,6 +1539,11 @@ function strokeRope(c, pts, st) {
   if (st.kind === 'neon') {
     c.save(); c.shadowColor = st.glow; c.shadowBlur = 10; path(); c.strokeStyle = st.c1; c.lineWidth = 2.6; c.stroke(); c.restore();
     path(); c.strokeStyle = '#ffffff'; c.lineWidth = 1; c.stroke(); return;
+  }
+  if (st.kind === 'dragon') {
+    path(); c.strokeStyle = '#3a0608'; c.lineWidth = 5; c.stroke();
+    path(); c.strokeStyle = '#d62b20'; c.lineWidth = 3.4; c.stroke();
+    c.setLineDash([2.5, 4]); path(); c.strokeStyle = '#ffd36a'; c.lineWidth = 2.2; c.stroke(); c.setLineDash([]); return;
   }
   if (st.kind === 'rainbow') {
     path(); c.strokeStyle = '#1d1626'; c.lineWidth = 3.8; c.stroke();
@@ -1541,6 +1650,10 @@ function drawHeroP(c, p) {
     c.fillStyle = '#fff3e6'; c.beginPath(); c.moveTo(-1.4, 1); c.lineTo(0, -3.4); c.lineTo(1.4, 1); c.closePath(); c.fill();
     c.restore();
   }
+  if (sk.horns) for (const [ex, tilt] of [[-4.2, -.5], [4.2, .45]]) {
+    c.save(); c.translate(ex, hy - 6.5); c.rotate(tilt); c.fillStyle = '#f2e6c9'; c.strokeStyle = O; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(-2, 1); c.quadraticCurveTo(-1.5, -4, 1, -7.5); c.quadraticCurveTo(.8, -3, 2, 1); c.closePath(); c.fill(); c.stroke(); c.restore();
+  }
   c.fillStyle = HAIR; c.strokeStyle = O; c.lineWidth = 1.3;
   c.beginPath(); c.moveTo(-7.6, hy + 7); c.lineTo(-7.8, hy - 1); c.arc(0, hy - 1, 7.8, Math.PI, 0); c.lineTo(7.8, hy + 1); c.lineTo(5.5, hy + 1); c.lineTo(5.5, hy + 7); c.closePath(); c.fill(); c.stroke();
   c.fillStyle = SKN; c.beginPath(); c.ellipse(1.6, hy + 1.2, 5.2, 5.6, 0, 0, 7); c.fill(); c.stroke();
@@ -1551,6 +1664,11 @@ function drawHeroP(c, p) {
   if (sk.mask === 'visor') {
     c.save(); c.shadowColor = sk.maskC; c.shadowBlur = 8; c.fillStyle = sk.maskC; c.fillRect(-2.2, hy - .5, 10.4, 2.9); c.restore();
     c.fillStyle = '#ffffff'; c.fillRect(2, hy + .4, 4.5, .8);
+  } else if (sk.mask === 'oni') {
+    c.fillStyle = sk.maskC; c.strokeStyle = O; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(-1.8, hy - 2.8); c.quadraticCurveTo(3, hy - 4.2, 7.8, hy - 2.6); c.lineTo(8.6, hy + 4.6); c.quadraticCurveTo(4, hy + 7, -.6, hy + 4.4); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = sk.eye; c.beginPath(); c.ellipse(2.6, hy + .4, 1.4, .8, .35, 0, 7); c.ellipse(6, hy + .4, 1.4, .8, -.35, 0, 7); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.moveTo(1.6, hy + 4); c.lineTo(2.6, hy + 6); c.lineTo(3.4, hy + 4.2); c.moveTo(5.4, hy + 4.2); c.lineTo(6.2, hy + 6); c.lineTo(7, hy + 4); c.fill();
   } else if (sk.mask === 'fox') {
     c.fillStyle = '#ffffff'; c.strokeStyle = O; c.lineWidth = 1;
     c.beginPath(); c.moveTo(-1.8, hy - 2.6); c.quadraticCurveTo(3, hy - 4, 7.6, hy - 2.4); c.lineTo(9.6, hy + 2.6); c.quadraticCurveTo(6, hy + 4.6, 1.4, hy + 3.6); c.quadraticCurveTo(-1.6, hy + 2.2, -1.8, hy - 2.6); c.closePath(); c.fill(); c.stroke();
@@ -1564,7 +1682,7 @@ function drawHeroP(c, p) {
     c.fillStyle = '#fff'; for (const ex of [2.5, 5.9]) { c.beginPath(); c.ellipse(ex, hy + 1, 1.2, blink ? .2 : 1, 0, 0, 7); c.fill(); }
     if (!blink) { c.fillStyle = sk.eye; for (const ex of [2.9, 6.2]) { c.beginPath(); c.arc(ex, hy + 1.1, .65, 0, 7); c.fill(); } }
   }
-  if (sk.mask !== 'fox') { c.strokeStyle = '#b4566a'; c.lineWidth = .9; c.beginPath(); c.moveTo(4.2, hy + 5); c.lineTo(5.6, hy + 4.8); c.stroke(); }
+  if (sk.mask !== 'fox' && sk.mask !== 'oni') { c.strokeStyle = '#b4566a'; c.lineWidth = .9; c.beginPath(); c.moveTo(4.2, hy + 5); c.lineTo(5.6, hy + 4.8); c.stroke(); }
   // front arm: sword, rope or hook launcher
   if (slashing) {
     const ang = -1.9 + p.slashP * (wp.wide ? 6.2 : 3.1);
@@ -1662,7 +1780,7 @@ function renderShop() {
     if (eq) btn = { cls: 'eqd', html: '✓ ' + cat.on, disabled: true, eq: true };
     else if (own) btn = { cls: 'own', html: cat.verb, onclick: () => equip(shopCat, id) };
     else btn = priceBtn(key, it.price, () => { save.ryo -= it.price; save.owned[key] = true; persist(); SFX.lantern(); equip(shopCat, id, true); pop(`Куплено: ${it.name}`); });
-    drawPreview(card(key, it.name, it.desc, '', btn), shopCat, id);
+    drawPreview(card(key, it.name + (it.isNew ? '<span class="new">НОВОЕ</span>' : ''), it.desc, '', btn), shopCat, id);
   }
 }
 function priceBtn(key, cost, onBuy) {
@@ -1721,8 +1839,8 @@ function drawPreview(cvs, cat, id) {
       const rnd = mulberry32(id.length * 77);
       for (let i = 0; i < 46; i++) {
         const t = rnd() * .92, q = path(t), pr = { x: q.x + (rnd() - .5) * 18, y: q.y + (rnd() - .5) * 18, s: id === 'stars' ? 2.6 : id === 'petals' ? 2.6 : 2, r: rnd() * 6 };
-        pr.col = id === 'petals' ? (rnd() < .5 ? '#ffb3cf' : '#ffd6e4') : id === 'sparks' ? ['#ffe066', '#ff9f1a', '#ff4d2b'][rnd() * 3 | 0] : (rnd() < .6 ? '#fff6c8' : '#9fe8ff');
-        pr.shape = id === 'petals' ? 'petal' : id === 'stars' ? 'star' : '';
+        pr.col = id === 'phoenix' ? ['#fff3b0', '#ffb020', '#ff5a1f', '#d4161f'][rnd() * 4 | 0] : id === 'petals' ? (rnd() < .5 ? '#ffb3cf' : '#ffd6e4') : id === 'sparks' ? ['#ffe066', '#ff9f1a', '#ff4d2b'][rnd() * 3 | 0] : (rnd() < .6 ? '#fff6c8' : '#9fe8ff');
+        pr.shape = id === 'petals' || id === 'phoenix' ? 'petal' : id === 'stars' ? 'star' : '';
         c.globalAlpha = .35 + t * .65; drawPart(c, pr);
       }
       c.globalAlpha = 1;
@@ -1733,11 +1851,12 @@ function drawPreview(cvs, cat, id) {
     drawUpgradeIcon(c, id);
   } else if (cat === 'style') {
     const small = document.createElement('canvas');
-    const px = id === 'pixel'; small.width = px ? 60 : 300; small.height = px ? 44 : 220;
+    const px = id === 'pixel' || id === 'pocket'; small.width = px ? 60 : 300; small.height = px ? 44 : 220;
     const s = small.getContext('2d'); s.setTransform(small.width / 150, 0, 0, small.height / 110, 0, 0);
     drawMiniWorld(s);
     c.setTransform(1, 0, 0, 1, 0, 0); c.imageSmoothingEnabled = !px; c.drawImage(small, 0, 0, 300, 220);
     if (id !== 'paint') cvs.classList.add('st-' + id);
+    if (id === 'pocket') { cvs.classList.add('st-pixel'); }
     if (id === 'synth') { c.fillStyle = 'rgba(0,0,0,.25)'; for (let y = 0; y < 220; y += 4) c.fillRect(0, y, 300, 1.5); }
   }
 }
@@ -1783,11 +1902,356 @@ $('#bShop').onclick = () => { audio(); openShop('menu'); };
 $('#bShopD').onclick = () => { audio(); openShop('done'); };
 $('#bShopBack').onclick = closeShop;
 $('#bGift').onclick = () => { audio(); claimGift(); };
+
+// ---------- settings ----------
+const SET_DEFAULT = { reel: 1, pole: 1, swing: 1, soft: .25, smooth: .35 };
+save.set = Object.assign({}, SET_DEFAULT, save.set);
+const inS = { x: 0, y: 0 };
+function smoothInput(ix, iy, dt) {
+  const tau = save.set.smooth * .22, k = tau > 0 ? Math.min(1, dt / tau) : 1;
+  inS.x += (ix - inS.x) * k; inS.y += (iy - inS.y) * k;
+  if (!ix && Math.abs(inS.x) < .02) inS.x = 0;
+  if (!iy && Math.abs(inS.y) < .02) inS.y = 0;
+}
+const SLIDERS = [
+  ['sReel', 'reel', v => v / 100, v => Math.round(v * 100), v => `×${v.toFixed(2).replace(/0$/, '')}`],
+  ['sPole', 'pole', v => v / 100, v => Math.round(v * 100), v => `×${v.toFixed(2).replace(/0$/, '')}`],
+  ['sSwing', 'swing', v => v / 100, v => Math.round(v * 100), v => `×${v.toFixed(2).replace(/0$/, '')}`],
+  ['sSoft', 'soft', v => v / 100, v => Math.round(v * 100), v => `${Math.round(v * 100)}%`],
+  ['sSmooth', 'smooth', v => v / 100, v => Math.round(v * 100), v => `${Math.round(v * 100)}%`],
+];
+let setFrom = 'menu';
+function syncSettings() {
+  for (const [id, key, , toUi, label] of SLIDERS) {
+    const el = $('#' + id); el.value = toUi(save.set[key]);
+    el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+    $('#o' + id.slice(1)).textContent = label(save.set[key]);
+  }
+  $('#sSound').setAttribute('aria-checked', String(!save.muted));
+}
+for (const [id, key, fromUi, , label] of SLIDERS) {
+  const el = $('#' + id);
+  el.addEventListener('input', () => {
+    save.set[key] = fromUi(+el.value);
+    el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+    $('#o' + id.slice(1)).textContent = label(save.set[key]);
+  });
+  el.addEventListener('change', persist);
+}
+$('#sSound').onclick = () => { save.muted = !save.muted; persist(); syncSettings(); audio(); SFX.coin(); };
+$('#bSetReset').onclick = () => { save.set = Object.assign({}, SET_DEFAULT); persist(); syncSettings(); };
+function openSettings(from) { setFrom = from; syncSettings(); show('settings'); }
+$('#bSettings').onclick = () => { audio(); openSettings('menu'); };
+$('#bSetP').onclick = () => openSettings('pause');
+$('#bSetBack').onclick = () => { if (setFrom === 'pause') show('pause'); else { buildMenu(); show('menu'); } };
+
+// ---------- pick-up weapons ----------
+const POWERS = {
+  shuriken: { name: 'Сюрикены', charges: 14, col: '#bfe6ff' },
+  foxfire: { name: 'Лисьи огни', charges: 8, col: '#ff9f45' },
+  whip: { name: 'Цепной хлыст', charges: 10, col: '#c7a6ff' },
+  ward: { name: 'Оберег', col: '#ffd36a' },
+};
+const POWER_ICON = {
+  shuriken: '<svg viewBox="0 0 24 24"><path fill="#cfe9ff" stroke="#1b2633" stroke-width="1.2" d="M12 1.5l2.4 7.2 7.6 3.3-7.6 3.3L12 22.5l-2.4-7.2L2 12l7.6-3.3z"/><circle cx="12" cy="12" r="2" fill="#1b2633"/></svg>',
+  foxfire: '<svg viewBox="0 0 24 24"><path fill="#ff9f45" d="M12 2c4 4 7 7 7 12a7 7 0 01-14 0c0-2.6 1.3-4.5 2.6-5.8.4 2.3 1.6 3.6 3.2 3.6C9 8.8 10 5.3 12 2z"/><path fill="#ffe08a" d="M12 11c2 2 3 3.5 3 5.5a3 3 0 01-6 0c0-1.4.8-2.5 1.6-3.2.3 1 .8 1.5 1.4 1.5-.5-1.4 0-2.7 0-3.8z"/></svg>',
+  whip: '<svg viewBox="0 0 24 24" fill="none" stroke="#d9c4ff" stroke-width="2.2" stroke-linecap="round"><circle cx="5" cy="19" r="2"/><circle cx="9" cy="15" r="2"/><circle cx="13" cy="11" r="2"/><path d="M15 9l5-5M20 4c-3 0-5 1-5 4"/></svg>',
+  ward: '<svg viewBox="0 0 24 24"><path fill="#ffd36a" stroke="#94600f" stroke-width="1.2" d="M12 2.5l7.5 3v5.5c0 5-3.3 8.5-7.5 10.5C7.8 19.5 4.5 16 4.5 11V5.5z"/><circle cx="12" cy="11.5" r="2.6" fill="#d83a2e"/></svg>',
+};
+let inv = {}, shots = [], lashes = [];
+function placePowers(lvl) {
+  const rnd = mulberry32(lvl.n * 313 + 5), P = lvl.pts, N = P.length - 1, types = ['shuriken', 'foxfire', 'whip', 'ward'];
+  const want = lvl.n === 1 ? 1 : Math.min(2 + Math.floor(lvl.n / 3), 5);
+  lvl.powers = [];
+  for (let tries = 0; lvl.powers.length < want && tries < 300; tries++) {
+    const p = P[2 + Math.floor(rnd() * (N - 3))], x = p.x + (rnd() - .5) * p.r * .7, y = p.y + (rnd() - .5) * p.r * .5;
+    if (!clearAt(x, y, 26) || lvl.powers.some(q => hyp(q.x - x, q.y - y) < 320) || lvl.coins.some(c => hyp(c.x - x, c.y - y) < 46)) continue;
+    const t = lvl.n === 1 ? 'shuriken' : types[Math.floor(rnd() * (lvl.n < 3 ? 3 : 4))];
+    lvl.powers.push({ x, y, t, got: false, ph: rnd() * 6 });
+  }
+}
+function resetPowers() {
+  inv = {}; shots = []; lashes = [];
+  if (save.nextLoad) { givePower(save.nextLoad, true); givePower(save.nextLoad, true); save.nextLoad = null; }
+  if (save.nextShield) { run.shields += save.nextShield; save.nextShield = 0; }
+  persist(); renderPowerChips();
+}
+function givePower(t, quiet) {
+  if (t === 'ward') { run.shields++; updateHud(true); if (!quiet) pop('Оберег +1'); return; }
+  const cur = inv[t] || { lv: 0, n: 0 };
+  cur.lv = Math.min(3, cur.lv + 1); cur.n += POWERS[t].charges; inv[t] = cur;
+  if (!quiet) pop(`${POWERS[t].name} · уровень ${cur.lv}`);
+  renderPowerChips();
+}
+function renderPowerChips() {
+  const box = $('#pw'); if (!box) return;
+  box.innerHTML = Object.keys(inv).filter(t => inv[t].n > 0).map(t => `<span class="pchip glass">${POWER_ICON[t]}${inv[t].n}<i>${'•'.repeat(inv[t].lv)}</i></span>`).join('');
+  layout();
+}
+function nearestEnemy(x, y, max) {
+  let best = null, bd = max;
+  for (const e of L.enemies) { if (!e.alive) continue; const d = hyp(e.x - x, ecy(e) - y); if (d < bd) { bd = d; best = e; } }
+  return best;
+}
+function firePowers() {
+  const f = hero.face; let any = false;
+  const sh = inv.shuriken;
+  if (sh && sh.n > 0) {
+    sh.n--; any = true;
+    for (const a of [[0], [-.1, .1], [-.17, 0, .17]][sh.lv - 1]) {
+      const ang = (f > 0 ? 0 : Math.PI) + a * f;
+      shots.push({ t: 'shuriken', x: w.x + f * 10, y: w.y - 6, vx: Math.cos(ang) * 950 + w.vx * .3, vy: Math.sin(ang) * 950, life: .9, pierce: sh.lv === 3, rot: 0 });
+    }
+  }
+  const fx = inv.foxfire;
+  if (fx && fx.n > 0) {
+    fx.n--; any = true;
+    for (let k = 0; k < fx.lv; k++) { const a = -Math.PI / 2 + (k - (fx.lv - 1) / 2) * .7 + f * .3; shots.push({ t: 'fox', x: w.x, y: w.y - 10, vx: Math.cos(a) * 280, vy: Math.sin(a) * 280, life: 2.8 }); }
+  }
+  const wh = inv.whip;
+  if (wh && wh.n > 0) {
+    const range = 170 + 50 * wh.lv;
+    const targets = L.enemies.filter(e => e.alive && hyp(e.x - w.x, ecy(e) - w.y) < range).sort((a, b) => hyp(a.x - w.x, ecy(a) - w.y) - hyp(b.x - w.x, ecy(b) - w.y)).slice(0, wh.lv);
+    if (targets.length) { wh.n--; any = true; for (const e of targets) { lashes.push({ x: e.x, y: ecy(e), t: .24 }); killEnemy(e); } }
+  }
+  if (any) { SFX.shot(); renderPowerChips(); }
+}
+function updatePowers(dt) {
+  for (const pw of L.powers) {
+    if (pw.got || dead > 0 || hyp(pw.x - w.x, pw.y - w.y) > R + 22) continue;
+    pw.got = true; givePower(pw.t); SFX.power(); floatText(pw.x, pw.y - 18, POWERS[pw.t].name, POWERS[pw.t].col);
+    for (let i = 0; i < 18; i++) { const a = i / 18 * 6.28; parts.push({ x: pw.x, y: pw.y, vx: Math.cos(a) * 180, vy: Math.sin(a) * 180, life: .5, max: .5, col: POWERS[pw.t].col, s: 3, g: 0 }); }
+  }
+  for (const s of shots) {
+    s.life -= dt;
+    if (s.t === 'fox') {
+      if (!s.tg || !s.tg.alive) s.tg = nearestEnemy(s.x, s.y, 720);
+      if (s.tg) { const dx = s.tg.x - s.x, dy = ecy(s.tg) - s.y, l = hyp(dx, dy) || 1, k = Math.min(1, dt * 5); s.vx += (dx / l * 560 - s.vx) * k; s.vy += (dy / l * 560 - s.vy) * k; }
+      else s.vy -= 160 * dt;
+      if (Math.random() < .7) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 40, vy: -40 - Math.random() * 40, life: .4, max: .4, col: Math.random() < .5 ? '#ffb347' : '#ff6b2b', s: 2.6, g: -60 });
+    }
+    s.x += s.vx * dt; s.y += s.vy * dt; s.rot = (s.rot || 0) + dt * 26;
+    if (s.t === 'shuriken' && solid(s.x, s.y)) { s.life = 0; for (let i = 0; i < 5; i++) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 200, vy: (Math.random() - .5) * 200, life: .25, max: .25, col: '#fff3c4', s: 2, g: 0 }); }
+    if (s.life <= 0) continue;
+    for (const e of L.enemies) {
+      if (!e.alive || hyp(e.x - s.x, ecy(e) - s.y) > 20) continue;
+      killEnemy(e); if (!s.pierce) s.life = 0; break;
+    }
+  }
+  shots = shots.filter(s => s.life > 0);
+  for (const l of lashes) l.t -= dt;
+  lashes = lashes.filter(l => l.t > 0);
+}
+function drawShuriken(c, x, y, rot, s) {
+  c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+  c.fillStyle = '#cfd6e2'; c.strokeStyle = '#1b2633'; c.lineWidth = 1.2;
+  c.beginPath(); for (let i = 0; i < 8; i++) { const r = i % 2 ? 2.4 : 8, a = i / 8 * Math.PI * 2; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.closePath(); c.fill(); c.stroke();
+  c.fillStyle = '#1b2633'; c.beginPath(); c.arc(0, 0, 1.6, 0, 7); c.fill();
+  c.restore();
+}
+function drawFox(c, x, y, s) {
+  c.save(); c.translate(x, y); c.scale(s, s);
+  const g = c.createRadialGradient(0, 0, 1, 0, 0, 14); g.addColorStop(0, 'rgba(255,230,140,1)'); g.addColorStop(.4, 'rgba(255,140,50,.85)'); g.addColorStop(1, 'rgba(255,80,30,0)');
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, 14, 0, 7); c.fill();
+  c.fillStyle = '#fff6d6'; c.beginPath(); c.arc(0, 0, 3.2, 0, 7); c.fill();
+  c.restore();
+}
+function drawPickup(c, x, y, t, s) {
+  c.save(); c.translate(x, y); c.scale(s, s);
+  const col = POWERS[t].col, g = c.createRadialGradient(0, 0, 4, 0, 0, 30);
+  g.addColorStop(0, col + 'aa'); g.addColorStop(1, col + '00');
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, 30, 0, 7); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.16)'; c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 1.4;
+  c.beginPath(); c.arc(0, 0, 15, 0, 7); c.fill(); c.stroke();
+  c.fillStyle = 'rgba(255,255,255,.5)'; c.beginPath(); c.ellipse(-5, -7, 5, 2.4, -.5, 0, 7); c.fill();
+  if (t === 'shuriken') drawShuriken(c, 0, 0, clock * 3, 1.15);
+  else if (t === 'foxfire') drawFox(c, 0, 0, .9);
+  else if (t === 'whip') {
+    c.strokeStyle = '#d9c4ff'; c.lineWidth = 2; c.lineCap = 'round';
+    for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(-6 + i * 4.5, 5 - i * 4.5, 2, 0, 7); c.stroke(); }
+    c.beginPath(); c.moveTo(5, -5); c.quadraticCurveTo(9, -9, 6, -12); c.stroke();
+  } else {
+    c.fillStyle = '#ffd36a'; c.strokeStyle = '#94600f'; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(0, -9); c.lineTo(7, -6); c.quadraticCurveTo(7, 4, 0, 9); c.quadraticCurveTo(-7, 4, -7, -6); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#d83a2e'; c.beginPath(); c.arc(0, -1, 2.4, 0, 7); c.fill();
+  }
+  c.restore();
+}
+function drawPowers() {
+  for (const pw of L.powers || []) if (!pw.got) drawPickup(ctx, pw.x, pw.y + Math.sin(clock * 2.4 + pw.ph) * 4, pw.t, 1);
+  for (const s of shots) s.t === 'shuriken' ? drawShuriken(ctx, s.x, s.y, s.rot, 1) : drawFox(ctx, s.x, s.y, 1);
+  const h = handPos();
+  for (const l of lashes) {
+    const a = l.t / .24, mx = (h.x + l.x) / 2, my = (h.y + l.y) / 2 + 18 * a;
+    ctx.save(); ctx.globalAlpha = Math.min(1, a * 1.6); ctx.lineCap = 'round';
+    ctx.strokeStyle = '#1d1626'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.quadraticCurveTo(mx, my, l.x, l.y); ctx.stroke();
+    ctx.setLineDash([4, 3]); ctx.strokeStyle = '#d9c4ff'; ctx.lineWidth = 2.4; ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(217,196,255,.8)'; ctx.beginPath(); ctx.arc(l.x, l.y, 10 * (1 - a) + 4, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ---------- wardrobe ----------
+function renderWardrobe(sel, from) {
+  const box = $(sel); if (!box) return;
+  box.innerHTML = '';
+  for (const id in SKINS) {
+    const it = SKINS[id], own = owns('skin', id), on = save.eq.skin === id;
+    const b = document.createElement('button');
+    b.className = 'wchip' + (on ? ' on' : '') + (own ? '' : ' lock');
+    b.innerHTML = `<canvas width="120" height="128"></canvas><span>${it.name}</span>` + (own ? '' : `<span class="lk">${MON}${fmtR(it.price)}</span>`);
+    b.setAttribute('aria-label', it.name + (own ? '' : `, ${it.price} рё`));
+    b.onclick = () => {
+      audio();
+      if (own) { save.eq.skin = id; persist(); SFX.off(); renderWardrobe(sel, from); }
+      else { shopCat = 'skin'; openShop(from); }
+    };
+    box.appendChild(b);
+    const c = b.querySelector('canvas').getContext('2d');
+    c.setTransform(2, 0, 0, 2, 0, 0);
+    drawHeroP(c, pose({ x: 30, y: 40, skin: id, s: 1.25, aimAng: -1.2 }));
+  }
+}
+
+// ---------- results: animated tally + lucky reels ----------
+const SYM = { bag: '💰', gift: '🎁', blade: '⚔️', ward: '🛡️', sakura: '🌸' }, SYM_KEYS = Object.keys(SYM), CELL = 72, SPIN_COST = 150;
+let lastEarn = 0, freeSpin = false, spinning = false;
+function lockedItems() {
+  const out = [];
+  for (const cat of ['skin', 'weapon', 'rope', 'trail', 'style']) for (const id in CAT[cat].items) if (!owns(cat, id)) out.push([cat, id]);
+  return out;
+}
+function showResults(won) {
+  state = 'done';
+  let st = 0, rows, total;
+  $('#dLabel').textContent = `Уровень ${L.n} из ${LEVELS}`;
+  if (won) {
+    st = time <= L.par ? 3 : time <= L.par * 1.6 ? 2 : 1;
+    save.stars[L.n] = Math.max(save.stars[L.n] || 0, st); persist();
+    ({ rows, total } = settle(st));
+    $('#dTitle').textContent = 'Ворота пройдены';
+  } else {
+    rows = [['Монеты', `${coinsGot} из ${L.coins.length}`, run.coinPts], ['Тени', `${kills} из ${L.enemies.length}`, run.killPts]];
+    total = run.coinPts + run.killPts; save.ryo += total; persist();
+    $('#dTitle').textContent = 'Забег окончен';
+  }
+  lastEarn = total;
+  $('#dTime').textContent = fmt(time);
+  $('#dStars').innerHTML = won ? [1, 2, 3].map(i => starSvg(i <= st)).join('') : '';
+  const list = $('#dList');
+  list.innerHTML = rows.map(([t, sub, v]) => `<li class="hide"><span class="t">${t}${sub ? `<small>${sub}</small>` : ''}</span><span class="v" data-v="${v}">+0</span></li>`).join('')
+    + (won ? `<li class="rec hide"><span class="t">${L.newBest ? 'Новый рекорд' : 'Рекорд'}${st < 3 ? `<small>три звезды быстрее ${fmt(L.par)}</small>` : ''}</span><span class="v">${fmt(save.best[L.n])}</span></li>` : '');
+  const tot = $('#dTotal'); tot.innerHTML = `${MON}+0`;
+  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo - total)} рё`;
+  freeSpin = won || total >= 60;
+  $('#slot').classList.add('hide'); $('#prize').hidden = true;
+  updateSpinBtn(); setReels(['sakura', 'bag', 'blade'].map(k => k), true);
+  $('#bNext').hidden = !won || L.n >= LEVELS;
+  renderWardrobe('#wardD', 'done');
+  show('done');
+  // tally rows one by one, then the total, then the reels
+  const items = [...list.children]; let i = 0;
+  const countUp = (el, to, ms, fmtFn) => new Promise(res => {
+    const t0 = performance.now();
+    const step = now => { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.innerHTML = fmtFn(to * e); if (k < 1) requestAnimationFrame(step); else res(); };
+    requestAnimationFrame(step);
+  });
+  const next = async () => {
+    if ($('#done').hidden) return;
+    if (i < items.length) {
+      const li = items[i++]; li.classList.remove('hide');
+      const v = li.querySelector('.v[data-v]');
+      if (v) { tone(700 + i * 90, 900 + i * 90, .06, 'triangle', .05); await countUp(v, +v.dataset.v, 320, n => '+' + fmtR(n)); }
+      setTimeout(next, 120); return;
+    }
+    tone(880, 1320, .2, 'triangle', .07);
+    await countUp(tot, total, 700, n => `${MON}+${fmtR(n)}`);
+    $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+    setTimeout(() => $('#slot').classList.remove('hide'), 150);
+  };
+  setTimeout(next, 350);
+}
+function updateSpinBtn() {
+  const b = $('#bSpin');
+  if (spinning) { b.disabled = true; return; }
+  b.disabled = !freeSpin && save.ryo < SPIN_COST;
+  b.innerHTML = freeSpin ? 'Крутить бесплатно' : `Ещё раз · ${MON}${SPIN_COST}`;
+  $('#slotHint').textContent = freeSpin ? 'Один прокрут бесплатно' : save.ryo < SPIN_COST ? 'Не хватает рё на прокрут' : 'Каждый следующий прокрут платный';
+}
+function setReels(keys, instant) {
+  [...document.querySelectorAll('.reel')].forEach((reel, r) => {
+    const strip = reel.querySelector('.strip'); reel.classList.remove('win');
+    const cells = []; for (let i = 0; i < 30; i++) cells.push(SYM_KEYS[(Math.random() * SYM_KEYS.length) | 0]);
+    cells[27] = keys[r];
+    strip.innerHTML = cells.map(k => `<div>${SYM[k]}</div>`).join('');
+    strip.style.transition = 'none';
+    strip.style.transform = `translateY(${instant ? -27 * CELL : 0}px)`;
+  });
+}
+function rollOutcome() {
+  const locked = lockedItems();
+  const table = [['gift', locked.length ? 9 : 0], ['blade', 18], ['sakura', 9], ['bag', 12], ['ward', 12], ['pair', 24], ['none', 16]];
+  let r = Math.random() * table.reduce((s, x) => s + x[1], 0);
+  for (const [k, wgt] of table) { if ((r -= wgt) < 0) return k; }
+  return 'none';
+}
+function spin() {
+  if (spinning) return;
+  audio();
+  if (!freeSpin) { if (save.ryo < SPIN_COST) return; save.ryo -= SPIN_COST; }
+  freeSpin = false; spinning = true; updateSpinBtn(); persist();
+  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+  $('#prize').hidden = true;
+  const out = rollOutcome();
+  let keys;
+  if (['gift', 'blade', 'sakura', 'bag', 'ward'].includes(out)) keys = [out, out, out];
+  else if (out === 'pair') { const a = SYM_KEYS[(Math.random() * 5) | 0]; let b; do b = SYM_KEYS[(Math.random() * 5) | 0]; while (b === a); keys = [a, a, b].sort(() => Math.random() - .5); }
+  else { keys = [...SYM_KEYS].sort(() => Math.random() - .5).slice(0, 3); }
+  setReels(keys, false);
+  const reels = [...document.querySelectorAll('.reel')];
+  void reels[0].offsetHeight;
+  reels.forEach((reel, i) => {
+    const strip = reel.querySelector('.strip'), dur = 1.1 + i * .45;
+    strip.style.transition = `transform ${dur}s cubic-bezier(.12,.75,.2,1)`;
+    strip.style.transform = `translateY(${-27 * CELL}px)`;
+    setTimeout(() => tone(400 + i * 120, 300 + i * 120, .08, 'square', .05), dur * 1000);
+  });
+  let tk = 0; const ticker = setInterval(() => { if (++tk > 16) clearInterval(ticker); tone(1200, 1100, .02, 'square', .025); }, 90);
+  setTimeout(() => { spinning = false; awardPrize(out, keys); updateSpinBtn(); }, (1.1 + 2 * .45) * 1000 + 120);
+}
+function awardPrize(out, keys) {
+  const reels = [...document.querySelectorAll('.reel')];
+  const triple = keys[0] === keys[1] && keys[1] === keys[2];
+  reels.forEach((r, i) => { if (triple || keys.filter(k => k === keys[i]).length > 1) r.classList.add('win'); });
+  let title = '', sub = '', action = null;
+  if (out === 'gift') {
+    const pool = lockedItems(), [cat, id] = pool[(Math.random() * pool.length) | 0], it = CAT[cat].items[id];
+    save.owned[cat + ':' + id] = true;
+    title = `Новинка: ${it.name}`; sub = `${CAT[cat].name} · теперь твоё`;
+    action = ['Надеть', () => { save.eq[cat] = id; persist(); if (cat === 'style') applyStyle(); renderWardrobe('#wardD', 'done'); $('#prize').querySelector('button').textContent = '✓ Надето'; }];
+  } else if (out === 'blade') {
+    const t = ['shuriken', 'foxfire', 'whip'][(Math.random() * 3) | 0]; save.nextLoad = t;
+    title = `${POWERS[t].name} на старте`; sub = 'Следующий забег начнёшь с оружием второго уровня';
+  } else if (out === 'sakura') { save.ryo += lastEarn; title = `Удвоение: +${fmtR(lastEarn)} рё`; sub = 'Весь заработок за забег ещё раз'; }
+  else if (out === 'bag') { save.ryo += 300; title = 'Мешок рё: +300'; sub = 'Три мешка в ряд'; }
+  else if (out === 'ward') { save.nextShield = (save.nextShield || 0) + 1; title = 'Оберег на следующий забег'; sub = 'Спасёт от одного касания'; }
+  else if (out === 'pair') { save.ryo += 60; title = 'Пара: +60 рё'; sub = 'Почти!'; }
+  else { save.ryo += 20; title = 'Утешительные +20 рё'; sub = 'В следующий раз повезёт'; }
+  persist();
+  if (['gift', 'blade', 'sakura', 'bag', 'ward'].includes(out)) SFX.win(); else SFX.coin();
+  const pz = $('#prize');
+  pz.innerHTML = `<span class="t">${title}<small>${sub}</small></span>`;
+  if (action) { const b = document.createElement('button'); b.textContent = action[0]; b.onclick = action[1]; pz.appendChild(b); }
+  pz.hidden = false;
+  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+}
+$('#bSpin').onclick = spin;
+$('#bQuit').onclick = () => { hookUp(); showResults(false); };
 applyStyle();
 buildLevel(save.last || 1); placeEnemies(L); checkpoint = L.lanterns[0]; respawn();
 toMenu();
 requestAnimationFrame(frame);
-window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; }, save, openShop, applyStyle, get run() { return run; } };
+window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; }, save, openShop, applyStyle, givePower, showResults, get inv() { return inv; }, get run() { return run; } };
 })();
 </script>
 
