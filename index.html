@@ -3062,7 +3062,7 @@ let musicGain = null, musicReady = false;
 function musicKick() {
   if (!AC) return;
   if (!musicReady) {
-    musicReady = true; music.src = 'music.m4a';
+    musicReady = true; music.src = 'music.mp4';
     try { const src = AC.createMediaElementSource(music); musicGain = AC.createGain(); src.connect(musicGain).connect(AC.destination); } catch (e) { musicGain = null; }
   }
   applyMusic();
