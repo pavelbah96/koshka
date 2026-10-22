@@ -6,14 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Кошка">
+<meta name="apple-mobile-web-app-title" content="Samurai Hook">
 <meta name="theme-color" content="#16132a">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Кошка</title>
+<title>Samurai Hook</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -321,6 +321,53 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
 .dcard.e b{color:#30d158}.dcard.n b{color:#ffd60a}.dcard.h b{color:#ff453a}
 .rowbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;font-size:15px;font-weight:600}
 .rowbtn i{font-style:normal;color:var(--label2);font-weight:500}
+
+/* Achievements, challenges, language and side switches */
+.headbtns{display:flex;flex-direction:column;gap:8px;align-self:flex-start}
+img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px 18px rgba(255,55,95,.35)}
+.achrow{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:16px;background:var(--fill2);text-align:left;width:100%}
+.achrow .t{flex:1;min-width:0;font-weight:700;font-size:15px}
+.achrow small{display:block;color:var(--label2);font-weight:500;font-size:12.5px}
+.achrow .bar{width:70px;height:6px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}
+.achrow .bar i{display:block;height:100%;background:var(--gold)}
+.trophy{width:32px;height:32px;border-radius:9px;background:linear-gradient(160deg,#ffe27a,#f5a524);display:grid;place-items:center;flex:none}
+.trophy svg{width:19px;height:19px;fill:none;stroke:#4a2c00;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gear svg use[href="#i-trophy"]{stroke:currentColor}
+.achlist li{gap:12px}
+.achlist li.off .trophy{background:rgba(255,255,255,.1)}
+.achlist li.off .trophy svg{stroke:var(--label3)}
+.achlist .t b{font-weight:700}
+.achlist .pb{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:5px;overflow:hidden}
+.achlist .pb i{display:block;height:100%;background:var(--gold)}
+.achlist .v{font-size:13px;display:flex;align-items:center;gap:3px;color:var(--gold);font-weight:700}
+.achlist .v .mon-i{width:13px;height:13px}
+.achlist li.off .v{color:var(--label3)}
+.tasks li{gap:10px;font-size:14.5px}
+.tasks .ck{width:22px;height:22px;border-radius:11px;flex:none;display:grid;place-items:center;font-size:13px;font-weight:800;background:rgba(255,255,255,.1);color:var(--label3)}
+.tasks li.ok .ck{background:var(--green);color:#03200c}
+.tasks li.fresh{background:rgba(255,204,0,.1)}
+.tasks li.fresh .ck{background:var(--gold);color:#241a00}
+.tasks .t{flex:1;min-width:0}
+.tasks .v{font-size:13px;font-weight:700;color:var(--gold)}
+.tasks li.bad .t{color:var(--label3);text-decoration:line-through}
+.tasks li.bad .v{color:#ff6b6b}
+.lv .td{display:flex;gap:3px;height:6px}
+.lv .td i{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.16)}
+.lv .td i.on{background:var(--green)}
+.itasks{list-style:none;margin:8px auto 0;padding:7px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-size:12.5px;font-weight:600;color:#fff;text-align:left;border-radius:12px;background:rgba(10,8,20,.42);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.itasks:empty{display:none}
+.achtoast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 6px);transform:translate(-50%,0);z-index:30;display:flex;align-items:center;gap:10px;padding:9px 14px 9px 10px;border-radius:18px;max-width:calc(100% - 32px);transition:opacity .35s,transform .35s;pointer-events:none}
+.achtoast.off{opacity:0;transform:translate(-50%,-14px)}
+.achtoast .at{display:flex;flex-direction:column;min-width:0}
+.achtoast small{white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.achtoast b{font-size:15px;font-weight:700}
+.achtoast em{font-style:normal;font-weight:800;color:var(--gold);font-size:14px;white-space:nowrap}
+.seg{display:flex;background:var(--fill);border-radius:10px;padding:2px;gap:2px}
+.seg button{height:30px;padding:0 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--label2)}
+.seg button.on{background:#fff;color:#000}
+.set li .seg{justify-self:end}
+#app.swap #deckL{left:auto;right:0;padding-left:0;padding-right:max(22px,env(safe-area-inset-right,0px))}
+#app.swap #deckR{right:auto;left:0;padding-right:0;padding-left:max(22px,env(safe-area-inset-left,0px))}
 @media (prefers-reduced-motion:reduce){.toast,.cta,.sec,.act,.lv,.prog i,#dpad .ch{transition:none}}
 </style>
 
@@ -332,6 +379,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
     <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1.4"/><rect x="14" y="4.5" width="4" height="15" rx="1.4"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11.3-7.2c.6-.4.6-1.3 0-1.7L8.6 3.9C7.9 3.5 7 4 7 4.8z"/></symbol>
     <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 01-10 0z"/><path d="M7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 13v4M8 20h8M9 17h6"/></symbol>
     <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></symbol>
@@ -351,22 +399,23 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
       <div class="cap glass" id="hShield" hidden><svg class="i c-gold" viewBox="0 0 24 24"><use href="#i-shield"/></svg><span id="sN">0</span></div>
       <div class="spacer"></div>
       <div class="cap glass ryo"><svg class="mon-i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/><rect x="9.6" y="9.6" width="4.8" height="4.8" fill="rgba(0,0,0,.55)"/></svg><span id="rN">+0</span></div>
-      <button class="round glass" id="bPause" aria-label="Пауза"><svg class="i" viewBox="0 0 24 24"><use href="#i-pause"/></svg></button>
+      <button class="round glass" id="bPause" data-aen="Pause" data-aru="Пауза" aria-label="Pause"><svg class="i" viewBox="0 0 24 24"><use href="#i-pause"/></svg></button>
     </div>
     <div class="prog-row"><div class="prog" aria-hidden="true"><i id="hProg"></i></div><span class="ptime" id="hTime">0:00.0</span></div>
     <div class="pw" id="pw"></div>
     <div class="bossbar glass" id="bossBar" hidden><span id="bossName"></span><div class="bb"><i id="bossHp"></i></div></div>
   </div>
-  <div class="intro off" id="intro" aria-live="polite"><small id="introCh"></small><b id="introName"></b><span id="introType"></span></div>
+  <div class="intro off" id="intro" aria-live="polite"><small id="introCh"></small><b id="introName"></b><span id="introType"></span><ul class="itasks" id="introTasks"></ul></div>
 
   <div id="hint" class="toast glass off" role="status"></div>
   <div id="pop" class="toast glass off"></div>
+  <div id="achToast" class="achtoast glass off" role="status"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="at"><small data-en="Achievement unlocked" data-ru="Достижение получено">Achievement unlocked</small><b id="achName"></b></span><em id="achRew"></em></div>
   </div>
 
   <div class="deck" id="deckL" hidden>
-    <div id="dpad" class="lg" role="group" aria-label="Крестовина">
+    <div id="dpad" class="lg" role="group" data-aen="D-pad" data-aru="Крестовина" aria-label="D-pad">
       <div class="glow"></div>
-      <div class="knob lg" id="knob" aria-label="Удар"><svg><use href="#i-sword"/></svg></div>
+      <div class="knob lg" id="knob" data-aen="Strike" data-aru="Удар" aria-label="Strike"><svg><use href="#i-sword"/></svg></div>
       <div class="ch ch-u" data-k="u"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg></div>
       <div class="ch ch-r" data-k="r"><svg viewBox="0 0 24 24" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></div>
       <div class="ch ch-d" data-k="d"><svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><use href="#i-chev"/></svg></div>
@@ -374,110 +423,133 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
     </div>
   </div>
   <div class="deck" id="deckR" hidden>
-    <button class="act lg" id="hookBtn" aria-label="Кошка: держи, чтобы висеть"><svg><use href="#i-hook"/></svg><span id="hookLbl">Держи</span></button>
+    <button class="act lg" id="hookBtn" data-aen="Hook: hold to hang on" data-aru="Кошка: держи, чтобы висеть" aria-label="Hook: hold to hang on"><svg><use href="#i-hook"/></svg><span id="hookLbl">Hold</span></button>
   </div>
 
   <section id="menu" class="screen">
     <div class="sheet">
       <div class="head">
-        <div class="appicon"><svg style="color:#fff"><use href="#i-hook"/></svg></div>
-        <div style="flex:1;min-width:0"><h1>Кошка</h1><p class="sub">Самурайка, верёвка и катана. Пролети пещеры до ворот тории.</p></div>
-        <button class="gear" id="bSettings" aria-label="Настройки"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
+        <img class="appicon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8ZGVmcz4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1NSUiIGN5PSIzOCUiIHI9IjgwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmNWE2YyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii41IiBzdG9wLWNvbG9yPSIjYzMxNjNmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJlMDQxMiIvPgogICAgPC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0ic3VuIiBjeD0iNDUlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmZhZjAiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZkMmFlIi8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJoYWlyIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZmJmMiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iI2YxZTVjNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZGI5OGEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNraW4iIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmRlNmQ2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iLjYiIHN0b3AtY29sb3I9IiNmN2Q0YzAiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZTNiMjliIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJyb2JlIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZmQ1ZTMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImlyaXMiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjOWFkNmZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzI2NTljNCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZmZmZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzlhYTZiZCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CgogIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSJ1cmwoI2JnKSIvPgogIDxnIG9wYWNpdHk9Ii4xNiIgZmlsbD0iI2ZmZiI+CiAgICA8cGF0aCBkPSJNMjkwIDIwMCBMNTEyIDExMCBMNTEyIDE1MFoiLz48cGF0aCBkPSJNMjkwIDIwMCBMNTEyIDIyNSBMNTEyIDI2OFoiLz48cGF0aCBkPSJNMjkwIDIwMCBMNTEyIDM2MCBMNTEyIDQxMFoiLz4KICAgIDxwYXRoIGQ9Ik0yOTAgMjAwIEwyMzAgMCBMMjgwIDBaIi8+PHBhdGggZD0iTTI5MCAyMDAgTDAgNDAgTDAgODVaIi8+PHBhdGggZD0iTTI5MCAyMDAgTDAgMTcwIEwwIDIxMFoiLz4KICA8L2c+CiAgPGNpcmNsZSBjeD0iMjkwIiBjeT0iMjAwIiByPSIxNTIiIGZpbGw9InVybCgjc3VuKSIvPgogIDwhLS0gaW5rIGJydXNoIHNsYXNoIGJlaGluZCBoZXIgLS0+CiAgPHBhdGggZD0iTS0zMCA0NDAgQyAxMDAgMzgwLCAyMzAgMzIwLCA1NDAgMjM2IEwgNTQwIDI4NiBDIDI3MCAzNTAsIDE0MCA0MTgsIC0zMCA0ODZaIiBmaWxsPSIjMTIwNTBiIiBvcGFjaXR5PSIuOTIiLz4KICA8ZyBmaWxsPSIjMTIwNTBiIiBvcGFjaXR5PSIuODgiPjxjaXJjbGUgY3g9IjU4IiBjeT0iNDAyIiByPSI2Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSI0MjAiIHI9IjMuNSIvPjxjaXJjbGUgY3g9IjQ4NiIgY3k9IjIyNiIgcj0iNC41Ii8+PGNpcmNsZSBjeD0iNTA1IiBjeT0iMjE0IiByPSIyLjUiLz48L2c+CgogIDwhLS0ga2F0YW5hIGhpbHQgcmlzaW5nIG92ZXIgaGVyIHJpZ2h0IHNob3VsZGVyIC0tPgogIDxnIHRyYW5zZm9ybT0icm90YXRlKC0zNCAxNTAgMzgwKSI+CiAgICA8cmVjdCB4PSIxNDEiIHk9IjE5MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjE3MCIgcng9IjQiIGZpbGw9IiMxNTEyMWEiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8cGF0aCBkPSJNMTQzIDIwNCBsMTYgMTQgTTE0MyAyMjggbDE2IDE0IE0xNDMgMjUyIGwxNiAxNCBNMTQzIDI3NiBsMTYgMTQgTTE0MyAzMDAgbDE2IDE0IE0xNDMgMzI0IGwxNiAxNCIgc3Ryb2tlPSIjZjRlYWQ2IiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPHBhdGggZD0iTTE0MyAyMTggbDE2IC0xNCBNMTQzIDI0MiBsMTYgLTE0IE0xNDMgMjY2IGwxNiAtMTQgTTE0MyAyOTAgbDE2IC0xNCBNMTQzIDMxNCBsMTYgLTE0IE0xNDMgMzM4IGwxNiAtMTQiIHN0cm9rZT0iI2Y0ZWFkNiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii41NSIvPgogICAgPGVsbGlwc2UgY3g9IjE1MSIgY3k9IjE4NiIgcng9IjEzIiByeT0iNyIgZmlsbD0iI2Q5YTYzYSIgc3Ryb2tlPSIjNWEzZDBhIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxyZWN0IHg9IjEyOCIgeT0iMzU4IiB3aWR0aD0iNDYiIGhlaWdodD0iMTIiIHJ4PSI1IiBmaWxsPSIjZDlhNjNhIiBzdHJva2U9IiM1YTNkMGEiIHN0cm9rZS13aWR0aD0iMyIvPgogIDwvZz4KCiAgPCEtLSBiYWNrIG9mIHRoZSBib2IgLS0+CiAgPHBhdGggZD0iTTE0NCAzMzAgQyAxMjggMjA2LCAxNzggMTI0LCAyNTggMTIyIEMgMzQwIDEyMiwgMzg4IDIwNCwgMzcyIDMzMCBMIDM2NiAzNzYgTCAxNDYgMzc2IFoiIGZpbGw9InVybCgjaGFpcikiIHN0cm9rZT0iIzI0MTcwZiIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CgogIDwhLS0ga2ltb25vIC0tPgogIDxwYXRoIGQ9Ik04OCA1MTIgQyA5OCA0MzgsIDE1NiA0MDIsIDIxMiAzOTAgTCAyNTYgNDUyIEwgMzAwIDM5MCBDIDM1NiA0MDIsIDQxNCA0MzgsIDQyNCA1MTIgWiIgZmlsbD0idXJsKCNyb2JlKSIgc3Ryb2tlPSIjMjQxNzBmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjEyIDM5MCBMIDI1NiA0NzIgTCAzMDAgMzkwIiBmaWxsPSJub25lIiBzdHJva2U9IiNjODMyM2YiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjAzIDM5OCBMIDI1NiA0OTQgTCAzMDkgMzk4IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNDE3MGYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zMzAgNDIwIEMgMzYwIDQ0MCwgMzgwIDQ3MCwgMzkwIDUxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjljMGQyIiBzdHJva2Utd2lkdGg9IjQiLz4KICA8cGF0aCBkPSJNMTgyIDQyMCBDIDE1MiA0NDAsIDEzMiA0NzAsIDEyMiA1MTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I5YzBkMiIgc3Ryb2tlLXdpZHRoPSI0Ii8+CiAgPCEtLSBuZWNrIHdpdGggc2hhZG93IHVuZGVyIHRoZSBqYXcgLS0+CiAgPHBhdGggZD0iTTIyNiAzNDAgTCAyMjYgMzk4IEwgMjU2IDQ0MCBMIDI4NiAzOTggTCAyODYgMzQwIFoiIGZpbGw9IiNlN2IzOWMiIHN0cm9rZT0iIzI0MTcwZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+CiAgPHBhdGggZD0iTTIyNiAzNTIgQyAyNDAgMzcyLCAyNzIgMzcyLCAyODYgMzUyIEwgMjg2IDM3MiBDIDI3MCAzODQsIDI0MiAzODQsIDIyNiAzNzIgWiIgZmlsbD0iI2M5OGU3OCIgb3BhY2l0eT0iLjciLz4KCiAgPCEtLSBmYWNlIC0tPgogIDxwYXRoIGQ9Ik0xNzAgMjQ2IEMgMTcwIDE4MiwgMjEwIDE1NiwgMjU2IDE1NiBDIDMwMiAxNTYsIDM0MiAxODIsIDM0MiAyNDYgQyAzNDIgMzEwLCAzMTAgMzYwLCAyNTYgMzcwIEMgMjAyIDM2MCwgMTcwIDMxMCwgMTcwIDI0NiBaIiBmaWxsPSJ1cmwoI3NraW4pIiBzdHJva2U9IiMyNDE3MGYiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxwYXRoIGQ9Ik0zMTggMjYyIEMgMzE2IDMxMCwgMjk2IDM0NiwgMjYyIDM2NCBDIDMwMCAzNTIsIDMzNCAzMjAsIDM0MCAyNjIgWiIgZmlsbD0iI2Q3OWQ4NiIgb3BhY2l0eT0iLjU1Ii8+CiAgPCEtLSBzaWRlIGxvY2tzIGZyYW1pbmcgdGhlIGZhY2UgLS0+CiAgPHBhdGggZD0iTTE3MCAyMjggQyAxNjAgMjkwLCAxNjYgMzQyLCAxODggMzc2IEwgMTQ4IDM3NiBDIDEzNiAzMjIsIDE0MiAyNjgsIDE1NiAyMjIgWiIgZmlsbD0idXJsKCNoYWlyKSIgc3Ryb2tlPSIjMjQxNzBmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMzQyIDIyOCBDIDM1MiAyOTAsIDM0NiAzNDIsIDMyNCAzNzYgTCAzNjQgMzc2IEMgMzc2IDMyMiwgMzcwIDI2OCwgMzU2IDIyMiBaIiBmaWxsPSJ1cmwoI2hhaXIpIiBzdHJva2U9IiMyNDE3MGYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDwhLS0gc2hhZG93IHRoZSBiYW5ncyBjYXN0IG9uIHRoZSBmb3JlaGVhZCAtLT4KICA8cGF0aCBkPSJNMTc2IDIzMiBDIDIyMCAyNDYsIDI5MiAyNDYsIDMzNiAyMzIgTCAzMzYgMjQ2IEMgMjkyIDI1OCwgMjIwIDI1OCwgMTc2IDI0NiBaIiBmaWxsPSIjYzk4ZTc4IiBvcGFjaXR5PSIuNTUiLz4KICA8IS0tIGJsdW50IGJhbmdzIHdpdGggYSBnbG9zcyBiYW5kIC0tPgogIDxwYXRoIGQ9Ik0xNTYgMjM2IEMgMTUyIDE2NiwgMTk4IDEzMiwgMjU2IDEzMCBDIDMxNiAxMzIsIDM2MCAxNjYsIDM1NiAyMzYgWiIgZmlsbD0idXJsKCNoYWlyKSIgc3Ryb2tlPSIjMjQxNzBmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMTg0IDE3NiBDIDIyMCAxNTYsIDI5MiAxNTYsIDMzMCAxNzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii44NSIvPgogIDxwYXRoIGQ9Ik0yMDYgMTk2IEMgMjEwIDIxMiwgMjEwIDIyNCwgMjA4IDIzNCBNIDI1NiAxODYgQyAyNTggMjA2LCAyNTggMjIwLCAyNTYgMjM0IE0gMzA2IDE5NiBDIDMwMiAyMTIsIDMwMiAyMjQsIDMwNCAyMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2NkYjk4YSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KCiAgPCEtLSBtYXNrIHJpYmJvbnMgZmx1dHRlcmluZyAtLT4KICA8cGF0aCBkPSJNMzUwIDI2MiBDIDM5OCAyNDYsIDQzMiAyNzIsIDQ3OCAyNTQgQyA0NTggMjg4LCA0MTIgMjkwLCAzNTggMjgyIFoiIGZpbGw9IiMxMDBkMTMiLz4KICA8cGF0aCBkPSJNMzUyIDI3OCBDIDM5NiAyOTQsIDQyNCAzMjYsIDQ3MCAzMjYgQyA0NDAgMzQ4LCAzOTYgMzI2LCAzNTQgMjk2IFoiIGZpbGw9IiMxMDBkMTMiLz4KCiAgPCEtLSBkb21pbm8gbWFzayAtLT4KICA8cGF0aCBkPSJNMTUyIDI1OCBDIDE5NCAyMzYsIDIzMiAyNDAsIDI1NiAyNTQgQyAyODAgMjQwLCAzMTggMjM2LCAzNjAgMjU4IEMgMzUyIDI5MiwgMzIyIDMwOCwgMjkyIDMwMiBDIDI3NiAyOTgsIDI2NiAyOTAsIDI1NiAyOTAgQyAyNDYgMjkwLCAyMzYgMjk4LCAyMjAgMzAyIEMgMTkwIDMwOCwgMTYwIDI5MiwgMTUyIDI1OCBaIiBmaWxsPSIjMTAwZDEzIi8+CiAgPHBhdGggZD0iTTE3MCAyNTggQyAyMDAgMjQ2LCAyMjggMjQ4LCAyNDggMjU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMzYTM1NDAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBleWVzOiBhbG1vbmQsIGZpZXJjZSwgaWNlIGJsdWUgLS0+CiAgPHBhdGggZD0iTTE4OCAyODAgQyAxOTggMjY2LCAyMjggMjYyLCAyNDIgMjcyIEMgMjMyIDI4NiwgMjA0IDI5MCwgMTg4IDI4MCBaIiBmaWxsPSIjZmZmZmZmIi8+CiAgPHBhdGggZD0iTTI3MCAyNzIgQyAyODQgMjYyLCAzMTQgMjY2LCAzMjQgMjgwIEMgMzA4IDI5MCwgMjgwIDI4NiwgMjcwIDI3MiBaIiBmaWxsPSIjZmZmZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjIxIiBjeT0iMjc2IiByPSI5LjUiIGZpbGw9InVybCgjaXJpcykiLz48Y2lyY2xlIGN4PSIyOTEiIGN5PSIyNzYiIHI9IjkuNSIgZmlsbD0idXJsKCNpcmlzKSIvPgogIDxjaXJjbGUgY3g9IjIyMSIgY3k9IjI3NiIgcj0iNC4yIiBmaWxsPSIjMDgxMjJhIi8+PGNpcmNsZSBjeD0iMjkxIiBjeT0iMjc2IiByPSI0LjIiIGZpbGw9IiMwODEyMmEiLz4KICA8Y2lyY2xlIGN4PSIyMjQuNSIgY3k9IjI3MiIgcj0iMi44IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjk0LjUiIGN5PSIyNzIiIHI9IjIuOCIgZmlsbD0iI2ZmZiIvPgogIDxwYXRoIGQ9Ik0xODQgMjc2IEMgMTk4IDI2MiwgMjI4IDI1OCwgMjQ0IDI3MCBNIDI2OCAyNzAgQyAyODQgMjU4LCAzMTQgMjYyLCAzMjggMjc2IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMDBkMTMiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0gbm9zZSBhbmQgYSBzbGlnaHQgc21pcmsgLS0+CiAgPHBhdGggZD0iTTI1NSAzMDYgTCAyNTEgMzIyIEwgMjU5IDMyMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzQ4Yjc4IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yMzYgMzQwIEMgMjUwIDM0NiwgMjY2IDM0NiwgMjgwIDMzNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzgzMjNmIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yODAgMzM2IGwgNSAtMyIgc3Ryb2tlPSIjYzgzMjNmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgoKICA8IS0tIGdyYXBwbGluZyBob29rIGZseWluZyBpbiwgdG9wIHJpZ2h0LCB3aXRoIGl0cyByb3BlIC0tPgogIDxwYXRoIGQ9Ik00MzIgMTA4IEMgNDcwIDE3MCwgNDMwIDIzMCwgNDg2IDMwMCBDIDUyMCAzNDIsIDQ4OCA0MjAsIDUxMiA0NzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNhMjYxNCIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTQzMiAxMDggQyA0NzAgMTcwLCA0MzAgMjMwLCA0ODYgMzAwIEMgNTIwIDM0MiwgNDg4IDQyMCwgNTEyIDQ3MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWFkMjllIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWRhc2hhcnJheT0iMTEgNiIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQyNCA4NCkgcm90YXRlKDMyKSI+CiAgICA8cGF0aCBkPSJNMCAyNiBMMCAtMjYiIHN0cm9rZT0iIzEyMTAxNiIgc3Ryb2tlLXdpZHRoPSIxMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8cGF0aCBkPSJNMCAtMjYgQyAtMjIgLTI2LCAtMzQgLTQwLCAtMzAgLTU2IE0wIC0yNiBDIDIyIC0yNiwgMzQgLTQwLCAzMCAtNTYgTTAgLTI2IEwwIC01OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTIxMDE2IiBzdHJva2Utd2lkdGg9IjEzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDxwYXRoIGQ9Ik0wIDI2IEwwIC0yNiIgc3Ryb2tlPSJ1cmwoI3N0ZWVsKSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAgIDxwYXRoIGQ9Ik0wIC0yNiBDIC0yMiAtMjYsIC0zNCAtNDAsIC0zMCAtNTYgTTAgLTI2IEMgMjIgLTI2LCAzNCAtNDAsIDMwIC01NiBNMCAtMjYgTDAgLTU4IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjc3RlZWwpIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPGNpcmNsZSBjeD0iMCIgY3k9IjM0IiByPSI5IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMjEwMTYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDwvZz4KICA8IS0tIGEgc3dvcmQgZ2xlYW0gLS0+CiAgPHBhdGggZD0iTTYwIDk2IEwgNzQgODQgTSA2NyA3MiBMIDY3IDEwOCBNIDUyIDkwIEwgODIgOTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii45Ii8+Cjwvc3ZnPgo=" alt="">
+        <div style="flex:1;min-width:0"><h1>Samurai Hook</h1><p class="sub" data-en="A masked samurai, a katana and a grappling hook. Swing through five worlds to the torii gates." data-ru="Самурайка в маске, катана и кошка на верёвке. Пролети пять миров до ворот тории.">A masked samurai, a katana and a grappling hook. Swing through five worlds to the torii gates.</p></div>
+        <div class="headbtns">
+          <button class="gear" id="bAch" data-aen="Achievements" data-aru="Достижения" aria-label="Achievements"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></button>
+          <button class="gear" id="bSettings" data-aen="Settings" data-aru="Настройки" aria-label="Settings"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button>
+        </div>
       </div>
-      <div class="wrow"><span class="wallet" id="mWallet"></span><button class="diffchip" id="bDiff" aria-label="Сложность"></button></div>
-      <div class="gift" id="gift" hidden><span class="t">Подарок дня · <span id="giftAmt">+100 рё</span><small id="giftSub">Заходи каждый день, подарок растёт</small></span><button id="bGift">Забрать</button></div>
+      <div class="wrow"><span class="wallet" id="mWallet"></span><button class="diffchip" id="bDiff"></button><button class="diffchip" id="bLang" data-aen="Language" data-aru="Язык" aria-label="Language"></button></div>
+      <div class="gift" id="gift" hidden><span class="t"><span data-en="Daily gift" data-ru="Подарок дня">Daily gift</span> · <span id="giftAmt"></span><small id="giftSub"></small></span><button id="bGift" data-en="Claim" data-ru="Забрать">Claim</button></div>
       <div class="menu-top">
-        <button class="cta" id="bPlay"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg><span id="bPlayLbl">Играть</span></button>
-        <button class="shopbtn" id="bShop" aria-label="Лавка"><svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg>Лавка<span class="dot" id="shopDot" hidden></span></button>
+        <button class="cta" id="bPlay"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg><span id="bPlayLbl">Play</span></button>
+        <button class="shopbtn" id="bShop"><svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg><span data-en="Shop" data-ru="Лавка">Shop</span><span class="dot" id="shopDot" hidden></span></button>
       </div>
-      <div class="title">Образ</div>
+      <button class="achrow" id="bAchRow"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="t"><span data-en="Achievements" data-ru="Достижения">Achievements</span><small id="achSum"></small></span><span class="bar"><i id="achBar"></i></span></button>
+      <div class="title" data-en="Look" data-ru="Образ">Look</div>
       <div class="ward" id="wardM"></div>
-      <div class="title">Главы</div>
+      <div class="title" data-en="Chapters" data-ru="Главы">Chapters</div>
       <div class="chapters" id="chapters"></div>
       <div class="levels levels10" id="levels"></div>
       <div class="chlock" id="chLock" hidden><span id="chLockTxt"></span><button class="cta gold" id="bBuyCh"></button></div>
-      <div class="title">Как играть</div>
+      <div class="title" data-en="How to play" data-ru="Как играть">How to play</div>
       <ul class="list">
-        <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.6"><use href="#i-hook"/></svg></span><span class="t">Кошка — правый палец<small>Держишь — висишь, отпустил — летишь. Зажми в полёте — зацепится, как только будет за что</small></span></li>
-        <li><span class="chip" style="background:#0a84ff"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v3M12 14v3M7 12h3M14 12h3"/></svg></span><span class="t">Крестовина — левый палец<small>Без верёвки: куда стрелять. На верёвке: ← → качаться, ↑ подтянуться, ↓ оттолкнуться</small></span></li>
-        <li><span class="chip" style="background:#30d158"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="t">Шест и отскок<small>Зацепись рядом за пол или стену и держи ↓ — верёвка оттолкнёт тебя, как шест. Отцепись на взлёте. Стрелка ↓ без верёвки целит кошку вниз</small></span></li>
-        <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t">Меч — тап по центру крестовины<small>Тени убивают касанием. Руби их первым</small></span></li>
-        <li><span class="chip" style="background:#ff9f0a"><svg class="i" viewBox="0 0 24 24"><path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></svg></span><span class="t">Оружие на карте<small>Сюрикены, лисьи огни, цепной хлыст, оберег. Подбирай подряд: оружие копится и усиливается, бьёт вместе с мечом</small></span></li>
-        <li><span class="chip" style="background:#ffd60a;color:#3a2a00"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><rect x="10" y="10" width="4" height="4"/></svg></span><span class="t">Главы и боссы<small>5 миров по 10 уровней: пещеры, бездна под потолком, погони. Каждый пятый уровень — босс: руби его в полёте и отбивай снаряды мечом</small></span></li>
-        <li><span class="chip" style="background:#ffd60a;color:#3a2a00"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><rect x="10" y="10" width="4" height="4"/></svg></span><span class="t">Рё и лавка<small>Монета 10, тень 25, в полёте +15, комбо растёт. За скорость, чистое прохождение и всё собранное — бонусы</small></span></li>
+        <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.6"><use href="#i-hook"/></svg></span><span class="t" id="howHook"></span></li>
+        <li><span class="chip" style="background:#0a84ff"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v3M12 14v3M7 12h3M14 12h3"/></svg></span><span class="t" id="howPad"></span></li>
+        <li><span class="chip" style="background:#30d158"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="t" data-en="Pole and wall kick<small>Hook the floor or a wall close by and hold ↓: the rope pushes you away like a pole. Let go on the way up. Without a rope, ↓ aims the hook down</small>" data-ru="Шест и отскок<small>Зацепись рядом за пол или стену и держи ↓ — верёвка оттолкнёт тебя, как шест. Отцепись на взлёте. Стрелка ↓ без верёвки целит кошку вниз</small>"></span></li>
+        <li><span class="chip" style="background:#bf5af2"><svg class="i" viewBox="0 0 40 40" style="stroke-width:3.2"><use href="#i-sword"/></svg></span><span class="t" data-en="Sword: tap the centre of the d-pad<small>Shadows kill on touch. Cut them down first</small>" data-ru="Меч — тап по центру крестовины<small>Тени убивают касанием. Руби их первым</small>"></span></li>
+        <li><span class="chip" style="background:#ff9f0a"><svg class="i" viewBox="0 0 24 24"><path d="M12 2l2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></svg></span><span class="t" data-en="Weapons on the map<small>Shuriken, fox fire, chain whip, charm. Pick them up in a row: they stack, level up and strike with your sword</small>" data-ru="Оружие на карте<small>Сюрикены, лисьи огни, цепной хлыст, оберег. Подбирай подряд: оружие копится и усиливается, бьёт вместе с мечом</small>"></span></li>
+        <li><span class="chip" style="background:#ffd60a;color:#3a2a00"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><rect x="10" y="10" width="4" height="4"/></svg></span><span class="t" data-en="Chapters and bosses<small>5 worlds of 10 levels: caves, ceilings over the abyss, chases. Every fifth level is a boss: hit it in mid-air and deflect its shots with your sword</small>" data-ru="Главы и боссы<small>5 миров по 10 уровней: пещеры, бездна под потолком, погони. Каждый пятый уровень — босс: руби его в полёте и отбивай снаряды мечом</small>"></span></li>
+        <li><span class="chip" style="background:#ff375f"><svg class="i" viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="t" data-en="Challenges and achievements<small>Every level has 3 challenges. Complete them for ryo, and chase achievements across the whole game</small>" data-ru="Испытания и достижения<small>На каждом уровне 3 испытания. Выполняй их ради рё и собирай достижения по всей игре</small>"></span></li>
       </ul>
     </div>
   </section>
 
   <section id="pause" class="screen" hidden>
     <div class="sheet">
-      <h2>Пауза</h2>
-      <button class="cta" id="bResume"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg>Продолжить</button>
-      <div class="btns"><button class="sec" id="bRestart">Заново</button><button class="sec" id="bMenu">Уровни</button></div>
-      <div class="btns"><button class="sec" id="bSetP">Настройки</button><button class="sec" id="bQuit">Закончить забег</button></div>
+      <h2 data-en="Paused" data-ru="Пауза">Paused</h2>
+      <div class="title" data-en="Level challenges" data-ru="Испытания уровня">Level challenges</div>
+      <ul class="list tasks" id="pTasks"></ul>
+      <button class="cta" id="bResume"><svg class="i" viewBox="0 0 24 24"><use href="#i-play"/></svg><span data-en="Resume" data-ru="Продолжить">Resume</span></button>
+      <div class="btns"><button class="sec" id="bRestart" data-en="Restart" data-ru="Заново">Restart</button><button class="sec" id="bMenu" data-en="Levels" data-ru="Уровни">Levels</button></div>
+      <div class="btns"><button class="sec" id="bSetP" data-en="Settings" data-ru="Настройки">Settings</button><button class="sec" id="bQuit" data-en="End run" data-ru="Закончить забег">End run</button></div>
     </div>
   </section>
 
   <section id="done" class="screen" hidden>
     <div class="sheet">
-      <div class="eyebrow" id="dLabel">Уровень 1</div>
-      <h2 id="dTitle">Ворота пройдены</h2>
+      <div class="eyebrow" id="dLabel"></div>
+      <h2 id="dTitle"></h2>
       <div class="res-top"><div class="bigtime" id="dTime">0:00.0</div><div class="stars" id="dStars"></div></div>
       <ul class="list" id="dList"></ul>
       <div class="total" id="dTotalRow"><b id="dTotal">+0</b><span id="dWallet"></span></div>
+      <div class="title" data-en="Challenges" data-ru="Испытания">Challenges</div>
+      <ul class="list tasks" id="dTasks"></ul>
       <div class="slot hide" id="slot">
-        <div class="slot-head"><b>Барабан удачи</b><small id="slotHint">Один прокрут бесплатно</small></div>
+        <div class="slot-head"><b data-en="Lucky reels" data-ru="Барабан удачи">Lucky reels</b><small id="slotHint"></small></div>
         <div class="reels"><div class="reel"><div class="strip"></div></div><div class="reel"><div class="strip"></div></div><div class="reel"><div class="strip"></div></div></div>
         <div class="prize" id="prize" hidden></div>
-        <button class="cta gold" id="bSpin">Крутить</button>
+        <button class="cta gold" id="bSpin"></button>
       </div>
-      <div class="title">Образ на следующий забег</div>
+      <div class="title" data-en="Look for the next run" data-ru="Образ на следующий забег">Look for the next run</div>
       <div class="ward" id="wardD"></div>
-      <button class="cta" id="bNext">Следующий уровень</button>
-      <div class="btns3"><button class="sec" id="bAgain">Ещё раз</button><button class="sec" id="bShopD">Лавка</button><button class="sec" id="bLevels">Уровни</button></div>
+      <button class="cta" id="bNext"></button>
+      <div class="btns3"><button class="sec" id="bAgain" data-en="Again" data-ru="Ещё раз">Again</button><button class="sec" id="bShopD" data-en="Shop" data-ru="Лавка">Shop</button><button class="sec" id="bLevels" data-en="Levels" data-ru="Уровни">Levels</button></div>
     </div>
   </section>
 
   <section id="settings" class="screen" hidden>
     <div class="sheet">
       <div class="shop-head">
-        <button class="back" id="bSetBack" aria-label="Назад"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg>Назад</button>
-        <h2>Настройки</h2>
+        <button class="back" id="bSetBack" data-aen="Back" data-aru="Назад" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg><span data-en="Back" data-ru="Назад">Back</span></button>
+        <h2 data-en="Settings" data-ru="Настройки">Settings</h2>
       </div>
-      <div class="title">Кошка и верёвка</div>
+      <div class="title" data-en="Game" data-ru="Игра">Game</div>
       <ul class="list set">
-        <li><label for="sReel">Подтягивание<small>Как быстро ↑ укорачивает верёвку</small></label><output id="oReel"></output><input type="range" id="sReel" min="40" max="180" step="5"></li>
-        <li><label for="sPole">Толчок шестом<small>Сила ↓, когда верёвка упирается</small></label><output id="oPole"></output><input type="range" id="sPole" min="40" max="180" step="5"></li>
-        <li><label for="sSwing">Раскачка<small>Сила ← →, пока висишь</small></label><output id="oSwing"></output><input type="range" id="sSwing" min="50" max="160" step="5"></li>
-        <li><label for="sSoft">Мягкость верёвки<small>0 — жёсткий рывок, больше — пружинит и гасит рывки</small></label><output id="oSoft"></output><input type="range" id="sSoft" min="0" max="100" step="5"></li>
-        <li><label for="sSmooth">Плавность нажатий<small>Насколько постепенно кнопки набирают силу</small></label><output id="oSmooth"></output><input type="range" id="sSmooth" min="0" max="100" step="5"></li>
+        <li><span class="t" data-en="Language" data-ru="Язык">Language</span><div class="seg" id="segLang"><button data-v="en">English</button><button data-v="ru">Русский</button></div></li>
+        <li><span class="t" data-en="Hook button" data-ru="Кнопка кошки">Hook button</span><div class="seg" id="segSide"><button data-v="right" data-en="Right" data-ru="Справа">Right</button><button data-v="left" data-en="Left" data-ru="Слева">Left</button></div></li>
+        <li><button class="rowbtn" id="bSetDiff"><span data-en="Difficulty" data-ru="Сложность">Difficulty</span> <i id="setDiffName"></i></button></li>
       </ul>
-      <div class="title">Игра</div>
-      <ul class="list"><li><button class="rowbtn" id="bSetDiff">Сложность <i id="setDiffName"></i></button></li></ul>
-      <div class="title">Звук</div>
+      <div class="title" data-en="Hook and rope" data-ru="Кошка и верёвка">Hook and rope</div>
       <ul class="list set">
-        <li><span class="t">Музыка</span><button class="switch" id="sMusic" role="switch" aria-checked="true" aria-label="Музыка"></button></li>
-        <li><label for="sMusicVol">Громкость музыки</label><output id="oMusicVol"></output><input type="range" id="sMusicVol" min="0" max="100" step="5"></li>
-        <li><span class="t">Звуки игры</span><button class="switch" id="sSound" role="switch" aria-checked="true" aria-label="Звуки игры"></button></li>
-        <li><label for="sSfxVol">Громкость звуков</label><output id="oSfxVol"></output><input type="range" id="sSfxVol" min="0" max="100" step="5"></li>
+        <li><label for="sReel" data-en="Reel in<small>How fast ↑ shortens the rope</small>" data-ru="Подтягивание<small>Как быстро ↑ укорачивает верёвку</small>"></label><output id="oReel"></output><input type="range" id="sReel" min="40" max="180" step="5"></li>
+        <li><label for="sPole" data-en="Pole push<small>Strength of ↓ when the rope braces</small>" data-ru="Толчок шестом<small>Сила ↓, когда верёвка упирается</small>"></label><output id="oPole"></output><input type="range" id="sPole" min="40" max="180" step="5"></li>
+        <li><label for="sSwing" data-en="Swing<small>Strength of ← → while hanging</small>" data-ru="Раскачка<small>Сила ← →, пока висишь</small>"></label><output id="oSwing"></output><input type="range" id="sSwing" min="50" max="160" step="5"></li>
+        <li><label for="sSoft" data-en="Rope softness<small>0 is a hard jerk; higher springs and cushions the snap</small>" data-ru="Мягкость верёвки<small>0 — жёсткий рывок, больше — пружинит и гасит рывки</small>"></label><output id="oSoft"></output><input type="range" id="sSoft" min="0" max="100" step="5"></li>
+        <li><label for="sSmooth" data-en="Input smoothing<small>How gradually the buttons build up strength</small>" data-ru="Плавность нажатий<small>Насколько постепенно кнопки набирают силу</small>"></label><output id="oSmooth"></output><input type="range" id="sSmooth" min="0" max="100" step="5"></li>
       </ul>
-      <button class="sec" id="bSetReset">Вернуть как было</button>
+      <div class="title" data-en="Sound" data-ru="Звук">Sound</div>
+      <ul class="list set">
+        <li><span class="t" data-en="Music" data-ru="Музыка">Music</span><button class="switch" id="sMusic" role="switch" aria-checked="true" data-aen="Music" data-aru="Музыка" aria-label="Music"></button></li>
+        <li><label for="sMusicVol" data-en="Music volume" data-ru="Громкость музыки">Music volume</label><output id="oMusicVol"></output><input type="range" id="sMusicVol" min="0" max="100" step="5"></li>
+        <li><span class="t" data-en="Sound effects" data-ru="Звуки игры">Sound effects</span><button class="switch" id="sSound" role="switch" aria-checked="true" data-aen="Sound effects" data-aru="Звуки игры" aria-label="Sound effects"></button></li>
+        <li><label for="sSfxVol" data-en="Effects volume" data-ru="Громкость звуков">Effects volume</label><output id="oSfxVol"></output><input type="range" id="sSfxVol" min="0" max="100" step="5"></li>
+      </ul>
+      <button class="sec" id="bSetReset" data-en="Reset rope settings" data-ru="Вернуть как было">Reset rope settings</button>
     </div>
   </section>
 
   <section id="diff" class="screen" hidden>
     <div class="sheet">
-      <h2>Выбери путь</h2>
-      <p class="sub">От сложности зависят тени, ловушки, погони, боссы и награда. Её можно сменить в настройках.</p>
+      <h2 data-en="Choose your path" data-ru="Выбери путь">Choose your path</h2>
+      <p class="sub" data-en="Difficulty changes shadows, traps, chases, bosses and rewards. You can change it any time in Settings." data-ru="От сложности зависят тени, ловушки, погони, боссы и награда. Её можно сменить в настройках.">Difficulty changes shadows, traps, chases, bosses and rewards. You can change it any time in Settings.</p>
       <div class="diffs" id="diffs"></div>
+    </div>
+  </section>
+
+  <section id="achs" class="screen" hidden>
+    <div class="sheet">
+      <div class="shop-head">
+        <button class="back" id="bAchBack" data-aen="Back" data-aru="Назад" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg><span data-en="Back" data-ru="Назад">Back</span></button>
+        <h2 data-en="Achievements" data-ru="Достижения">Achievements</h2>
+      </div>
+      <p class="blurb" id="achBlurb"></p>
+      <ul class="list achlist" id="achList"></ul>
     </div>
   </section>
 
   <section id="shop" class="screen" hidden>
     <div class="sheet">
       <div class="shop-head">
-        <button class="back" id="bShopBack" aria-label="Назад"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg>Назад</button>
-        <h2>Лавка</h2>
+        <button class="back" id="bShopBack" data-aen="Back" data-aru="Назад" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg><span data-en="Back" data-ru="Назад">Back</span></button>
+        <h2 data-en="Shop" data-ru="Лавка">Shop</h2>
         <span class="wallet" id="shopWallet"></span>
       </div>
       <div class="tabs" id="tabs" role="tablist"></div>
@@ -506,13 +578,19 @@ let save = { unlocked: 1, best: {}, stars: {}, tut: false, muted: false, last: 1
 try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s) save = Object.assign(save, s); } catch (e) {}
 const persist = () => { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} };
 
+// ---------- language: every text is an English/Russian pair that prints in the current language ----------
+let lang = save.lang === 'ru' ? 'ru' : 'en';
+class Tr { constructor(en, ru) { this.en = en; this.ru = ru; } toString() { return lang === 'ru' ? this.ru : this.en; } }
+const T2 = (en, ru) => new Tr(en, ru);
+const RYO = () => lang === 'ru' ? 'рё' : 'ryo';
+
 // ---------- difficulty: changes generation, speeds, bosses and rewards ----------
 const DIFF = {
-  easy: { id: 'easy', cls: 'e', name: 'Ученица', tag: 'Лёгкий', desc: 'Меньше теней и ловушек, медленные погони, фонари чаще, шире поиск опоры. Оберег на каждый уровень. Рё ×0.8',
+  easy: { id: 'easy', cls: 'e', name: T2('Apprentice', 'Ученица'), tag: T2('Easy', 'Лёгкий'), desc: T2('Fewer shadows and traps, slower chases, more lanterns, a wider hook search. A charm on every level. Ryo ×0.8', 'Меньше теней и ловушек, медленные погони, фонари чаще, шире поиск опоры. Оберег на каждый уровень. Рё ×0.8'),
     enemies: .55, espeed: .75, blades: .6, bspeed: .75, chase: .72, spikes: .45, aim: 2, rope: 40, shields: 1, lanterns: 3, boss: .6, bfire: .7, par: 1.4, ryo: .8, regen: 0 },
-  normal: { id: 'normal', cls: 'n', name: 'Ронин', tag: 'Обычный', desc: 'Как задумано: честные тени, ловушки, погони и боссы. Рё ×1',
+  normal: { id: 'normal', cls: 'n', name: T2('Ronin', 'Ронин'), tag: T2('Normal', 'Обычный'), desc: T2('As intended: fair shadows, traps, chases and bosses. Ryo ×1', 'Как задумано: честные тени, ловушки, погони и боссы. Рё ×1'),
     enemies: 1, espeed: 1, blades: 1, bspeed: 1, chase: 1, spikes: 1, aim: 0, rope: 0, shields: 0, lanterns: 5, boss: 1, bfire: 1, par: 1, ryo: 1, regen: .3 },
-  hard: { id: 'hard', cls: 'h', name: 'Сёгун', tag: 'Сложный', desc: 'Больше теней, быстрее ловушки и погони, редкие фонари, узкий прицел, злые боссы, которые лечатся. Рё ×1.5',
+  hard: { id: 'hard', cls: 'h', name: T2('Shogun', 'Сёгун'), tag: T2('Hard', 'Сложный'), desc: T2('More shadows, faster traps and chases, rare lanterns, a narrow hook search, angry bosses that heal. Ryo ×1.5', 'Больше теней, быстрее ловушки и погони, редкие фонари, узкий прицел, злые боссы, которые лечатся. Рё ×1.5'),
     enemies: 1.45, espeed: 1.3, blades: 1.45, bspeed: 1.3, chase: 1.22, spikes: 1.5, aim: -2, rope: -30, shields: 0, lanterns: 8, boss: 1.5, bfire: 1.35, par: .82, ryo: 1.5, regen: 1 },
 };
 const diff = () => DIFF[save.diff] || DIFF.normal;
@@ -580,32 +658,32 @@ const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), pars
 
 // ---------- worlds: five chapters, each a hand-tuned art direction ----------
 const THEMES = [
-  { id: 'bamboo', name: 'Бамбуковая долина', sky: ['#78c2e6', '#bfe4ef', '#f1f4df'], rock: ['#7e8b66', '#5a684d'], outline: '#232a1f',
+  { id: 'bamboo', name: T2('Bamboo Valley', 'Бамбуковая долина'), sky: ['#78c2e6', '#bfe4ef', '#f1f4df'], rock: ['#7e8b66', '#5a684d'], outline: '#232a1f',
     top: 'grass', topCol: ['#aee063', '#5f9c37'], tex: 'moss', deco: 'bamboo', bg: 'bamboo', fx: 'leaves', wall: 'fire', rise: 'water',
     lantern: '#ffd56e' },
-  { id: 'sakura', name: 'Сад сакуры', sky: ['#ee8fb0', '#f7bdb0', '#ffe8cc'], rock: ['#8a6470', '#5e4250'], outline: '#2a1720',
+  { id: 'sakura', name: T2('Sakura Garden', 'Сад сакуры'), sky: ['#ee8fb0', '#f7bdb0', '#ffe8cc'], rock: ['#8a6470', '#5e4250'], outline: '#2a1720',
     top: 'grass', topCol: ['#b5dc78', '#6d9e45'], tex: 'stone', deco: 'sakura', bg: 'sakura', fx: 'petals', wall: 'mist', rise: 'water',
     lantern: '#ffc2d8' },
-  { id: 'snow', name: 'Снежный перевал', sky: ['#121c42', '#33467f', '#aab0dc'], rock: ['#6f86ab', '#4a5d84'], outline: '#16203a',
+  { id: 'snow', name: T2('Snow Pass', 'Снежный перевал'), sky: ['#121c42', '#33467f', '#aab0dc'], rock: ['#6f86ab', '#4a5d84'], outline: '#16203a',
     top: 'snow', topCol: ['#ffffff', '#cfe0f5'], tex: 'ice', deco: 'snow', bg: 'snow', fx: 'snow', wall: 'avalanche', rise: 'ice',
     lantern: '#bfe6ff' },
-  { id: 'volcano', name: 'Огненная гора', sky: ['#120406', '#3a0d0b', '#8f2a14'], rock: ['#3b2f37', '#221a20'], outline: '#0f0608',
+  { id: 'volcano', name: T2('Fire Mountain', 'Огненная гора'), sky: ['#120406', '#3a0d0b', '#8f2a14'], rock: ['#3b2f37', '#221a20'], outline: '#0f0608',
     top: 'ember', topCol: ['#ffb347', '#a8321a'], tex: 'basalt', deco: 'volcano', bg: 'volcano', fx: 'embers', wall: 'fire', rise: 'lava',
     lantern: '#ff9a3c' },
-  { id: 'city', name: 'Облачный город', sky: ['#0a0920', '#22184c', '#4a2d72'], rock: ['#363b58', '#22263d'], outline: '#06070f',
+  { id: 'city', name: T2('Cloud City', 'Облачный город'), sky: ['#0a0920', '#22184c', '#4a2d72'], rock: ['#363b58', '#22263d'], outline: '#06070f',
     top: 'tiles', topCol: ['#3f528c', '#232d57'], tex: 'city', deco: 'city', bg: 'city', fx: 'rain', wall: 'storm', rise: 'neon',
     lantern: '#ff5a8a' },
 ];
 // the ink-painting style redraws any chapter with brush, wash and paper
-const INK = { id: 'ink', name: 'Тушь', sky: ['#f6f0e1', '#efe5cf', '#e6d9bd'], rock: ['#3b3630', '#211d19'], outline: '#0b0907',
+const INK = { id: 'ink', name: T2('Ink', 'Тушь'), sky: ['#f6f0e1', '#efe5cf', '#e6d9bd'], rock: ['#3b3630', '#211d19'], outline: '#0b0907',
   top: 'ink', topCol: ['#15120f', '#15120f'], tex: 'ink', deco: 'ink', bg: 'ink', fx: 'inkdrops', lantern: '#e2483a' };
 
 const CHAPTERS = [
-  { id: 'bamboo', name: 'Бамбуковая долина', price: 0, boss: 'tengu' },
-  { id: 'sakura', name: 'Сад сакуры', price: 0, boss: 'kitsune' },
-  { id: 'snow', name: 'Снежный перевал', price: 2500, boss: 'yuki' },
-  { id: 'volcano', name: 'Огненная гора', price: 5000, boss: 'dragon' },
-  { id: 'city', name: 'Облачный город', price: 8000, boss: 'raijin' },
+  { id: 'bamboo', name: T2('Bamboo Valley', 'Бамбуковая долина'), price: 0, boss: 'tengu' },
+  { id: 'sakura', name: T2('Sakura Garden', 'Сад сакуры'), price: 0, boss: 'kitsune' },
+  { id: 'snow', name: T2('Snow Pass', 'Снежный перевал'), price: 2500, boss: 'yuki' },
+  { id: 'volcano', name: T2('Fire Mountain', 'Огненная гора'), price: 5000, boss: 'dragon' },
+  { id: 'city', name: T2('Cloud City', 'Облачный город'), price: 8000, boss: 'raijin' },
 ];
 // every chapter follows the same rhythm of level types
 const LAYOUT = [
@@ -613,22 +691,22 @@ const LAYOUT = [
   { type: 'cave', sub: 'zig' }, { type: 'sky' }, { type: 'chase', sub: 'rise' }, { type: 'ceiling', hard: true }, { type: 'boss' },
 ];
 const LEVEL_NAMES = [
-  ['Тропа ученицы', 'Мост из облаков', 'Колодец росы', 'Лесной пожар', 'Тэнгу-младший', 'Зелёный лабиринт', 'Острова журавлей', 'Половодье', 'Потолок водопада', 'Великий Тэнгу'],
-  ['Лепестковый грот', 'Висячий сад', 'Башня пагоды', 'Розовый туман', 'Лисёнок-оборотень', 'Корни старой вишни', 'Небесный сад', 'Пруд карпов', 'Крыша святилища', 'Девятихвостая Кицунэ'],
-  ['Ледяная жила', 'Сосульки над бездной', 'Замёрзший колодец', 'Лавина', 'Снежный дух', 'Хрустальный лабиринт', 'Северное сияние', 'Ледяная вода', 'Карниз ледника', 'Ледяной они'],
-  ['Пепельная штольня', 'Мост над жерлом', 'Огненный дымоход', 'Огненный вал', 'Саламандра', 'Обсидиановый лабиринт', 'Парящие скалы', 'Лавовый колодец', 'Потолок кратера', 'Огненный дракон'],
-  ['Подземка', 'Неоновые провода', 'Лифтовая шахта', 'Гроза', 'Барабанщик бури', 'Переулки', 'Крыши в облаках', 'Затопленный квартал', 'Под мостом', 'Райдзин'],
+  [T2('Apprentice\'s Path', 'Тропа ученицы'), T2('Bridge of Clouds', 'Мост из облаков'), T2('Dew Well', 'Колодец росы'), T2('Forest Fire', 'Лесной пожар'), T2('Young Tengu', 'Тэнгу-младший'), T2('Green Labyrinth', 'Зелёный лабиринт'), T2('Crane Islands', 'Острова журавлей'), T2('Spring Flood', 'Половодье'), T2('Waterfall Ceiling', 'Потолок водопада'), T2('Great Tengu', 'Великий Тэнгу')],
+  [T2('Petal Grotto', 'Лепестковый грот'), T2('Hanging Garden', 'Висячий сад'), T2('Pagoda Tower', 'Башня пагоды'), T2('Pink Mist', 'Розовый туман'), T2('Fox Cub', 'Лисёнок-оборотень'), T2('Old Cherry Roots', 'Корни старой вишни'), T2('Sky Garden', 'Небесный сад'), T2('Koi Pond', 'Пруд карпов'), T2('Shrine Roof', 'Крыша святилища'), T2('Nine-Tailed Kitsune', 'Девятихвостая Кицунэ')],
+  [T2('Ice Vein', 'Ледяная жила'), T2('Icicles over the Abyss', 'Сосульки над бездной'), T2('Frozen Well', 'Замёрзший колодец'), T2('Avalanche', 'Лавина'), T2('Snow Spirit', 'Снежный дух'), T2('Crystal Labyrinth', 'Хрустальный лабиринт'), T2('Northern Lights', 'Северное сияние'), T2('Icy Water', 'Ледяная вода'), T2('Glacier Ledge', 'Карниз ледника'), T2('Ice Oni', 'Ледяной они')],
+  [T2('Ash Mine', 'Пепельная штольня'), T2('Bridge over the Crater', 'Мост над жерлом'), T2('Fire Chimney', 'Огненный дымоход'), T2('Wall of Fire', 'Огненный вал'), T2('Salamander', 'Саламандра'), T2('Obsidian Labyrinth', 'Обсидиановый лабиринт'), T2('Floating Rocks', 'Парящие скалы'), T2('Lava Well', 'Лавовый колодец'), T2('Crater Ceiling', 'Потолок кратера'), T2('Fire Dragon', 'Огненный дракон')],
+  [T2('Subway', 'Подземка'), T2('Neon Wires', 'Неоновые провода'), T2('Elevator Shaft', 'Лифтовая шахта'), T2('Thunderstorm', 'Гроза'), T2('Storm Drummer', 'Барабанщик бури'), T2('Back Alleys', 'Переулки'), T2('Rooftops in the Clouds', 'Крыши в облаках'), T2('Flooded Block', 'Затопленный квартал'), T2('Under the Bridge', 'Под мостом'), T2('Raijin', 'Райдзин')],
 ];
 const TYPE_INFO = {
-  cave: { label: 'пещера', hint: 'Пещера: ищи путь к воротам, собирай рё, руби теней.' },
-  ceiling: { label: 'потолок', hint: 'Над бездной: цепляйся только за потолок и перелетай провалы. Падать нельзя.' },
-  sky: { label: 'небо', hint: 'Небесные острова: прыгай от острова к бамбуку, внизу пустота.' },
-  chase: { label: 'погоня', hint: 'Погоня! Не останавливайся, оно догоняет.' },
-  boss: { label: 'босс', hint: 'Босс! Руби его в полёте, уворачивайся от снарядов, подбирай оружие.' },
+  cave: { label: T2('cave', 'пещера'), hint: T2('Cave: find the way to the gate, collect ryo and cut down shadows.', 'Пещера: ищи путь к воротам, собирай рё, руби теней.') },
+  ceiling: { label: T2('ceiling', 'потолок'), hint: T2('Over the abyss: hook only onto the ceiling and fly across the gaps. Do not fall.', 'Над бездной: цепляйся только за потолок и перелетай провалы. Падать нельзя.') },
+  sky: { label: T2('sky', 'небо'), hint: T2('Sky islands: swing from island to bamboo, there is nothing below.', 'Небесные острова: прыгай от острова к бамбуку, внизу пустота.') },
+  chase: { label: T2('chase', 'погоня'), hint: T2('Chase! Keep moving, it is catching up.', 'Погоня! Не останавливайся, оно догоняет.') },
+  boss: { label: T2('boss', 'босс'), hint: T2('Boss! Hit it in mid-air, dodge its shots and grab weapons.', 'Босс! Руби его в полёте, уворачивайся от снарядов, подбирай оружие.') },
 };
 const CHASE_INFO = {
-  fire: 'Лесной пожар идёт по пятам', mist: 'Ядовитый туман ползёт следом', avalanche: 'Лавина сходит за спиной', storm: 'Грозовой фронт настигает',
-  water: 'Вода поднимается', ice: 'Ледяная вода поднимается', lava: 'Лава поднимается', neon: 'Квартал затапливает',
+  fire: T2('A forest fire is on your heels', 'Лесной пожар идёт по пятам'), mist: T2('Poison mist is creeping after you', 'Ядовитый туман ползёт следом'), avalanche: T2('An avalanche is coming down behind you', 'Лавина сходит за спиной'), storm: T2('The storm front is catching up', 'Грозовой фронт настигает'),
+  water: T2('The water is rising', 'Вода поднимается'), ice: T2('Icy water is rising', 'Ледяная вода поднимается'), lava: T2('Lava is rising', 'Лава поднимается'), neon: T2('The block is flooding', 'Квартал затапливает'),
 };
 function levelDef(n) {
   const ch = Math.floor((n - 1) / 10), k = (n - 1) % 10;
@@ -1391,7 +1469,8 @@ function updateEnemies(dt) {
   }
 }
 function killEnemy(e) {
-  e.alive = false; kills++; SFX.hit(); shake = 4; pop(scoreKill(e)); updateHud(true);
+  e.alive = false; kills++; stats.kills++; if (!w.ground) { stats.air++; run.airKills++; }
+  SFX.hit(); shake = 4; pop(scoreKill(e)); updateHud(true); checkAch();
   const cy = ecy(e);
   for (let i = 0; i < 24; i++) { const a = Math.random() * 6.28, s = 60 + Math.random() * 240; parts.push({ x: e.x, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 60, life: .7, max: .7, col: i % 3 ? 'rgba(20,16,28,.85)' : (e.t === 'spirit' ? '#c7a6ff' : '#ff453a'), s: 3 + Math.random() * 3, g: 120 }); }
 }
@@ -1413,7 +1492,7 @@ const inY = () => finished ? 0 : clamp((pad.d || keys.d) - (pad.u || keys.u), -1
 
 function startLevel(n) {
   buildLevel(n); placeEnemies(L); placePowers(L); applyUpgrades(); resetRun(); resetPowers();
-  run.shields += diff().shields;
+  run.shields += diff().shields; L.tasks = levelTasks(L);
   save.last = n; persist();
   checkpoint = L.lanterns[0];
   respawn();
@@ -1422,23 +1501,25 @@ function startLevel(n) {
   cam.x = w.x; cam.y = w.y; cam.z = clamp(Math.sqrt(W * H) / 560, .6, 1.4);
   tut = (n === 1 && !save.tut) ? 0 : -1; tutT = 0;
   hint('', 0); updateHud(true); updateBossBar(); showIntro(L.def);
-  if (tut === 0) { hint('<b>Держи Кошку</b> правым пальцем: она выстрелит и будет держать. Отпустишь — отцепится.'); return; }
+  if (tut === 0) { hint(T2(`<b>Hold the Hook</b> with your ${hookSide().en} thumb: it fires and holds on. Let go to release.`, `<b>Держи Кошку</b> ${hookSide().ru} пальцем: она выстрелит и будет держать. Отпустишь — отцепится.`)); return; }
   const seen = save.seen || (save.seen = {}), key = L.type === 'chase' ? 'chase-' + L.def.sub : L.type;
   const chaseTxt = L.chase ? CHASE_INFO[L.chase.style] : L.lava ? CHASE_INFO[L.lava.style] : '';
-  if (!seen[key]) { seen[key] = 1; persist(); setTimeout(() => hint(L.type === 'chase' ? `<b>Погоня!</b> ${chaseTxt}. Не останавливайся.` : TYPE_INFO[L.type].hint, 6), 1600); }
+  if (!seen[key]) { seen[key] = 1; persist(); setTimeout(() => hint(L.type === 'chase' ? T2(`<b>Chase!</b> ${chaseTxt}. Keep moving.`, `<b>Погоня!</b> ${chaseTxt}. Не останавливайся.`) : TYPE_INFO[L.type].hint, 6), 1600); }
   else if (chaseTxt) setTimeout(() => hint(chaseTxt + '!', 2.5), 1600);
 }
 let introT = 0;
 function showIntro(def) {
   const el = $('#intro');
-  $('#introCh').textContent = `Глава ${def.ch + 1} · ${def.chapter.name}`;
+  $('#introCh').textContent = T2(`Chapter ${def.ch + 1} · ${def.chapter.name}`, `Глава ${def.ch + 1} · ${def.chapter.name}`);
   $('#introName').textContent = def.name;
-  $('#introType').textContent = `${def.ch + 1}-${def.k} · ` + (def.type === 'boss' ? (def.mini ? 'мини-босс' : 'босс главы') : TYPE_INFO[def.type].label) + ` · ${diff().name}`;
-  el.classList.remove('off'); clearTimeout(introT); introT = setTimeout(() => el.classList.add('off'), 2300);
+  $('#introType').textContent = `${def.ch + 1}-${def.k} · ` + (def.type === 'boss' ? (def.mini ? T2('mini-boss', 'мини-босс') : T2('chapter boss', 'босс главы')) : TYPE_INFO[def.type].label) + ` · ${diff().name}`;
+  const done = save.tasks[def.n] || [];
+  $('#introTasks').innerHTML = L.tasks.map((id, i) => `<li>${done[i] ? '✓' : '○'} ${taskLabel(id)}</li>`).join('');
+  el.classList.remove('off'); clearTimeout(introT); introT = setTimeout(() => el.classList.add('off'), 3200);
 }
 function respawn() {
   w.x = checkpoint.rx; w.y = checkpoint.ry; w.vx = 0; w.vy = 0; dead = 0;
-  rope.st = 'none'; rope.pts = []; hero.ang = 0; hero.inv = 1.2;
+  rope.st = 'none'; rope.pts = []; hero.ang = 0; hero.inv = 1.2; hero.wasGround = true;
   // under a ceiling there is no floor: come back hanging from the lantern's hook
   if (checkpoint.hang) { rope.st = 'on'; rope.pts = [{ x: checkpoint.x, y: checkpoint.cy + 2, side: 1 }]; rope.seg = 0; rope.len = w.y - checkpoint.cy; }
   if (L.lava) L.lava.y = Math.max(L.lava.y, checkpoint.ry + 420);
@@ -1471,7 +1552,7 @@ function hookUp() {
   release();
   if (kick) {
     w.vx += contactN.x * KICK_OUT; w.vy = Math.min(w.vy, 0) - KICK_UP;
-    SFX.kick(); pop('Отскок'); dust(w.x, w.y + R, 8);
+    SFX.kick(); pop(T2('Wall kick', 'Отскок')); stats.kicks++; run.kicks++; checkAch(); dust(w.x, w.y + R, 8);
   } else SFX.off();
 }
 function slashPress() {
@@ -1488,13 +1569,13 @@ function fire() {
 function attach(x, y) {
   rope.st = 'on'; rope.pts = [{ x, y, side: 1 }]; rope.seg = 0;
   rope.len = Math.min(hyp(w.x - x, w.y - y), ropeMax); contactT = 9;
-  SFX.hook();
+  SFX.hook(); stats.hooks++; checkAch();
   for (let i = 0; i < 6; i++) parts.push({ x, y, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, life: .3, max: .3, col: 'rgba(255,240,200,.9)', s: 2, g: 200 });
-  if (tut === 0) { tut = 1; tutT = 0; hint('Левый палец: <b>← →</b> раскачка, <b>↑</b> подтянуться, <b>↓</b> удлинить и оттолкнуться.'); }
-  else if (tut === 3 && !w.ground) { tut = 4; tutT = 0; hint('Шест: зацепись рядом за пол или стену и держи <b>↓</b> — верёвка оттолкнёт тебя вверх. Отпусти Кошку на взлёте.', 9); }
+  if (tut === 0) { tut = 1; tutT = 0; hint(T2(`${padSide().enC} thumb: <b>← →</b> swing, <b>↑</b> reel in, <b>↓</b> let out and push off.`, `${padSide().ruC} палец: <b>← →</b> раскачка, <b>↑</b> подтянуться, <b>↓</b> удлинить и оттолкнуться.`)); }
+  else if (tut === 3 && !w.ground) { tut = 4; tutT = 0; hint(T2('Pole: hook the floor or a wall close by and hold <b>↓</b> — the rope pushes you up. Release the Hook on the way up.', 'Шест: зацепись рядом за пол или стену и держи <b>↓</b> — верёвка оттолкнёт тебя вверх. Отпусти Кошку на взлёте.'), 9); }
 }
 function release() {
-  if (rope.st === 'on' && tut === 2) { tut = 3; hint('В полёте снова <b>зажми</b> Кошку. Пока держишь, она сама зацепится за первое, до чего достанет.'); }
+  if (rope.st === 'on' && tut === 2) { tut = 3; hint(T2('In the air, <b>hold</b> the Hook again. While you hold it, it grabs the first thing in reach.', 'В полёте снова <b>зажми</b> Кошку. Пока держишь, она сама зацепится за первое, до чего достанет.')); }
   rope.st = 'none'; rope.pts = [];
 }
 function constrain(iy, h) {
@@ -1594,6 +1675,8 @@ function update(dt) {
     }
     if (rope.st === 'on') wrap();
   }
+  if (w.ground && !hero.wasGround && started && rope.st !== 'on') run.floor++;
+  hero.wasGround = w.ground;
   if (w.ground && rope.st !== 'on' && !ix) { w.vx *= Math.exp(-10 * dt); if (Math.abs(w.vx) < 6) w.vx = 0; }
   if (L.open) { if (w.x < 14) { w.x = 14; w.vx = Math.abs(w.vx) * .3; } if (w.x > L.WW - 14) { w.x = L.WW - 14; w.vx = -Math.abs(w.vx) * .3; } }
   updateHazards(dt);
@@ -1609,7 +1692,7 @@ function update(dt) {
   hero.walk += w.ground ? Math.abs(w.vx) * dt * .12 : 0;
 
   // tutorial
-  if (tut === 1 && rope.st === 'on') { tutT += dt; if (tutT > 3) { tut = 2; hint('Раскачалась? <b>Отпусти</b> Кошку в верхней точке — полетишь.'); } }
+  if (tut === 1 && rope.st === 'on') { tutT += dt; if (tutT > 3) { tut = 2; hint(T2('Swinging? <b>Let go</b> of the Hook at the top of the swing to fly.', 'Раскачалась? <b>Отпусти</b> Кошку в верхней точке — полетишь.')); } }
   if (tut === 4) { tutT += dt; if (tutT > 9) { tut = -1; save.tut = true; persist(); } }
 
   updateTrail(dt); updatePowers(dt);
@@ -1624,12 +1707,12 @@ function update(dt) {
     const dc = hyp(c.x - w.x, c.y - w.y);
     if (magnetR && dc < magnetR && dead <= 0) { const k = Math.min(1, dt * 9); c.x += (w.x - c.x) * k; c.y += (w.y - c.y) * k; }
     if (dc > R + 16) continue;
-    c.got = true; coinsGot++; SFX.coin(); scoreCoin(c); updateHud(true);
+    c.got = true; coinsGot++; stats.coins++; SFX.coin(); scoreCoin(c); updateHud(true); checkAch();
     for (let i = 0; i < 14; i++) { const a = Math.random() * 6.28, s = 60 + Math.random() * 200; parts.push({ x: c.x, y: c.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 60, life: .6, max: .6, col: i % 2 ? '#ffd60a' : '#ffffff', s: 2.5, g: 400 }); }
   }
   for (const l of L.lanterns) {
     if (l.lit || hyp(l.x - w.x, l.y - 24 - w.y) > 90) continue;
-    l.lit = true; checkpoint = l; SFX.lantern(); pop('Фонарь зажжён');
+    l.lit = true; checkpoint = l; SFX.lantern(); pop(T2('Lantern lit', 'Фонарь зажжён'));
     for (let i = 0; i < 16; i++) parts.push({ x: l.x, y: l.y - 26, vx: (Math.random() - .5) * 120, vy: -Math.random() * 160, life: .9, max: .9, col: '#ffcf70', s: 2.5, g: -40 });
   }
   // fights & hazards
@@ -1638,7 +1721,7 @@ function update(dt) {
     for (const e of L.enemies) {
       if (!e.alive) continue;
       const ex = e.x, ey = ecy(e), dh = hyp(ex - w.x, ey - w.y);
-      if (!ninjaHinted && dh < 380 && !save.ninja) { ninjaHinted = true; save.ninja = true; persist(); hint('Тень! Касание убивает. Руби её первой: <b>тап по центру крестовины</b>.', 5); }
+      if (!ninjaHinted && dh < 380 && !save.ninja) { ninjaHinted = true; save.ninja = true; persist(); hint(T2('A shadow! Its touch kills. Strike first: <b>tap the centre of the d-pad</b>.', 'Тень! Касание убивает. Руби её первой: <b>тап по центру крестовины</b>.'), 5); }
       if (hero.slash > 0 && (hyp(ex - sx, ey - sy) < 36 * wp.reach || dh < R + 20 + (wp.wide ? 30 : 0))) { killEnemy(e); continue; }
       if (dh < R + 12 && hero.inv <= 0) { die(); break; }
     }
@@ -1648,9 +1731,9 @@ function update(dt) {
     }
     if (dead <= 0) for (const s of L.spikes) if (hyp(s.x - w.x, s.y - 8 - w.y) < R + 5) { die(); break; }
     if (dead <= 0) for (const b of L.blades) if (hyp(b.x - w.x, b.y - w.y) < R + 15) { die(); break; }
-    if (dead <= 0 && L.voidY && w.y > L.voidY) { pop('Пропасть'); die(true); }
-    if (dead <= 0 && L.lava && w.y + R > L.lava.y + 6) { pop(L.lava.style === 'lava' ? 'Лава' : 'Затянуло вниз'); die(true); }
-    if (dead <= 0 && L.chase && w.x - R < L.chase.x + 6) { pop('Догнали'); die(true); }
+    if (dead <= 0 && L.voidY && w.y > L.voidY) { pop(T2('The abyss', 'Пропасть')); die(true); }
+    if (dead <= 0 && L.lava && w.y + R > L.lava.y + 6) { pop(L.lava.style === 'lava' ? T2('Lava', 'Лава') : T2('Pulled under', 'Затянуло вниз')); die(true); }
+    if (dead <= 0 && L.chase && w.x - R < L.chase.x + 6) { pop(T2('Caught', 'Догнали')); die(true); }
     if (dead <= 0 && !L.gateLocked && hyp(L.gate.x - w.x, L.gate.y - 48 - w.y) < 62) win();
   }
   if (finished) { doneT += dt; if (doneT > 1.1 && state === 'play') showDone(); }
@@ -1658,7 +1741,7 @@ function update(dt) {
 function die(force) {
   if (dead > 0 || (hero.inv > 0 && !force)) return;
   if (run.shields > 0 && !force) {
-    run.shields--; hero.inv = 1.4; w.vy = -340; w.vx *= -.4; SFX.lantern(); pop('Оберег спас'); updateHud(true);
+    run.shields--; hero.inv = 1.4; w.vy = -340; w.vx *= -.4; SFX.lantern(); pop(T2('The charm saved you', 'Оберег спас')); updateHud(true);
     for (let i = 0; i < 24; i++) { const a = i / 24 * 6.28; parts.push({ x: w.x, y: w.y, vx: Math.cos(a) * 220, vy: Math.sin(a) * 220, life: .5, max: .5, col: '#ffd36a', s: 3, g: 0 }); }
     return;
   }
@@ -1680,6 +1763,8 @@ function win() {
   if (L.newBest) save.best[L.n] = +time.toFixed(2);
   save.unlocked = Math.max(save.unlocked, Math.min(LEVELS, L.n + 1));
   if (L.n === 1) save.tut = true;
+  stats.wins++; if (!run.deaths) stats.flawless++; if (save.diff === 'hard') stats.hardWin = 1; if (time < 20) stats.fast = 1; if (save.eq.style !== 'paint') stats.style = 1;
+  settleTasks();
   tut = -1; hint('', 0); persist();
   for (let i = 0; i < 40; i++) { const a = -Math.PI / 2 + (Math.random() - .5) * 2, s = 200 + Math.random() * 300; parts.push({ x: L.gate.x, y: L.gate.y - 60, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1.4, max: 1.4, col: ['#ff375f', '#ffd60a', '#ffffff', '#ffb3cf'][i % 4], s: 3.5, g: 380 }); }
 }
@@ -1717,7 +1802,7 @@ function updateCam(dt) {
   }
   cam.z += (zT - cam.z) * (1 - Math.exp(-3 * dt));
   const z = cam.z, vw = W / z;
-  if (state === 'menu') { const S = L.samples, k = Math.floor((clock * 30) % S.length); tx = S[k].x; ty = S[k].y; }
+  if (state === 'menu') { const S = L.samples, k = Math.floor(Math.abs(clock * 30) % S.length); tx = S[k].x; ty = S[k].y; }
   else if (fight) { const b = L.boss; tx = (w.x + b.x) / 2; ty = (w.y + b.y) / 2; }
   else { tx = w.x + clamp(w.vx * .25, -vw * .2, vw * .2); ty = w.y + clamp(w.vy * .16, -H / z * .14, H / z * .14); }
   const k = 1 - Math.exp(-(state === 'menu' ? 1.5 : 4.5) * dt);
@@ -1893,7 +1978,7 @@ function updateHud(force) {
     lastDeck = deck;
     const hb = $('#hookBtn');
     hb.classList.toggle('hooked', deck === 'on' || deck === 'fly'); hb.classList.toggle('kick', deck === 'kick');
-    $('#hookLbl').textContent = deck === 'aim' ? 'Держи' : deck === 'kick' ? 'Отпусти!' : 'Держу';
+    $('#hookLbl').textContent = deck === 'aim' ? T2('Hold', 'Держи') : deck === 'kick' ? T2('Let go!', 'Отпусти!') : T2('Holding', 'Держу');
   }
   knob.classList.toggle('cool', hero.slashCd > 0 && hero.slash <= 0); knob.classList.toggle('slash', hero.slash > 0);
 }
@@ -1906,7 +1991,7 @@ function hint(html, secs) {
 }
 function pop(text) { const el = $('#pop'); clearTimeout(popTimer); el.textContent = text; el.classList.remove('off'); popTimer = setTimeout(() => el.classList.add('off'), 1100); }
 function show(id) {
-  for (const s of ['menu', 'pause', 'done', 'shop', 'settings', 'diff']) $('#' + s).hidden = s !== id;
+  for (const s of ['menu', 'pause', 'done', 'shop', 'settings', 'diff', 'achs']) $('#' + s).hidden = s !== id;
   const inGame = id === null || id === 'pause';
   $('#hud').hidden = !inGame; $('#deckL').hidden = !inGame; $('#deckR').hidden = !inGame; $('#scrim').hidden = !inGame;
   resize();
@@ -1937,7 +2022,7 @@ function buildMenu() {
     const open = chapterOpen(i), b = document.createElement('button');
     b.className = 'chc' + (i === menuCh ? ' on' : '') + (open ? '' : ' lock');
     b.innerHTML = `<canvas width="300" height="164"></canvas><span class="cn">${i + 1}. ${chp.name}</span><span class="cs">${open ? `★ ${chapterStars(i)} / 30` : `${MON}${fmtR(chp.price)}`}</span>` + (open ? '' : `<span class="lockb">${LOCK_SVG}</span>`);
-    b.setAttribute('aria-label', `Глава ${i + 1}: ${chp.name}` + (open ? '' : `, закрыта, ${chp.price} рё`));
+    b.setAttribute('aria-label', T2(`Chapter ${i + 1}: ${chp.name}`, `Глава ${i + 1}: ${chp.name}`) + (open ? '' : `, ${T2('locked', 'закрыта')}, ${chp.price} ${RYO()}`));
     b.onclick = () => { audio(); menuCh = i; chConfirm = -1; buildMenu(); };
     strip.appendChild(b);
     drawChapterThumb(b.querySelector('canvas').getContext('2d'), i, 300, 164);
@@ -1947,32 +2032,36 @@ function buildMenu() {
   if (open) for (let k = 1; k <= 10; k++) {
     const n = menuCh * 10 + k, def = levelDef(n), st = save.stars[n] || 0, b = document.createElement('button');
     b.className = 'lv' + (n === save.last ? ' cur' : '') + (def.type === 'boss' ? ' boss' : '');
-    b.innerHTML = `<span class="n">${k}</span><span class="ti">${TYPE_ICON[def.type]}</span><span class="s">${st ? [1, 2, 3].map(j => starSvg(j <= st)).join('') : ''}</span>`;
-    b.setAttribute('aria-label', `${menuCh + 1}-${k} ${def.name}, ${def.type === 'boss' ? 'босс' : TYPE_INFO[def.type].label}` + (save.best[n] ? `, рекорд ${fmt(save.best[n])}` : ''));
+    const td = save.tasks[n] || [];
+    b.innerHTML = `<span class="n">${k}</span><span class="ti">${TYPE_ICON[def.type]}</span><span class="s">${st ? [1, 2, 3].map(j => starSvg(j <= st)).join('') : ''}</span><span class="td">${[0, 1, 2].map(j => `<i class="${td[j] ? 'on' : ''}"></i>`).join('')}</span>`;
+    b.setAttribute('aria-label', `${menuCh + 1}-${k} ${def.name}, ${TYPE_INFO[def.type].label}` + (save.best[n] ? `, ${T2('best', 'рекорд')} ${fmt(save.best[n])}` : ''));
     b.onclick = () => { audio(); play(n); };
     box.appendChild(b);
   } else {
     const chp = CHAPTERS[menuCh], poor = chp.price > save.ryo;
-    $('#chLockTxt').innerHTML = `<b>${chp.name}</b> — 10 новых уровней и босс ${BOSSES[chp.boss].name}.<br><small>${poor ? `Не хватает ${fmtR(chp.price - save.ryo)} рё. Проходи уровни и крути барабан.` : 'Хватает рё, можно открыть.'}</small>`;
+    $('#chLockTxt').innerHTML = T2(`<b>${chp.name}</b> — 10 new levels and the boss ${BOSSES[chp.boss].name}.<br><small>${poor ? `You need ${fmtR(chp.price - save.ryo)} more ryo. Clear levels and spin the reels.` : 'You have enough ryo to open it.'}</small>`,
+      `<b>${chp.name}</b> — 10 новых уровней и босс ${BOSSES[chp.boss].name}.<br><small>${poor ? `Не хватает ${fmtR(chp.price - save.ryo)} рё. Проходи уровни и крути барабан.` : 'Хватает рё, можно открыть.'}</small>`);
     const bb = $('#bBuyCh');
-    bb.innerHTML = chConfirm === menuCh ? `Открыть за ${fmtR(chp.price)}?` : `${MON}Открыть за ${fmtR(chp.price)}`;
+    bb.innerHTML = chConfirm === menuCh ? T2(`Open for ${fmtR(chp.price)}?`, `Открыть за ${fmtR(chp.price)}?`) : `${MON}` + T2(`Open for ${fmtR(chp.price)}`, `Открыть за ${fmtR(chp.price)}`);
     bb.disabled = poor;
     bb.onclick = () => {
       audio();
       if (chConfirm !== menuCh) { chConfirm = menuCh; buildMenu(); return; }
-      save.ryo -= chp.price; save.owned['chapter:' + chp.id] = true; persist(); chConfirm = -1; SFX.win(); pop(`Глава «${chp.name}» открыта`); buildMenu();
+      save.ryo -= chp.price; save.owned['chapter:' + chp.id] = true; persist(); chConfirm = -1; SFX.win(); pop(T2(`Chapter “${chp.name}” is open`, `Глава «${chp.name}» открыта`)); checkAch(); buildMenu();
     };
   }
   const target = chapterOpen(menuCh) ? (Math.floor((save.last - 1) / 10) === menuCh ? save.last : nextLevelFor(menuCh)) : save.last;
-  $('#bPlayLbl').textContent = `Играть · ${levelDef(target).ch + 1}-${levelDef(target).k}`;
+  $('#bPlayLbl').textContent = T2('Play', 'Играть') + ` · ${levelDef(target).ch + 1}-${levelDef(target).k}`;
   $('#bPlay').onclick = () => { audio(); play(target); };
-  $('#bDiff').innerHTML = `<i>Сложность</i> ${diff().name}`;
+  $('#bDiff').innerHTML = `<i>${T2('Difficulty', 'Сложность')}</i> ${diff().name}`;
+  $('#bLang').innerHTML = `<i>${T2('Language', 'Язык')}</i> ${lang === 'ru' ? 'RU' : 'EN'}`;
+  renderAchSummary();
   $('#mWallet').innerHTML = `${MON}<span>${fmtR(save.ryo)}</span>`;
   $('#shopDot').hidden = !canAffordSomething();
   renderWardrobe('#wardM', 'menu');
   const g = giftInfo();
   $('#gift').hidden = !g;
-  if (g) { $('#giftAmt').textContent = `+${fmtR(g.amount)} рё`; $('#giftSub').textContent = g.streak > 1 ? `${g.streak}-й день подряд. Завтра будет больше` : 'Заходи каждый день, подарок растёт'; }
+  if (g) { $('#giftAmt').textContent = `+${fmtR(g.amount)} ${RYO()}`; $('#giftSub').textContent = g.streak > 1 ? T2(`Day ${g.streak} in a row. Tomorrow's is bigger`, `${g.streak}-й день подряд. Завтра будет больше`) : T2('Come back every day, the gift grows', 'Заходи каждый день, подарок растёт'); }
 }
 function toMenu() {
   state = 'menu'; hint('', 0); clearPad();
@@ -1981,11 +2070,11 @@ function toMenu() {
 }
 function play(n) {
   const ch = levelDef(n).ch;
-  if (!chapterOpen(ch)) { menuCh = ch; toMenu(); pop('Эта глава пока закрыта'); return; }
-  show(null); state = 'load'; hint('Строю уровень…'); setTimeout(() => { startLevel(n); state = 'play'; layout(); }, 40);
+  if (!chapterOpen(ch)) { menuCh = ch; toMenu(); pop(T2('This chapter is still locked', 'Эта глава пока закрыта')); return; }
+  show(null); state = 'load'; hint(T2('Building the level…', 'Строю уровень…')); setTimeout(() => { startLevel(n); state = 'play'; layout(); }, 40);
 }
 function showDone() { showResults(true); }
-function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); show('pause'); }
+function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); renderTaskList($('#pTasks'), false); show('pause'); }
 
 $('#bPause').onclick = pause;
 $('#bResume').onclick = () => { state = 'play'; show(null); };
@@ -2065,7 +2154,7 @@ if (window.ResizeObserver) new ResizeObserver(resize).observe(view);
 // ---------- loop ----------
 let last = performance.now(), acc = 0;
 function frame(t) {
-  const dt = Math.min(.05, (t - last) / 1000); last = t; lastFrameDt = dt;
+  const dt = clamp((t - last) / 1000 || 0, 0, .05); last = t; lastFrameDt = dt;
   if (state === 'play' || state === 'done') {
     const ts = slowT > 0 ? .35 : 1; slowT = Math.max(0, slowT - dt);
     acc += dt * ts; while (acc >= STEP) { update(STEP); acc -= STEP; }
@@ -2076,8 +2165,9 @@ function frame(t) {
     updateHud(false);
   } else clock += dt;
   updateCam(dt); render();
-  requestAnimationFrame(frame);
 }
+// one exception must not stop the game for good, so the next frame is booked first
+function loop(t) { requestAnimationFrame(loop); frame(t); }
 
 
 // ---------- hazards: spinning katanas, rising lava, the abyss ----------
@@ -2161,13 +2251,17 @@ function drawVoid(x0, x1) {
   ctx.fillStyle = g; ctx.fillRect(x0 - 20, L.HH - 420, x1 - x0 + 40, 2000);
 }
 
+// which thumb holds what, for hints: the hook is on the right unless the player swapped sides
+const hookSide = () => save.swap ? { en: 'left', ru: 'левым' } : { en: 'right', ru: 'правым' };
+const padSide = () => save.swap ? { enC: 'Right', ruC: 'Правый' } : { enC: 'Left', ruC: 'Левый' };
+
 // ---------- bosses ----------
 const BOSSES = {
-  tengu: { name: 'Великий Тэнгу', mini: 'Тэнгу-младший', bullet: 'feather', attacks: ['volley', 'dash', 'summon', 'ring'] },
-  kitsune: { name: 'Девятихвостая Кицунэ', mini: 'Лисёнок-оборотень', bullet: 'foxfire', attacks: ['ring', 'volley', 'summon', 'dash'] },
-  yuki: { name: 'Ледяной они', mini: 'Снежный дух', bullet: 'icicle', attacks: ['rain', 'volley', 'dash', 'ring'] },
-  dragon: { name: 'Огненный дракон', mini: 'Саламандра', bullet: 'fire', attacks: ['volley', 'ring', 'dash', 'rain'] },
-  raijin: { name: 'Райдзин', mini: 'Барабанщик бури', bullet: 'bolt', attacks: ['rain', 'ring', 'dash', 'summon'] },
+  tengu: { name: T2('Great Tengu', 'Великий Тэнгу'), mini: T2('Young Tengu', 'Тэнгу-младший'), bullet: 'feather', attacks: ['volley', 'dash', 'summon', 'ring'] },
+  kitsune: { name: T2('Nine-Tailed Kitsune', 'Девятихвостая Кицунэ'), mini: T2('Fox Cub', 'Лисёнок-оборотень'), bullet: 'foxfire', attacks: ['ring', 'volley', 'summon', 'dash'] },
+  yuki: { name: T2('Ice Oni', 'Ледяной они'), mini: T2('Snow Spirit', 'Снежный дух'), bullet: 'icicle', attacks: ['rain', 'volley', 'dash', 'ring'] },
+  dragon: { name: T2('Fire Dragon', 'Огненный дракон'), mini: T2('Salamander', 'Саламандра'), bullet: 'fire', attacks: ['volley', 'ring', 'dash', 'rain'] },
+  raijin: { name: T2('Raijin', 'Райдзин'), mini: T2('Storm Drummer', 'Барабанщик бури'), bullet: 'bolt', attacks: ['rain', 'ring', 'dash', 'summon'] },
 };
 let bshots = [], warns = [], slowT = 0;
 function makeBoss(def, x, y) {
@@ -2206,7 +2300,7 @@ function fireRing(b, D) {
 function summon(b) {
   const k = b.mini ? 1 : 2;
   for (let i = 0; i < k; i++) { const a = Math.random() * 6.28, x = b.x + Math.cos(a) * 90, y = b.y + Math.sin(a) * 70; L.enemies.push({ t: 'spirit', x, y, hx: x, hy: y, ox: x, oy: y, alive: true, ph: Math.random() * 6, summoned: true }); }
-  pop('Босс призывает духов'); SFX.summon(); updateHud(true);
+  pop(T2('The boss summons spirits', 'Босс призывает духов')); SFX.summon(); updateHud(true);
 }
 function updateBoss(dt) {
   const b = L.boss; if (!b) return;
@@ -2268,7 +2362,7 @@ function updateBossShots(dt) {
     if (s.kind === 'fire' && Math.random() < .5) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 30, vy: -30, life: .3, max: .3, col: Math.random() < .5 ? '#ffb347' : '#ff5a1f', s: 2.5, g: -40 });
     if (s.kind !== 'bolt' && solid(s.x, s.y)) { s.life = 0; for (let i = 0; i < 4; i++) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 120, vy: (Math.random() - .5) * 120, life: .25, max: .25, col: 'rgba(255,255,255,.6)', s: 2, g: 0 }); continue; }
     // the sword knocks bullets out of the air
-    if (hero.slash > 0 && hyp(s.x - sx, s.y - sy) < 32 * wp.reach) { s.life = 0; run.killPts += 5; floatText(s.x, s.y - 10, '+5', '#bfe6ff'); for (let i = 0; i < 6; i++) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, life: .3, max: .3, col: '#fff6c4', s: 2.4, g: 0 }); continue; }
+    if (hero.slash > 0 && hyp(s.x - sx, s.y - sy) < 32 * wp.reach) { s.life = 0; run.killPts += 5; stats.deflects++; run.deflects++; floatText(s.x, s.y - 10, '+5', '#bfe6ff'); for (let i = 0; i < 6; i++) parts.push({ x: s.x, y: s.y, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, life: .3, max: .3, col: '#fff6c4', s: 2.4, g: 0 }); continue; }
     if (dead <= 0 && hyp(s.x - w.x, s.y - w.y) < R + 7) { s.life = 0; die(); }
   }
   bshots = bshots.filter(s => s.life > 0);
@@ -2288,7 +2382,7 @@ function hitBoss(dmg) {
   b.hp = Math.max(0, b.hp - dmg); b.inv = .32; b.flash = .2; shake = Math.max(shake, 5); slowT = Math.max(slowT, .06); SFX.bossHurt();
   floatText(b.x, b.y - b.r - 12, '−' + dmg, '#ffffff');
   for (let i = 0; i < 14; i++) { const a = Math.random() * 6.28, s = 80 + Math.random() * 200; parts.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: .5, max: .5, col: i % 2 ? '#ffffff' : '#ffd36a', s: 3, g: 200 }); }
-  if (b.phase === 1 && b.hp <= b.max / 2 && b.hp > 0) { b.phase = 2; pop(`${b.name} в ярости!`); }
+  if (b.phase === 1 && b.hp <= b.max / 2 && b.hp > 0) { b.phase = 2; pop(T2(`${b.name} is enraged!`, `${b.name} в ярости!`)); }
   if (b.hp <= 0) killBoss(b);
   updateBossBar();
   return true;
@@ -2297,11 +2391,12 @@ function killBoss(b) {
   b.alive = false; b.dying = 0; slowT = 1.4; shake = 12; L.gateLocked = false; bshots = []; warns = [];
   for (const e of L.enemies) if (e.summoned) e.alive = false;
   const bonus = b.mini ? 150 : 300;
-  run.killPts += bonus; floatText(b.x, b.y - b.r - 34, `+${bonus} рё`, '#ffd60a');
-  pop(`${b.name} повержен!`); SFX.bossDown();
+  run.killPts += bonus; floatText(b.x, b.y - b.r - 34, `+${bonus} ${RYO()}`, '#ffd60a');
+  pop(T2(`${b.name} defeated!`, `${b.name} повержен!`)); SFX.bossDown();
+  stats.bossAny++; if (!b.mini) { stats.bosses[b.kind] = 1; if (save.diff === 'hard') stats.hardBoss = 1; } if (run.picks === 0) stats.pureBoss = 1; checkAch();
   for (let i = 0; i < 90; i++) { const a = Math.random() * 6.28, s = 100 + Math.random() * 420; parts.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 80, life: 1.2, max: 1.2, col: ['#ffffff', '#ffd36a', '#ff6d8a', '#9fe8ff'][i % 4], s: 3 + Math.random() * 3, g: 260, shape: i % 5 ? '' : 'star' }); }
   for (let k = 0; k < 10; k++) { const a = k / 10 * 6.28; L.coins.push({ x: b.x + Math.cos(a) * 80, y: b.y + Math.sin(a) * 56, got: false, ph: k }); }
-  hint('Ворота открыты, лети к ним!', 3);
+  hint(T2('The gate is open, fly to it!', 'Ворота открыты, лети к ним!'), 3);
   updateHud(true);
 }
 function bossOnPlayerDeath() {
@@ -2474,61 +2569,61 @@ function drawBullet(s) {
 
 // ---------- catalog ----------
 const SKINS = {
-  shiro: { name: 'Белая тень', price: 0, desc: 'Белое кимоно, каре и чёрная маска.', top: '#fbfbf6', shade: '#dcdfe8', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#121016', belt: '#17151d', knot: '#d83a2e', sock: '#fbfbf6', eye: '#3b6fd4' },
-  aka: { name: 'Алая гейша', price: 0, desc: 'Красное кимоно, чёрные волосы, золотой пояс.', top: '#e8323f', shade: '#a71d2b', hair: '#1d1820', hair2: '#3a3040', mask: 'domino', maskC: '#121016', belt: '#ffd36a', knot: '#ffd36a', sock: '#fbfbf6', eye: '#8a4a22' },
-  kuro: { name: 'Чёрный лотос', price: 0, desc: 'Ночной наряд и алая маска.', top: '#2a2633', shade: '#4a4460', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#e8323f', belt: '#e8323f', knot: '#e8323f', sock: '#2a2633', eye: '#e8323f' },
-  cyber: { name: 'Кибер-ронин', price: 1500, desc: 'Неоновый визор вместо маски.', top: '#1b1f2e', shade: '#34406a', hair: '#eef0ff', hair2: '#b9c0e6', mask: 'visor', maskC: '#39f3ff', belt: '#39f3ff', knot: '#ff2bd6', sock: '#1b1f2e', eye: '#39f3ff' },
-  kitsune: { name: 'Кицунэ', price: 2400, desc: 'Лисья маска, уши и пушистый хвост.', top: '#fff7ee', shade: '#efcfac', hair: '#ff8a3d', hair2: '#d5652a', mask: 'fox', maskC: '#ffffff', belt: '#d83a2e', knot: '#d83a2e', sock: '#fff7ee', eye: '#d83a2e', ears: true, tail: true },
-  gold: { name: 'Золотой сёгун', price: 4000, desc: 'Для тех, кто собрал все звёзды.', top: '#ffd36a', shade: '#c9952a', hair: '#fff6d8', hair2: '#e8d49a', mask: 'domino', maskC: '#3a2400', belt: '#8a1020', knot: '#8a1020', sock: '#ffd36a', eye: '#8a1020' },
-  yuki: { name: 'Снежная дева', price: 3000, desc: 'Ледяные волосы и синяя маска.', top: '#eef6ff', shade: '#b9d3f0', hair: '#cfe6ff', hair2: '#9cc3ea', mask: 'domino', maskC: '#2a4f8a', belt: '#5aa2ff', knot: '#ffffff', sock: '#eef6ff', eye: '#5aa2ff' },
-  oni: { name: 'Они', price: 5000, desc: 'Маска демона с рогами.', top: '#2a1416', shade: '#4a2226', hair: '#ff3b30', hair2: '#b0201a', mask: 'oni', maskC: '#d62b20', belt: '#ffd36a', knot: '#ffd36a', sock: '#2a1416', eye: '#ffd36a', horns: true },
+  shiro: { name: T2('White Shadow', 'Белая тень'), price: 0, desc: T2('White kimono, a bob cut and a black mask.', 'Белое кимоно, каре и чёрная маска.'), top: '#fbfbf6', shade: '#dcdfe8', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#121016', belt: '#17151d', knot: '#d83a2e', sock: '#fbfbf6', eye: '#3b6fd4' },
+  aka: { name: T2('Scarlet Geisha', 'Алая гейша'), price: 0, desc: T2('Red kimono, black hair, a golden sash.', 'Красное кимоно, чёрные волосы, золотой пояс.'), top: '#e8323f', shade: '#a71d2b', hair: '#1d1820', hair2: '#3a3040', mask: 'domino', maskC: '#121016', belt: '#ffd36a', knot: '#ffd36a', sock: '#fbfbf6', eye: '#8a4a22' },
+  kuro: { name: T2('Black Lotus', 'Чёрный лотос'), price: 0, desc: T2('A night outfit and a scarlet mask.', 'Ночной наряд и алая маска.'), top: '#2a2633', shade: '#4a4460', hair: '#f4ecd2', hair2: '#d9c99e', mask: 'domino', maskC: '#e8323f', belt: '#e8323f', knot: '#e8323f', sock: '#2a2633', eye: '#e8323f' },
+  cyber: { name: T2('Cyber Ronin', 'Кибер-ронин'), price: 1500, desc: T2('A neon visor instead of a mask.', 'Неоновый визор вместо маски.'), top: '#1b1f2e', shade: '#34406a', hair: '#eef0ff', hair2: '#b9c0e6', mask: 'visor', maskC: '#39f3ff', belt: '#39f3ff', knot: '#ff2bd6', sock: '#1b1f2e', eye: '#39f3ff' },
+  kitsune: { name: T2('Kitsune', 'Кицунэ'), price: 2400, desc: T2('A fox mask, ears and a fluffy tail.', 'Лисья маска, уши и пушистый хвост.'), top: '#fff7ee', shade: '#efcfac', hair: '#ff8a3d', hair2: '#d5652a', mask: 'fox', maskC: '#ffffff', belt: '#d83a2e', knot: '#d83a2e', sock: '#fff7ee', eye: '#d83a2e', ears: true, tail: true },
+  gold: { name: T2('Golden Shogun', 'Золотой сёгун'), price: 4000, desc: T2('For those who earned every star.', 'Для тех, кто собрал все звёзды.'), top: '#ffd36a', shade: '#c9952a', hair: '#fff6d8', hair2: '#e8d49a', mask: 'domino', maskC: '#3a2400', belt: '#8a1020', knot: '#8a1020', sock: '#ffd36a', eye: '#8a1020' },
+  yuki: { name: T2('Snow Maiden', 'Снежная дева'), price: 3000, desc: T2('Icy hair and a blue mask.', 'Ледяные волосы и синяя маска.'), top: '#eef6ff', shade: '#b9d3f0', hair: '#cfe6ff', hair2: '#9cc3ea', mask: 'domino', maskC: '#2a4f8a', belt: '#5aa2ff', knot: '#ffffff', sock: '#eef6ff', eye: '#5aa2ff' },
+  oni: { name: T2('Oni', 'Они'), price: 5000, desc: T2('A horned demon mask.', 'Маска демона с рогами.'), top: '#2a1416', shade: '#4a2226', hair: '#ff3b30', hair2: '#b0201a', mask: 'oni', maskC: '#d62b20', belt: '#ffd36a', knot: '#ffd36a', sock: '#2a1416', eye: '#ffd36a', horns: true },
 };
 const WEAPONS = {
-  katana: { name: 'Катана', price: 0, desc: 'Быстрая и надёжная.', reach: 1, cd: .32, len: 27, blade: '#eef2f8', arc: '255,255,255' },
-  nodachi: { name: 'Нодати', price: 0, desc: 'Длинный клинок: дальность +35%.', reach: 1.35, cd: .36, len: 38, blade: '#f4f6fb', arc: '220,235,255' },
-  kama: { name: 'Кама', price: 1300, desc: 'Удар по кругу, достаёт и тех, кто сзади.', reach: 1.1, cd: .38, len: 16, wide: true, blade: '#d8dce6', arc: '200,170,255' },
-  raijin: { name: 'Клинок Райдзина', price: 6000, desc: 'Молния: дальность +60%, самые частые удары.', reach: 1.6, cd: .22, len: 36, blade: '#fffbd0', arc: '255,230,80', glow: '#ffe14d' },
-  plasma: { name: 'Плазменный клинок', price: 2800, desc: 'Дальность +50%, удары чаще.', reach: 1.5, cd: .24, len: 34, blade: '#d9fdff', arc: '57,243,255', glow: '#39f3ff' },
+  katana: { name: T2('Katana', 'Катана'), price: 0, desc: T2('Fast and reliable.', 'Быстрая и надёжная.'), reach: 1, cd: .32, len: 27, blade: '#eef2f8', arc: '255,255,255' },
+  nodachi: { name: T2('Nodachi', 'Нодати'), price: 0, desc: T2('A long blade: +35% reach.', 'Длинный клинок: дальность +35%.'), reach: 1.35, cd: .36, len: 38, blade: '#f4f6fb', arc: '220,235,255' },
+  kama: { name: T2('Kama', 'Кама'), price: 1300, desc: T2('A full circle swing that hits behind you too.', 'Удар по кругу, достаёт и тех, кто сзади.'), reach: 1.1, cd: .38, len: 16, wide: true, blade: '#d8dce6', arc: '200,170,255' },
+  raijin: { name: T2('Raijin Blade', 'Клинок Райдзина'), price: 6000, desc: T2('Lightning: +60% reach, the fastest strikes.', 'Молния: дальность +60%, самые частые удары.'), reach: 1.6, cd: .22, len: 36, blade: '#fffbd0', arc: '255,230,80', glow: '#ffe14d' },
+  plasma: { name: T2('Plasma Blade', 'Плазменный клинок'), price: 2800, desc: T2('+50% reach, faster strikes.', 'Дальность +50%, удары чаще.'), reach: 1.5, cd: .24, len: 34, blade: '#d9fdff', arc: '57,243,255', glow: '#39f3ff' },
 };
 const ROPES = {
-  hemp: { name: 'Пенька', price: 0, desc: 'Классическая верёвка и стальная кошка.', c0: '#2a1d12', c1: '#e6cf98', hook: '#b9bfcc' },
-  silk: { name: 'Алый шёлк', price: 0, desc: 'Красный шёлк и золотые когти.', c0: '#4a0a14', c1: '#ff375f', hook: '#ffd36a' },
-  chain: { name: 'Цепь', price: 700, desc: 'Тяжёлые звенья и воронёные когти.', kind: 'chain', hook: '#7d8496' },
-  kunai: { name: 'Кунай', price: 1100, desc: 'Вместо кошки метательный нож.', c0: '#101014', c1: '#f2f2f2', head: 'kunai', hook: '#d9dde6' },
-  neon: { name: 'Неон', price: 1800, desc: 'Светится в темноте пещер.', kind: 'neon', c1: '#39f3ff', glow: '#39f3ff', hook: '#39f3ff' },
-  rainbow: { name: 'Радуга', price: 2600, desc: 'Переливается на лету.', kind: 'rainbow', hook: '#ffffff' },
-  dragon: { name: 'Драконья цепь', price: 3500, desc: 'Алая чешуя и золотые когти.', kind: 'dragon', hook: '#ffd36a' },
+  hemp: { name: T2('Hemp', 'Пенька'), price: 0, desc: T2('Classic rope and a steel grapnel.', 'Классическая верёвка и стальная кошка.'), c0: '#2a1d12', c1: '#e6cf98', hook: '#b9bfcc' },
+  silk: { name: T2('Scarlet Silk', 'Алый шёлк'), price: 0, desc: T2('Red silk and golden claws.', 'Красный шёлк и золотые когти.'), c0: '#4a0a14', c1: '#ff375f', hook: '#ffd36a' },
+  chain: { name: T2('Chain', 'Цепь'), price: 700, desc: T2('Heavy links and blued claws.', 'Тяжёлые звенья и воронёные когти.'), kind: 'chain', hook: '#7d8496' },
+  kunai: { name: T2('Kunai', 'Кунай'), price: 1100, desc: T2('A throwing knife instead of a grapnel.', 'Вместо кошки метательный нож.'), c0: '#101014', c1: '#f2f2f2', head: 'kunai', hook: '#d9dde6' },
+  neon: { name: T2('Neon', 'Неон'), price: 1800, desc: T2('Glows in the dark caves.', 'Светится в темноте пещер.'), kind: 'neon', c1: '#39f3ff', glow: '#39f3ff', hook: '#39f3ff' },
+  rainbow: { name: T2('Rainbow', 'Радуга'), price: 2600, desc: T2('Shimmers as it flies.', 'Переливается на лету.'), kind: 'rainbow', hook: '#ffffff' },
+  dragon: { name: T2('Dragon Chain', 'Драконья цепь'), price: 3500, desc: T2('Scarlet scales and golden claws.', 'Алая чешуя и золотые когти.'), kind: 'dragon', hook: '#ffd36a' },
 };
 const TRAILS = {
-  none: { name: 'Без следа', price: 0, desc: 'Только ветер в ушах.' },
-  petals: { name: 'Лепестки сакуры', price: 0, desc: 'Розовые лепестки за спиной.' },
-  sparks: { name: 'Искры', price: 800, desc: 'Огненный хвост на скорости.' },
-  stars: { name: 'Звёздная пыль', price: 1500, desc: 'Мерцающие звёзды.' },
-  ghost: { name: 'Тень-двойник', price: 2500, desc: 'За героиней летят её отражения.' },
-  phoenix: { name: 'Пламя феникса', price: 4000, desc: 'Огненные перья на скорости.' },
+  none: { name: T2('No trail', 'Без следа'), price: 0, desc: T2('Just the wind in your ears.', 'Только ветер в ушах.') },
+  petals: { name: T2('Sakura Petals', 'Лепестки сакуры'), price: 0, desc: T2('Pink petals behind you.', 'Розовые лепестки за спиной.') },
+  sparks: { name: T2('Sparks', 'Искры'), price: 800, desc: T2('A fiery tail at speed.', 'Огненный хвост на скорости.') },
+  stars: { name: T2('Stardust', 'Звёздная пыль'), price: 1500, desc: T2('Twinkling stars.', 'Мерцающие звёзды.') },
+  ghost: { name: T2('Shadow Double', 'Тень-двойник'), price: 2500, desc: T2('Her reflections fly after her.', 'За героиней летят её отражения.') },
+  phoenix: { name: T2('Phoenix Flame', 'Пламя феникса'), price: 4000, desc: T2('Fiery feathers at speed.', 'Огненные перья на скорости.') },
 };
 const UPGRADES = {
-  rope: { name: 'Длинная верёвка', desc: '+40 к длине верёвки за каждый уровень.', costs: [400, 900, 1800] },
-  pole: { name: 'Мощный шест', desc: 'Толчок на ↓ сильнее на 15% за уровень.', costs: [500, 1000, 2000] },
-  magnet: { name: 'Магнит для рё', desc: 'Монеты сами летят к тебе, и всё издалека.', costs: [300, 700, 1400] },
-  eye: { name: 'Острый глаз', desc: 'Кошка ищет опору в более широком конусе.', costs: [400, 900] },
-  shield: { name: 'Оберег', desc: 'Спасает от касания тени или шипов. Раз за уровень на каждую ступень.', costs: [1200, 3000] },
+  rope: { name: T2('Long Rope', 'Длинная верёвка'), desc: T2('+40 rope length per level.', '+40 к длине верёвки за каждый уровень.'), costs: [400, 900, 1800] },
+  pole: { name: T2('Strong Pole', 'Мощный шест'), desc: T2('↓ pushes 15% harder per level.', 'Толчок на ↓ сильнее на 15% за уровень.'), costs: [500, 1000, 2000] },
+  magnet: { name: T2('Ryo Magnet', 'Магнит для рё'), desc: T2('Coins fly to you, from further away each level.', 'Монеты сами летят к тебе, и всё издалека.'), costs: [300, 700, 1400] },
+  eye: { name: T2('Sharp Eye', 'Острый глаз'), desc: T2('The hook searches a wider cone for a grip.', 'Кошка ищет опору в более широком конусе.'), costs: [400, 900] },
+  shield: { name: T2('Charm', 'Оберег'), desc: T2('Saves you from a shadow or spikes, once per level for each step.', 'Спасает от касания тени или шипов. Раз за уровень на каждую ступень.'), costs: [1200, 3000] },
 };
 const STYLES = {
-  paint: { name: 'Акварель', price: 0, desc: 'Мягкая 2D-графика, у каждой главы свой мир.' },
-  pixel: { name: 'Пиксель-арт', price: 4000, desc: 'Настоящая палитра из 32 цветов, дизеринг и крупные пиксели.' },
-  ink: { name: 'Тушь и бумага', price: 6000, desc: 'Весь мир перерисован кистью: тушь, размывка, красное солнце.' },
-  pocket: { name: 'Карманная консоль', price: 7000, desc: 'Четыре оттенка зелёного, как на старой карманной консоли.' },
+  paint: { name: T2('Watercolor', 'Акварель'), price: 0, desc: T2('Soft 2D art, each chapter its own world.', 'Мягкая 2D-графика, у каждой главы свой мир.') },
+  pixel: { name: T2('Pixel Art', 'Пиксель-арт'), price: 4000, desc: T2('A real 32-colour palette, dithering and chunky pixels.', 'Настоящая палитра из 32 цветов, дизеринг и крупные пиксели.') },
+  ink: { name: T2('Ink and Paper', 'Тушь и бумага'), price: 6000, desc: T2('The whole world redrawn with a brush: ink, wash and a red sun.', 'Весь мир перерисован кистью: тушь, размывка, красное солнце.') },
+  pocket: { name: T2('Pocket Console', 'Карманная консоль'), price: 7000, desc: T2('Four shades of green, like an old handheld.', 'Четыре оттенка зелёного, как на старой карманной консоли.') },
 };
-const CHAPTER_ITEMS = Object.fromEntries(CHAPTERS.map((c, i) => [c.id, { name: `${i + 1}. ${c.name}`, price: c.price, desc: `10 уровней и босс: ${BOSSES[c.boss].name}.`, idx: i }]));
+const CHAPTER_ITEMS = Object.fromEntries(CHAPTERS.map((c, i) => [c.id, { name: T2(`${i + 1}. ${c.name.en}`, `${i + 1}. ${c.name.ru}`), price: c.price, desc: T2(`10 levels and a boss: ${BOSSES[c.boss].name.en}.`, `10 уровней и босс: ${BOSSES[c.boss].name.ru}.`), idx: i }]));
 const CATS = [
-  { id: 'chapter', name: 'Главы', items: CHAPTER_ITEMS, verb: 'Играть', on: 'Открыта', blurb: 'Миры с новыми уровнями и боссами. Две главы открыты сразу.' },
-  { id: 'skin', name: 'Наряды', items: SKINS, verb: 'Надеть', on: 'Надето', blurb: 'Три наряда с самого начала. Остальные — за рё или с барабана удачи.' },
-  { id: 'weapon', name: 'Оружие', items: WEAPONS, verb: 'Взять', on: 'В руках', blurb: 'Тап по центру крестовины. У каждого клинка своя дальность и скорость.' },
-  { id: 'rope', name: 'Кошка', items: ROPES, verb: 'Взять', on: 'Выбрано', blurb: 'Как выглядят кошка и верёвка.' },
-  { id: 'trail', name: 'След', items: TRAILS, verb: 'Выбрать', on: 'Выбрано', blurb: 'Что тянется за героиней на большой скорости.' },
-  { id: 'up', name: 'Прокачка', blurb: 'Улучшения навсегда. Делают героиню сильнее.' },
-  { id: 'style', name: 'Стиль', items: STYLES, verb: 'Включить', on: 'Включён', blurb: 'Как нарисован весь мир. Самое дорогое в лавке.' },
+  { id: 'chapter', name: T2('Chapters', 'Главы'), items: CHAPTER_ITEMS, verb: T2('Play', 'Играть'), on: T2('Open', 'Открыта'), blurb: T2('Worlds with new levels and bosses. Two chapters are open from the start.', 'Миры с новыми уровнями и боссами. Две главы открыты сразу.') },
+  { id: 'skin', name: T2('Outfits', 'Наряды'), items: SKINS, verb: T2('Wear', 'Надеть'), on: T2('Wearing', 'Надето'), blurb: T2('Three outfits from the start. The rest cost ryo or drop from the lucky reels.', 'Три наряда с самого начала. Остальные — за рё или с барабана удачи.') },
+  { id: 'weapon', name: T2('Blades', 'Оружие'), items: WEAPONS, verb: T2('Equip', 'Взять'), on: T2('In hand', 'В руках'), blurb: T2('Tap the centre of the d-pad. Every blade has its own reach and speed.', 'Тап по центру крестовины. У каждого клинка своя дальность и скорость.') },
+  { id: 'rope', name: T2('Hook', 'Кошка'), items: ROPES, verb: T2('Equip', 'Взять'), on: T2('Selected', 'Выбрано'), blurb: T2('How your hook and rope look.', 'Как выглядят кошка и верёвка.') },
+  { id: 'trail', name: T2('Trail', 'След'), items: TRAILS, verb: T2('Select', 'Выбрать'), on: T2('Selected', 'Выбрано'), blurb: T2('What follows the heroine at high speed.', 'Что тянется за героиней на большой скорости.') },
+  { id: 'up', name: T2('Upgrades', 'Прокачка'), blurb: T2('Permanent upgrades that make the heroine stronger.', 'Улучшения навсегда. Делают героиню сильнее.') },
+  { id: 'style', name: T2('Style', 'Стиль'), items: STYLES, verb: T2('Turn on', 'Включить'), on: T2('On', 'Включён'), blurb: T2('How the whole world is drawn. The priciest items in the shop.', 'Как нарисован весь мир. Самое дорогое в лавке.') },
 ];
 const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
 
@@ -2547,7 +2642,7 @@ save.up = Object.assign({ rope: 0, pole: 0, magnet: 0, eye: 0, shield: 0 }, save
 save.gift = Object.assign({ date: '', streak: 0 }, save.gift);
 const owns = (cat, id) => !CAT[cat].items[id] || CAT[cat].items[id].price === 0 || !!save.owned[cat + ':' + id];
 if (!STYLES[save.eq.style]) save.eq.style = 'paint';
-const fmtR = n => Math.round(n).toLocaleString('ru-RU');
+const fmtR = n => Math.round(n).toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US');
 const MON = '<svg class="mon-i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/><rect x="9.6" y="9.6" width="4.8" height="4.8" fill="rgba(0,0,0,.55)"/></svg>';
 
 // ---------- upgrades ----------
@@ -2563,7 +2658,7 @@ const weapon = () => WEAPONS[save.eq.weapon] || WEAPONS.katana;
 
 // ---------- run score ----------
 let run = { coinPts: 0, killPts: 0, deaths: 0, combo: 0, lastKill: -9, shields: 0 }, floats = [], ghosts = [], trailT = 0, ghostT = 0;
-function resetRun() { run = { coinPts: 0, killPts: 0, deaths: 0, combo: 0, lastKill: -9, shields: save.up.shield }; floats = []; ghosts = []; }
+function resetRun() { run = { coinPts: 0, killPts: 0, deaths: 0, combo: 0, lastKill: -9, shields: save.up.shield, kicks: 0, floor: 0, airKills: 0, deflects: 0, picks: 0 }; floats = []; ghosts = []; }
 const runTotal = () => run.coinPts + run.killPts;
 function floatText(x, y, text, col) { floats.push({ x, y, text, col, life: 1.1 }); }
 function updateFloats(dt) { for (const f of floats) { f.y -= 34 * dt; f.life -= dt; } floats = floats.filter(f => f.life > 0); }
@@ -2578,23 +2673,24 @@ function drawFloats() {
 function scoreCoin(c) { run.coinPts += 10; floatText(c.x, c.y - 12, '+10', '#ffd60a'); }
 function scoreKill(e) {
   const air = !w.ground;
-  run.combo = clock - run.lastKill < 2.5 ? run.combo + 1 : 1; run.lastKill = clock;
+  run.combo = clock - run.lastKill < 2.5 ? run.combo + 1 : 1; run.lastKill = clock; stats.combo = Math.max(stats.combo, run.combo);
   const pts = 25 + (air ? 15 : 0) + 25 * (run.combo - 1);
   run.killPts += pts; floatText(e.x, ecy(e) - 20, '+' + pts, '#ff6d8a');
-  return run.combo > 1 ? `Комбо ×${run.combo}` : air ? 'Удар в полёте' : 'Тень повержена';
+  return run.combo > 1 ? T2(`Combo ×${run.combo}`, `Комбо ×${run.combo}`) : air ? T2('Mid-air strike', 'Удар в полёте') : T2('Shadow down', 'Тень повержена');
 }
 function settle(st) {
   const rows = [
-    ['Монеты', `${coinsGot} из ${L.coins.length}`, run.coinPts],
-    ['Тени', L.enemies.length ? `${kills} из ${L.enemies.length}` : 'не было', run.killPts],
-    ['Скорость', '★★★'.slice(0, st), { 3: 150, 2: 75, 1: 25 }[st]],
+    [T2('Coins', 'Монеты'), T2(`${coinsGot} of ${L.coins.length}`, `${coinsGot} из ${L.coins.length}`), run.coinPts],
+    [T2('Shadows', 'Тени'), L.enemies.length ? T2(`${kills} of ${L.enemies.length}`, `${kills} из ${L.enemies.length}`) : T2('none', 'не было'), run.killPts],
+    [T2('Speed', 'Скорость'), '★★★'.slice(0, st), { 3: 150, 2: 75, 1: 25 }[st]],
   ];
-  if (!run.deaths) rows.push(['Без единой царапины', '', 100]);
-  if (L.coins.length && coinsGot === L.coins.length) rows.push(['Все монеты', '', 50]);
-  if (L.enemies.length && kills === L.enemies.length) rows.push(['Все тени', '', 50]);
-  if (L.firstClear) rows.push(['Первое прохождение', '', 200]);
+  if (!run.deaths) rows.push([T2('Not a scratch', 'Без единой царапины'), '', 100]);
+  if (L.coins.length && coinsGot === L.coins.length) rows.push([T2('Every coin', 'Все монеты'), '', 50]);
+  if (L.enemies.length && kills === L.enemies.length) rows.push([T2('Every shadow', 'Все тени'), '', 50]);
+  if (L.firstClear) rows.push([T2('First clear', 'Первое прохождение'), '', 200]);
+  if (L.taskReward) rows.push([T2('Challenges', 'Испытания'), T2(`${L.taskFresh} new`, `новых: ${L.taskFresh}`), L.taskReward]);
   const D = diff(), sub = rows.reduce((s, r) => s + r[2], 0);
-  if (D.ryo !== 1) rows.push([`Сложность «${D.name}»`, `×${D.ryo}`, Math.round(sub * (D.ryo - 1))]);
+  if (D.ryo !== 1) rows.push([T2(`Difficulty: ${D.name}`, `Сложность «${D.name}»`), `×${D.ryo}`, Math.round(sub * (D.ryo - 1))]);
   const total = rows.reduce((s, r) => s + r[2], 0);
   save.ryo += total; persist();
   return { rows, total };
@@ -2834,7 +2930,7 @@ function giftInfo() {
 function claimGift() {
   const g = giftInfo(); if (!g) return;
   save.ryo += g.amount; save.gift = { date: g.today, streak: g.streak }; persist();
-  SFX.coin(); buildMenu(); pop(`+${fmtR(g.amount)} рё`);
+  SFX.coin(); buildMenu(); pop(`+${fmtR(g.amount)} ${RYO()}`); checkAch();
 }
 
 // ---------- shop ----------
@@ -2848,7 +2944,7 @@ function canAffordSomething() {
 }
 function openShop(from) { shopFrom = from; confirmKey = ''; show('shop'); renderShop(); }
 function closeShop() {
-  if (shopFrom === 'done') { $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`; show('done'); }
+  if (shopFrom === 'done') { $('#dWallet').innerHTML = walletLine(); show('done'); }
   else { buildMenu(); show('menu'); }
 }
 function renderShop() {
@@ -2873,8 +2969,8 @@ function renderShop() {
       const u = UPGRADES[id], lv = save.up[id], cost = u.costs[lv], key = 'up:' + id;
       const pips = `<div class="pips">${u.costs.map((_, i) => `<i class="${i < lv ? 'on' : ''}"></i>`).join('')}</div>`;
       let btn;
-      if (cost == null) btn = { cls: 'max', html: 'Максимум', disabled: true };
-      else btn = priceBtn(key, cost, () => { save.ryo -= cost; save.up[id]++; applyUpgrades(); persist(); SFX.lantern(); pop(`${u.name}: уровень ${save.up[id]}`); });
+      if (cost == null) btn = { cls: 'max', html: T2('Maxed out', 'Максимум'), disabled: true };
+      else btn = priceBtn(key, cost, () => { save.ryo -= cost; save.up[id]++; applyUpgrades(); persist(); SFX.lantern(); pop(T2(`${u.name}: level ${save.up[id]}`, `${u.name}: уровень ${save.up[id]}`)); checkAch(); });
       drawPreview(card(key, u.name, u.desc, pips, btn), 'up', id);
     }
     return;
@@ -2883,21 +2979,21 @@ function renderShop() {
   for (const id in cat.items) {
     const it = cat.items[id], key = shopCat + ':' + id, own = owns(shopCat, id), eq = shopCat !== 'chapter' && save.eq[shopCat] === id;
     let btn;
-    if (shopCat === 'chapter' && own) btn = { cls: 'own', html: '▶ Играть', onclick: () => equip('chapter', id) };
+    if (shopCat === 'chapter' && own) btn = { cls: 'own', html: T2('▶ Play', '▶ Играть'), onclick: () => equip('chapter', id) };
     else if (eq) btn = { cls: 'eqd', html: '✓ ' + cat.on, disabled: true, eq: true };
     else if (own) btn = { cls: 'own', html: cat.verb, onclick: () => equip(shopCat, id) };
-    else btn = priceBtn(key, it.price, () => { save.ryo -= it.price; save.owned[key] = true; persist(); SFX.lantern(); pop(`Куплено: ${it.name}`); if (shopCat !== 'chapter') equip(shopCat, id, true); else renderShop(); });
-    drawPreview(card(key, it.name + (it.isNew ? '<span class="new">НОВОЕ</span>' : ''), it.desc, '', btn), shopCat, id);
+    else btn = priceBtn(key, it.price, () => { save.ryo -= it.price; save.owned[key] = true; persist(); SFX.lantern(); pop(T2(`Bought: ${it.name}`, `Куплено: ${it.name}`)); checkAch(); if (shopCat !== 'chapter') equip(shopCat, id, true); else renderShop(); });
+    drawPreview(card(key, it.name + (it.isNew ? `<span class="new">${T2('NEW', 'НОВОЕ')}</span>` : ''), it.desc, '', btn), shopCat, id);
   }
 }
 function priceBtn(key, cost, onBuy) {
   const poor = cost > save.ryo;
-  if (confirmKey === key && !poor) return { cls: 'confirm', html: `Купить за ${fmtR(cost)}?`, onclick: () => { confirmKey = ''; clearTimeout(confirmTimer); onBuy(); renderShop(); } };
+  if (confirmKey === key && !poor) return { cls: 'confirm', html: T2(`Buy for ${fmtR(cost)}?`, `Купить за ${fmtR(cost)}?`), onclick: () => { confirmKey = ''; clearTimeout(confirmTimer); onBuy(); renderShop(); } };
   return {
     cls: poor ? 'poor' : '', html: `${MON}${fmtR(cost)}`,
     onclick: () => {
       audio();
-      if (poor) { pop(`Не хватает ${fmtR(cost - save.ryo)} рё`); SFX.miss(); return; }
+      if (poor) { pop(T2(`You need ${fmtR(cost - save.ryo)} more ryo`, `Не хватает ${fmtR(cost - save.ryo)} рё`)); SFX.miss(); return; }
       confirmKey = key; clearTimeout(confirmTimer); confirmTimer = setTimeout(() => { confirmKey = ''; if (!$('#shop').hidden) renderShop(); }, 3500); renderShop();
     },
   };
@@ -3009,6 +3105,8 @@ $('#bShopD').onclick = () => { audio(); openShop('done'); };
 $('#bShopBack').onclick = closeShop;
 $('#bGift').onclick = () => { audio(); claimGift(); };
 
+const walletLine = () => T2(`Wallet ${MON} ${fmtR(save.ryo)} ryo`, `В кошельке ${MON} ${fmtR(save.ryo)} рё`);
+
 // ---------- settings ----------
 const SET_DEFAULT = { reel: 1, pole: 1, swing: 1, soft: .25, smooth: .35 };
 save.set = Object.assign({}, SET_DEFAULT, save.set);
@@ -3110,10 +3208,10 @@ $('#bSetBack').onclick = () => { if (setFrom === 'pause') show('pause'); else { 
 
 // ---------- pick-up weapons ----------
 const POWERS = {
-  shuriken: { name: 'Сюрикены', charges: 14, col: '#bfe6ff' },
-  foxfire: { name: 'Лисьи огни', charges: 8, col: '#ff9f45' },
-  whip: { name: 'Цепной хлыст', charges: 10, col: '#c7a6ff' },
-  ward: { name: 'Оберег', col: '#ffd36a' },
+  shuriken: { name: T2('Shuriken', 'Сюрикены'), charges: 14, col: '#bfe6ff' },
+  foxfire: { name: T2('Fox Fire', 'Лисьи огни'), charges: 8, col: '#ff9f45' },
+  whip: { name: T2('Chain Whip', 'Цепной хлыст'), charges: 10, col: '#c7a6ff' },
+  ward: { name: T2('Charm', 'Оберег'), col: '#ffd36a' },
 };
 const POWER_ICON = {
   shuriken: '<svg viewBox="0 0 24 24"><path fill="#cfe9ff" stroke="#1b2633" stroke-width="1.2" d="M12 1.5l2.4 7.2 7.6 3.3-7.6 3.3L12 22.5l-2.4-7.2L2 12l7.6-3.3z"/><circle cx="12" cy="12" r="2" fill="#1b2633"/></svg>',
@@ -3141,10 +3239,11 @@ function resetPowers() {
   persist(); renderPowerChips();
 }
 function givePower(t, quiet) {
-  if (t === 'ward') { run.shields++; updateHud(true); if (!quiet) pop('Оберег +1'); return; }
+  if (t === 'ward') { run.shields++; updateHud(true); if (!quiet) pop(T2('Charm +1', 'Оберег +1')); return; }
   const cur = inv[t] || { lv: 0, n: 0 };
   cur.lv = Math.min(3, cur.lv + 1); cur.n += POWERS[t].charges; inv[t] = cur;
-  if (!quiet) pop(`${POWERS[t].name} · уровень ${cur.lv}`);
+  if (!quiet) pop(T2(`${POWERS[t].name} · level ${cur.lv}`, `${POWERS[t].name} · уровень ${cur.lv}`));
+  if (cur.lv === 3) { stats.lv3 = 1; checkAch(); }
   renderPowerChips();
 }
 function renderPowerChips() {
@@ -3185,7 +3284,7 @@ function firePowers() {
 function updatePowers(dt) {
   for (const pw of L.powers) {
     if (pw.got || dead > 0 || hyp(pw.x - w.x, pw.y - w.y) > R + 22) continue;
-    pw.got = true; givePower(pw.t); SFX.power(); floatText(pw.x, pw.y - 18, POWERS[pw.t].name, POWERS[pw.t].col);
+    pw.got = true; run.picks++; stats.picks++; givePower(pw.t); SFX.power(); checkAch(); floatText(pw.x, pw.y - 18, POWERS[pw.t].name, POWERS[pw.t].col);
     for (let i = 0; i < 18; i++) { const a = i / 18 * 6.28; parts.push({ x: pw.x, y: pw.y, vx: Math.cos(a) * 180, vy: Math.sin(a) * 180, life: .5, max: .5, col: POWERS[pw.t].col, s: 3, g: 0 }); }
   }
   for (const s of shots) {
@@ -3267,7 +3366,7 @@ function renderWardrobe(sel, from) {
     const b = document.createElement('button');
     b.className = 'wchip' + (on ? ' on' : '') + (own ? '' : ' lock');
     b.innerHTML = `<canvas width="120" height="128"></canvas><span>${it.name}</span>` + (own ? '' : `<span class="lk">${MON}${fmtR(it.price)}</span>`);
-    b.setAttribute('aria-label', it.name + (own ? '' : `, ${it.price} рё`));
+    b.setAttribute('aria-label', it.name + (own ? '' : `, ${it.price} ${RYO()}`));
     b.onclick = () => {
       audio();
       if (own) { save.eq.skin = id; persist(); SFX.off(); renderWardrobe(sel, from); }
@@ -3291,34 +3390,35 @@ function lockedItems() {
 function showResults(won) {
   state = 'done';
   let st = 0, rows, total;
-  $('#dLabel').textContent = `Глава ${L.def.ch + 1} · ${L.def.ch + 1}-${L.def.k} ${L.def.name} · ${diff().name}`;
+  $('#dLabel').textContent = T2('Chapter', 'Глава') + ` ${L.def.ch + 1} · ${L.def.ch + 1}-${L.def.k} ${L.def.name} · ${diff().name}`;
   if (won) {
     st = time <= L.par ? 3 : time <= L.par * 1.6 ? 2 : 1;
     save.stars[L.n] = Math.max(save.stars[L.n] || 0, st); persist();
     ({ rows, total } = settle(st));
-    $('#dTitle').textContent = L.type === 'boss' ? 'Босс повержен' : 'Ворота пройдены';
+    $('#dTitle').textContent = L.type === 'boss' ? T2('Boss defeated', 'Босс повержен') : T2('Gate reached', 'Ворота пройдены');
   } else {
-    rows = [['Монеты', `${coinsGot} из ${L.coins.length}`, run.coinPts], ['Тени', `${kills} из ${L.enemies.length}`, run.killPts]];
+    rows = [[T2('Coins', 'Монеты'), T2(`${coinsGot} of ${L.coins.length}`, `${coinsGot} из ${L.coins.length}`), run.coinPts], [T2('Shadows', 'Тени'), T2(`${kills} of ${L.enemies.length}`, `${kills} из ${L.enemies.length}`), run.killPts]];
     const D = diff(), sub = run.coinPts + run.killPts;
-    if (D.ryo !== 1) rows.push([`Сложность «${D.name}»`, `×${D.ryo}`, Math.round(sub * (D.ryo - 1))]);
+    if (D.ryo !== 1) rows.push([T2(`Difficulty: ${D.name}`, `Сложность «${D.name}»`), `×${D.ryo}`, Math.round(sub * (D.ryo - 1))]);
     total = rows.reduce((a, r) => a + r[2], 0); save.ryo += total; persist();
-    $('#dTitle').textContent = 'Забег окончен';
+    $('#dTitle').textContent = T2('Run over', 'Забег окончен');
   }
   lastEarn = total;
   $('#dTime').textContent = fmt(time);
   $('#dStars').innerHTML = won ? [1, 2, 3].map(i => starSvg(i <= st)).join('') : '';
   const list = $('#dList');
   list.innerHTML = rows.map(([t, sub, v]) => `<li class="hide"><span class="t">${t}${sub ? `<small>${sub}</small>` : ''}</span><span class="v" data-v="${v}">${v < 0 ? '−' : '+'}0</span></li>`).join('')
-    + (won ? `<li class="rec hide"><span class="t">${L.newBest ? 'Новый рекорд' : 'Рекорд'}${st < 3 ? `<small>три звезды быстрее ${fmt(L.par)}</small>` : ''}</span><span class="v">${fmt(save.best[L.n])}</span></li>` : '');
+    + (won ? `<li class="rec hide"><span class="t">${L.newBest ? T2('New best', 'Новый рекорд') : T2('Best time', 'Рекорд')}${st < 3 ? `<small>${T2('three stars under', 'три звезды быстрее')} ${fmt(L.par)}</small>` : ''}</span><span class="v">${fmt(save.best[L.n])}</span></li>` : '');
   const tot = $('#dTotal'); tot.innerHTML = `${MON}+0`;
-  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo - total)} рё`;
+  $('#dWallet').innerHTML = T2(`Wallet ${MON} ${fmtR(save.ryo - total)} ryo`, `В кошельке ${MON} ${fmtR(save.ryo - total)} рё`);
   freeSpin = won || total >= 60;
   $('#slot').classList.add('hide'); $('#prize').hidden = true;
   updateSpinBtn(); setReels(['sakura', 'bag', 'blade'].map(k => k), true);
   $('#bNext').hidden = !won || L.n >= LEVELS;
-  if (won && L.n < LEVELS) { const nd = levelDef(L.n + 1); $('#bNext').textContent = chapterOpen(nd.ch) ? (nd.k === 1 ? `Глава ${nd.ch + 1}: ${nd.chapter.name}` : 'Следующий уровень') : `Глава ${nd.ch + 1} закрыта · в меню`; }
+  if (won && L.n < LEVELS) { const nd = levelDef(L.n + 1); $('#bNext').textContent = chapterOpen(nd.ch) ? (nd.k === 1 ? T2(`Chapter ${nd.ch + 1}: ${nd.chapter.name}`, `Глава ${nd.ch + 1}: ${nd.chapter.name}`) : T2('Next level', 'Следующий уровень')) : T2(`Chapter ${nd.ch + 1} is locked · menu`, `Глава ${nd.ch + 1} закрыта · в меню`); }
   renderWardrobe('#wardD', 'done');
-  show('done');
+  if (won) renderTaskList($('#dTasks'), true); else renderTaskList($('#dTasks'), false);
+  show('done'); checkAch();
   // tally rows one by one, then the total, then the reels
   const items = [...list.children]; let i = 0;
   const countUp = (el, to, ms, fmtFn) => new Promise(res => {
@@ -3336,7 +3436,7 @@ function showResults(won) {
     }
     tone(880, 1320, .2, 'triangle', .07);
     await countUp(tot, total, 700, n => `${MON}+${fmtR(n)}`);
-    $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+    $('#dWallet').innerHTML = walletLine();
     setTimeout(() => $('#slot').classList.remove('hide'), 150);
   };
   setTimeout(next, 350);
@@ -3345,8 +3445,8 @@ function updateSpinBtn() {
   const b = $('#bSpin');
   if (spinning) { b.disabled = true; return; }
   b.disabled = !freeSpin && save.ryo < SPIN_COST;
-  b.innerHTML = freeSpin ? 'Крутить бесплатно' : `Ещё раз · ${MON}${SPIN_COST}`;
-  $('#slotHint').textContent = freeSpin ? 'Один прокрут бесплатно' : save.ryo < SPIN_COST ? 'Не хватает рё на прокрут' : 'Каждый следующий прокрут платный';
+  b.innerHTML = freeSpin ? T2('Spin for free', 'Крутить бесплатно') : T2('Spin again', 'Ещё раз') + ` · ${MON}${SPIN_COST}`;
+  $('#slotHint').textContent = freeSpin ? T2('One free spin', 'Один прокрут бесплатно') : save.ryo < SPIN_COST ? T2('Not enough ryo to spin', 'Не хватает рё на прокрут') : T2('Every next spin costs ryo', 'Каждый следующий прокрут платный');
 }
 function setReels(keys, instant) {
   [...document.querySelectorAll('.reel')].forEach((reel, r) => {
@@ -3369,8 +3469,8 @@ function spin() {
   if (spinning) return;
   audio();
   if (!freeSpin) { if (save.ryo < SPIN_COST) return; save.ryo -= SPIN_COST; }
-  freeSpin = false; spinning = true; updateSpinBtn(); persist();
-  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+  freeSpin = false; spinning = true; stats.spins++; updateSpinBtn(); persist();
+  $('#dWallet').innerHTML = walletLine();
   $('#prize').hidden = true;
   const out = rollOutcome();
   let keys;
@@ -3397,32 +3497,206 @@ function awardPrize(out, keys) {
   if (out === 'gift') {
     const pool = lockedItems(), [cat, id] = pool[(Math.random() * pool.length) | 0], it = CAT[cat].items[id];
     save.owned[cat + ':' + id] = true;
-    title = `Новинка: ${it.name}`; sub = `${CAT[cat].name} · теперь твоё`;
-    action = ['Надеть', () => { save.eq[cat] = id; persist(); if (cat === 'style') applyStyle(); renderWardrobe('#wardD', 'done'); $('#prize').querySelector('button').textContent = '✓ Надето'; }];
+    title = T2(`New: ${it.name}`, `Новинка: ${it.name}`); sub = T2(`${CAT[cat].name} · it's yours now`, `${CAT[cat].name} · теперь твоё`);
+    action = [T2('Equip', 'Надеть'), () => { save.eq[cat] = id; persist(); if (cat === 'style') applyStyle(); renderWardrobe('#wardD', 'done'); $('#prize').querySelector('button').textContent = T2('✓ Equipped', '✓ Надето'); }];
   } else if (out === 'blade') {
     const t = ['shuriken', 'foxfire', 'whip'][(Math.random() * 3) | 0]; save.nextLoad = t;
-    title = `${POWERS[t].name} на старте`; sub = 'Следующий забег начнёшь с оружием второго уровня';
-  } else if (out === 'sakura') { save.ryo += lastEarn; title = `Удвоение: +${fmtR(lastEarn)} рё`; sub = 'Весь заработок за забег ещё раз'; }
-  else if (out === 'bag') { save.ryo += 300; title = 'Мешок рё: +300'; sub = 'Три мешка в ряд'; }
-  else if (out === 'ward') { save.nextShield = (save.nextShield || 0) + 1; title = 'Оберег на следующий забег'; sub = 'Спасёт от одного касания'; }
-  else if (out === 'pair') { save.ryo += 60; title = 'Пара: +60 рё'; sub = 'Почти!'; }
-  else { save.ryo += 20; title = 'Утешительные +20 рё'; sub = 'В следующий раз повезёт'; }
+    title = T2(`${POWERS[t].name} at the start`, `${POWERS[t].name} на старте`); sub = T2('Your next run starts with a level 2 weapon', 'Следующий забег начнёшь с оружием второго уровня');
+  } else if (out === 'sakura') { save.ryo += lastEarn; title = T2(`Double: +${fmtR(lastEarn)} ryo`, `Удвоение: +${fmtR(lastEarn)} рё`); sub = T2('Everything from this run, once more', 'Весь заработок за забег ещё раз'); }
+  else if (out === 'bag') { save.ryo += 300; title = T2('Bag of ryo: +300', 'Мешок рё: +300'); sub = T2('Three bags in a row', 'Три мешка в ряд'); }
+  else if (out === 'ward') { save.nextShield = (save.nextShield || 0) + 1; title = T2('A charm for the next run', 'Оберег на следующий забег'); sub = T2('Saves you from one touch', 'Спасёт от одного касания'); }
+  else if (out === 'pair') { save.ryo += 60; title = T2('A pair: +60 ryo', 'Пара: +60 рё'); sub = T2('So close!', 'Почти!'); }
+  else { save.ryo += 20; title = T2('Consolation +20 ryo', 'Утешительные +20 рё'); sub = T2('Better luck next time', 'В следующий раз повезёт'); }
   persist();
-  if (['gift', 'blade', 'sakura', 'bag', 'ward'].includes(out)) SFX.win(); else SFX.coin();
+  if (['gift', 'blade', 'sakura', 'bag', 'ward'].includes(out)) { SFX.win(); stats.jackpots++; } else SFX.coin();
+  checkAch();
   const pz = $('#prize');
   pz.innerHTML = `<span class="t">${title}<small>${sub}</small></span>`;
   if (action) { const b = document.createElement('button'); b.textContent = action[0]; b.onclick = action[1]; pz.appendChild(b); }
   pz.hidden = false;
-  $('#dWallet').innerHTML = `В кошельке ${MON} ${fmtR(save.ryo)} рё`;
+  $('#dWallet').innerHTML = walletLine();
 }
 $('#bSpin').onclick = spin;
 $('#bQuit').onclick = () => { hookUp(); showResults(false); };
+
+// ---------- level challenges: three per level ----------
+save.tasks = Object.assign({}, save.tasks);
+save.ach = Object.assign({}, save.ach);
+const stats = save.stats = Object.assign({ hooks: 0, kills: 0, air: 0, combo: 0, coins: 0, kicks: 0, deflects: 0, bossAny: 0, bosses: {}, hardBoss: 0, pureBoss: 0,
+  wins: 0, flawless: 0, hardWin: 0, fast: 0, style: 0, spins: 0, jackpots: 0, picks: 0, lv3: 0 }, save.stats);
+const TASK_PLAN = [['coins', 'kills', 'time'], ['nodeath', 'coins', 'time'], ['coins', 'kicks', 'time'], ['nodeath', 'coins', 'time'], ['nodeath', 'deflect', 'bossfast'],
+  ['coins', 'nofloor', 'kills'], ['coins', 'airkills', 'nodeath'], ['nodeath', 'coins', 'time'], ['nodeath', 'coins', 'nopower'], ['nodeath', 'deflect', 'bossfast']];
+function levelTasks(lvl) {
+  const plan = TASK_PLAN[lvl.def.k - 1].slice();
+  return plan.map(id => {
+    if ((id === 'kills' && !lvl.enemies.length) || (id === 'airkills' && lvl.enemies.length < 3) || (id === 'coins' && !lvl.coins.length)) {
+      for (const alt of ['time', 'nodeath', 'nopower']) if (!plan.includes(alt)) { plan.push(alt); return alt; }
+    }
+    return id;
+  });
+}
+const deflectGoal = () => L.def.mini ? 5 : 8;
+function taskLabel(id) {
+  switch (id) {
+    case 'nodeath': return T2('Finish without dying', 'Пройди без единой смерти');
+    case 'coins': return T2('Collect every coin', 'Собери все монеты');
+    case 'kills': return T2('Defeat every shadow', 'Заруби всех теней');
+    case 'time': return T2(`Finish under ${fmt(L.par)}`, `Пройди быстрее ${fmt(L.par)}`);
+    case 'kicks': return T2('Do 3 wall kicks', 'Сделай 3 отскока от стены');
+    case 'nofloor': return T2('Never land on the floor', 'Ни разу не приземлись на пол');
+    case 'airkills': return T2('Defeat 3 shadows in mid-air', 'Заруби 3 тени в полёте');
+    case 'deflect': return T2(`Deflect ${deflectGoal()} shots with the sword`, `Отбей мечом ${deflectGoal()} снарядов`);
+    case 'bossfast': return T2(`Defeat the boss under ${fmt(L.par)}`, `Победи босса быстрее ${fmt(L.par)}`);
+    case 'nopower': return T2('No weapon pick-ups', 'Без подобранного оружия');
+  }
+  return '';
+}
+// ok: met right now (for "keep it up" tasks: not broken yet); prog: a counter to show
+function taskState(id, final) {
+  switch (id) {
+    case 'nodeath': return { ok: run.deaths === 0, keep: true };
+    case 'coins': return { ok: coinsGot >= L.coins.length, prog: `${coinsGot}/${L.coins.length}` };
+    case 'kills': return { ok: kills >= L.enemies.length, prog: `${kills}/${L.enemies.length}` };
+    case 'time': case 'bossfast': return { ok: time <= L.par, keep: true, prog: final ? fmt(time) : T2(`${fmt(L.par - time)} left`, `осталось ${fmt(L.par - time)}`) };
+    case 'kicks': return { ok: run.kicks >= 3, prog: `${Math.min(run.kicks, 3)}/3` };
+    case 'nofloor': return { ok: run.floor === 0, keep: true };
+    case 'airkills': return { ok: run.airKills >= 3, prog: `${Math.min(run.airKills, 3)}/3` };
+    case 'deflect': return { ok: run.deflects >= deflectGoal(), prog: `${Math.min(run.deflects, deflectGoal())}/${deflectGoal()}` };
+    case 'nopower': return { ok: run.picks === 0, keep: true };
+  }
+  return { ok: false };
+}
+// called when the gate is reached: records completed challenges and returns the reward
+function settleTasks() {
+  const prev = save.tasks[L.n] || [false, false, false], now = L.tasks.map(id => taskState(id, true).ok);
+  let reward = 0, fresh = 0;
+  const next = prev.map((p, i) => { if (now[i] && !p) { fresh++; reward += 50; } return p || now[i]; });
+  if (next.every(Boolean) && !prev.every(Boolean)) reward += 150;
+  save.tasks[L.n] = next; L.taskNow = now; L.taskPrev = prev; L.taskReward = reward; L.taskFresh = fresh;
+  persist();
+}
+const tasksDoneTotal = () => Object.values(save.tasks).reduce((s, a) => s + a.filter(Boolean).length, 0);
+function renderTaskList(el, final) {
+  const prev = save.tasks[L.n] || [false, false, false];
+  el.innerHTML = L.tasks.map((id, i) => {
+    // "keep" challenges (no deaths, under par...) only count once the gate is reached
+    const st = taskState(id, final), was = final ? L.taskPrev[i] : prev[i], ok = final ? L.taskNow[i] : st.ok && !st.keep;
+    const lost = !final && st.keep && !st.ok && !was;
+    const cls = final && ok && !was ? 'fresh' : (ok || was) ? 'ok' : lost ? 'bad' : '';
+    const right = final && ok && !was ? `+50` : lost ? T2('failed', 'провалено') : st.prog && !final && !was ? st.prog : was ? '✓' : '';
+    return `<li class="${cls}"><span class="ck">${ok || was ? '✓' : ''}</span><span class="t">${taskLabel(id)}</span><span class="v">${right}</span></li>`;
+  }).join('');
+}
+
+// ---------- achievements ----------
+const chapterCleared = i => { for (let k = 1; k <= 10; k++) if (!save.best[i * 10 + k]) return 0; return 1; };
+const totalStars = () => Object.values(save.stars).reduce((s, v) => s + v, 0);
+const ownedSkins = () => Object.keys(SKINS).filter(id => owns('skin', id)).length;
+const maxedUpgrade = () => Object.keys(UPGRADES).some(id => save.up[id] >= UPGRADES[id].costs.length) ? 1 : 0;
+const openChapters = () => CHAPTERS.filter((c, i) => chapterOpen(i)).length;
+const A = (id, en, ru, den, dru, goal, get, reward) => ({ id, name: T2(en, ru), desc: T2(den, dru), goal, get, reward });
+const ACH = [
+  A('hook1', 'First Hook', 'Первая кошка', 'Hook onto anything', 'Зацепись за что-нибудь', 1, () => stats.hooks, 50),
+  A('hook300', 'Swing Apprentice', 'Ученица маятника', 'Hook on 300 times', 'Зацепись 300 раз', 300, () => stats.hooks, 300),
+  A('hook3000', 'Spider Samurai', 'Самурай-паук', 'Hook on 3,000 times', 'Зацепись 3000 раз', 3000, () => stats.hooks, 1500),
+  A('kill1', 'First Cut', 'Первый удар', 'Defeat a shadow', 'Заруби тень', 1, () => stats.kills, 50),
+  A('kill100', 'Shadow Cutter', 'Гроза теней', 'Defeat 100 shadows', 'Заруби 100 теней', 100, () => stats.kills, 400),
+  A('kill1000', 'Thousand Shadows', 'Тысяча теней', 'Defeat 1,000 shadows', 'Заруби 1000 теней', 1000, () => stats.kills, 2000),
+  A('air50', 'Sky Blade', 'Небесный клинок', 'Defeat 50 shadows in mid-air', 'Заруби 50 теней в полёте', 50, () => stats.air, 500),
+  A('combo3', 'Triple Strike', 'Тройной удар', 'Reach a ×3 combo', 'Сделай комбо ×3', 3, () => stats.combo, 200),
+  A('combo6', 'Whirlwind', 'Вихрь', 'Reach a ×6 combo', 'Сделай комбо ×6', 6, () => stats.combo, 800),
+  A('coin500', 'Coin Purse', 'Кошелёк', 'Collect 500 coins', 'Собери 500 монет', 500, () => stats.coins, 300),
+  A('coin3000', 'Treasure Hunter', 'Охотница за сокровищами', 'Collect 3,000 coins', 'Собери 3000 монет', 3000, () => stats.coins, 1200),
+  A('kick25', 'Wall Runner', 'Бегущая по стенам', 'Do 25 wall kicks', 'Сделай 25 отскоков от стены', 25, () => stats.kicks, 300),
+  A('deflect50', 'Parry Master', 'Мастер парирования', 'Deflect 50 boss shots with the sword', 'Отбей мечом 50 снарядов боссов', 50, () => stats.deflects, 600),
+  A('boss1', 'Demon Slayer', 'Убийца демонов', 'Defeat any boss', 'Победи любого босса', 1, () => stats.bossAny, 300),
+  A('bossAll', 'Five Demons', 'Пять демонов', 'Defeat all five chapter bosses', 'Победи всех пятерых боссов глав', 5, () => Object.keys(stats.bosses).length, 3000),
+  A('pureBoss', 'Bare Blade', 'Голый клинок', 'Defeat a boss without picking up weapons', 'Победи босса без подобранного оружия', 1, () => stats.pureBoss, 1000),
+  A('ch1', 'Bamboo Cleared', 'Долина пройдена', 'Clear all of Bamboo Valley', 'Пройди всю Бамбуковую долину', 1, () => chapterCleared(0), 500),
+  A('ch2', 'Sakura Cleared', 'Сад пройден', 'Clear all of Sakura Garden', 'Пройди весь Сад сакуры', 1, () => chapterCleared(1), 600),
+  A('ch3', 'Snow Cleared', 'Перевал пройден', 'Clear all of Snow Pass', 'Пройди весь Снежный перевал', 1, () => chapterCleared(2), 800),
+  A('ch4', 'Volcano Cleared', 'Гора пройдена', 'Clear all of Fire Mountain', 'Пройди всю Огненную гору', 1, () => chapterCleared(3), 1000),
+  A('ch5', 'City Cleared', 'Город пройден', 'Clear all of Cloud City', 'Пройди весь Облачный город', 1, () => chapterCleared(4), 1500),
+  A('stars30', 'Rising Star', 'Восходящая звезда', 'Earn 30 stars', 'Получи 30 звёзд', 30, totalStars, 400),
+  A('stars150', 'Perfectionist', 'Перфекционистка', 'Earn all 150 stars', 'Получи все 150 звёзд', 150, totalStars, 5000),
+  A('tasks30', 'Challenger', 'Испытательница', 'Complete 30 level challenges', 'Выполни 30 испытаний уровней', 30, tasksDoneTotal, 800),
+  A('tasks150', 'Grandmaster', 'Гроссмейстер', 'Complete all 150 level challenges', 'Выполни все 150 испытаний', 150, tasksDoneTotal, 5000),
+  A('flawless10', 'Untouchable', 'Неуязвимая', 'Clear 10 levels without dying', 'Пройди 10 уровней без смертей', 10, () => stats.flawless, 600),
+  A('fast', 'Lightning', 'Молния', 'Clear a level in under 20 seconds', 'Пройди уровень быстрее 20 секунд', 1, () => stats.fast, 400),
+  A('hardWin', "Shogun's Path", 'Путь сёгуна', 'Clear a level on Shogun', 'Пройди уровень на «Сёгуне»', 1, () => stats.hardWin, 400),
+  A('hardBoss', 'Shogun Slayer', 'Гроза сёгуна', 'Defeat a chapter boss on Shogun', 'Победи босса главы на «Сёгуне»', 1, () => stats.hardBoss, 1500),
+  A('picks50', 'Arsenal', 'Арсенал', 'Pick up 50 weapons', 'Подбери 50 оружий', 50, () => stats.picks, 300),
+  A('lv3', 'Overcharged', 'Перегрузка', 'Power a weapon up to level 3', 'Прокачай оружие до 3 уровня', 1, () => stats.lv3, 250),
+  A('spins10', 'Gambler', 'Азартная', 'Spin the lucky reels 10 times', 'Прокрути барабан 10 раз', 10, () => stats.spins, 200),
+  A('jackpot', 'Jackpot', 'Джекпот', 'Hit three of a kind on the reels', 'Выбей три одинаковых на барабане', 1, () => stats.jackpots, 400),
+  A('rich', 'Wealthy', 'Богачка', 'Hold 10,000 ryo at once', 'Накопи 10 000 рё', 10000, () => save.ryo, 500),
+  A('outfits', 'Fashionista', 'Модница', 'Own 6 outfits', 'Собери 6 нарядов', 6, ownedSkins, 600),
+  A('upmax', 'Fully Upgraded', 'Полная прокачка', 'Max out any upgrade', 'Прокачай любое улучшение до максимума', 1, maxedUpgrade, 400),
+  A('worlds', 'World Traveler', 'Путешественница', 'Open all five chapters', 'Открой все пять глав', 5, openChapters, 1000),
+  A('style', 'New Eyes', 'Новый взгляд', 'Clear a level in another art style', 'Пройди уровень в другом стиле рисовки', 1, () => stats.style, 200),
+  A('daily7', 'Devoted', 'Преданная', 'Claim the daily gift 7 days in a row', 'Забери подарок дня 7 дней подряд', 7, () => save.gift.streak || 0, 700),
+];
+let achQueue = [], achShowing = false;
+function checkAch() {
+  let got = false;
+  for (const a of ACH) {
+    if (save.ach[a.id] || a.get() < a.goal) continue;
+    save.ach[a.id] = true; save.ryo += a.reward; achQueue.push(a); got = true;
+  }
+  if (got) { persist(); showAchToast(); }
+}
+function showAchToast() {
+  if (achShowing || !achQueue.length) return;
+  const a = achQueue.shift(), el = $('#achToast');
+  achShowing = true;
+  $('#achName').textContent = a.name; $('#achRew').innerHTML = `+${fmtR(a.reward)} ${RYO()}`;
+  el.classList.remove('off'); SFX.lantern();
+  setTimeout(() => { el.classList.add('off'); setTimeout(() => { achShowing = false; showAchToast(); }, 400); }, 2600);
+}
+function renderAchSummary() {
+  const done = ACH.filter(a => save.ach[a.id]).length;
+  $('#achSum').textContent = T2(`${done} of ${ACH.length} · ${tasksDoneTotal()} of 150 challenges`, `${done} из ${ACH.length} · испытаний ${tasksDoneTotal()} из 150`);
+  $('#achBar').style.width = (done / ACH.length * 100) + '%';
+}
+function openAch() {
+  const done = ACH.filter(a => save.ach[a.id]).length;
+  $('#achBlurb').textContent = T2(`${done} of ${ACH.length} unlocked. Each one pays out ryo.`, `Получено ${done} из ${ACH.length}. За каждое — рё.`);
+  $('#achList').innerHTML = ACH.slice().sort((a, b) => (save.ach[b.id] ? 1 : 0) - (save.ach[a.id] ? 1 : 0)).map(a => {
+    const on = !!save.ach[a.id], cur = Math.min(a.get(), a.goal);
+    return `<li class="${on ? '' : 'off'}"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="t"><b>${a.name}</b><small>${a.desc}${on || a.goal === 1 ? '' : ` · ${fmtR(cur)}/${fmtR(a.goal)}`}</small>${on || a.goal === 1 ? '' : `<div class="pb"><i style="width:${cur / a.goal * 100}%"></i></div>`}</span><span class="v">${on ? '✓' : `${MON}${fmtR(a.reward)}`}</span></li>`;
+  }).join('');
+  show('achs');
+}
+$('#bAch').onclick = () => { audio(); openAch(); };
+$('#bAchRow').onclick = () => { audio(); openAch(); };
+$('#bAchBack').onclick = () => { buildMenu(); show('menu'); };
+
+// ---------- language and hand settings ----------
+function applyLang() {
+  document.documentElement.lang = lang;
+  for (const el of document.querySelectorAll('[data-en]')) el.innerHTML = lang === 'ru' ? el.dataset.ru : el.dataset.en;
+  for (const el of document.querySelectorAll('[data-aen]')) el.setAttribute('aria-label', lang === 'ru' ? el.dataset.aru : el.dataset.aen);
+  const hs = hookSide(), ps = padSide();
+  $('#howHook').innerHTML = T2(`Hook: ${hs.en} thumb<small>Hold to hang on, let go to fly. Hold it in the air and it grabs the first thing in reach</small>`,
+    `Кошка — ${hs.ru === 'правым' ? 'правый' : 'левый'} палец<small>Держишь — висишь, отпустил — летишь. Зажми в полёте — зацепится, как только будет за что</small>`);
+  $('#howPad').innerHTML = T2(`D-pad: ${ps.enC.toLowerCase()} thumb<small>Without a rope: where to throw. On the rope: ← → swing, ↑ reel in, ↓ push off</small>`,
+    `Крестовина — ${ps.ruC === 'Левый' ? 'левый' : 'правый'} палец<small>Без верёвки: куда стрелять. На верёвке: ← → качаться, ↑ подтянуться, ↓ оттолкнуться</small>`);
+  for (const b of document.querySelectorAll('#segLang button')) b.classList.toggle('on', b.dataset.v === lang);
+  for (const b of document.querySelectorAll('#segSide button')) b.classList.toggle('on', (b.dataset.v === 'left') === !!save.swap);
+  lastDeck = '';
+}
+function setLang(l) { lang = l; save.lang = l; persist(); applyLang(); if (!$('#menu').hidden) buildMenu(); if (!$('#settings').hidden) syncSettings(); if (L && L.boss) updateBossBar(); }
+$('#bLang').onclick = () => { audio(); setLang(lang === 'ru' ? 'en' : 'ru'); };
+for (const b of document.querySelectorAll('#segLang button')) b.onclick = () => { audio(); setLang(b.dataset.v); };
+for (const b of document.querySelectorAll('#segSide button')) b.onclick = () => { audio(); save.swap = b.dataset.v === 'left'; persist(); app.classList.toggle('swap', !!save.swap); applyLang(); layout(); };
+app.classList.toggle('swap', !!save.swap);
 applyStyle();
+applyLang();
 buildLevel(save.last || 1); placeEnemies(L); placePowers(L); checkpoint = L.lanterns[0]; respawn();
 cam.z = clamp(Math.sqrt(W * H) / 560, .6, 1.4);
 toMenu();
 if (!save.diff) openDiff('boot');
-requestAnimationFrame(frame);
+requestAnimationFrame(loop);
 window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; }, save, openShop, applyStyle, givePower, showResults, get inv() { return inv; }, hitBoss, levelDef, openDiff, tick: n => { for (let i = 0; i < n; i++) frame(last + 1000 / 60); } };
 })();
 </script>
