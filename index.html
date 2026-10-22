@@ -140,6 +140,7 @@ h2{font-family:var(--sfd);font-size:28px;line-height:1.1;font-weight:800;letter-
 .lv .s{display:flex;gap:1px;height:12px;color:var(--gold)}
 .lv .s svg{width:11px;height:11px;fill:currentColor}
 .lv .s svg.o{color:rgba(255,255,255,.15)}
+.lv.nk .k{color:var(--gold)}
 .lv.cur{background:rgba(255,55,95,.22);box-shadow:inset 0 0 0 1.5px var(--tint)}
 .lv:disabled{opacity:.35;cursor:default}
 .lv:disabled .n{color:var(--label3)}
@@ -431,9 +432,9 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
 // ---------- tuning ----------
 const STEP = 1/120, G = 980, R = 11;
 const ROPE_MAX = 500, ROPE_TOTAL = 600, ROPE_SPEED = 4200, REEL = 340, EXTEND = 600, SWING = 1250, VMAX = 1700, WALK = 130;
-const KICK_WINDOW = .2, KICK_UP = 460, KICK_OUT = 230, SLASH_T = .22, SLASH_CD = .32, LEVELS = 12;
-const KINDS = ['right', 'up', 'right', 'zig', 'up', 'zig', 'right', 'up', 'zig', 'up', 'zig', 'zig'];
-const KIND_LABEL = { right: 'вправо', up: 'вверх', zig: 'зигзаг' };
+const KICK_WINDOW = .2, KICK_UP = 460, KICK_OUT = 230, SLASH_T = .22, SLASH_CD = .32, LEVELS = 18;
+const KINDS = ['right', 'up', 'right', 'zig', 'up', 'zig', 'right', 'up', 'zig', 'up', 'zig', 'zig', 'ceiling', 'lava', 'abyss', 'ceiling', 'lava', 'abyss'];
+const KIND_LABEL = { right: 'вправо', up: 'вверх', zig: 'зигзаг', ceiling: 'потолок', lava: 'лава', abyss: 'пропасть' };
 
 const $ = s => document.querySelector(s);
 const app = $('#app'), view = $('#view'), cv = $('#c'), ctx = cv.getContext('2d');
@@ -520,16 +521,18 @@ function cr(p0, p1, p2, p3, t) { const t2 = t * t, t3 = t2 * t; return .5 * (2 *
 function buildLevel(n) {
   if (L && L.canvas) L.canvas.width = L.canvas.height = 0;
   const rnd = mulberry32(n * 7717 + 1234);
-  const th = THEMES[(n - 1) % THEMES.length], kind = KINDS[(n - 1) % KINDS.length];
+  const kind = KINDS[(n - 1) % KINDS.length];
+  const th = kind === 'lava' ? THEMES[n % 2 ? 4 : 1] : kind === 'ceiling' ? THEMES[n % 2 ? 2 : 0] : kind === 'abyss' ? THEMES[n % 2 ? 3 : 4] : THEMES[(n - 1) % THEMES.length];
+  if (kind === 'ceiling' || kind === 'abyss') return buildOpen(n, kind, rnd, th);
   // waypoints of the cave path
-  const N = Math.min(Math.round(8 + n * 1.1), kind === 'zig' ? 14 : 18);
+  const N = kind === 'lava' ? 15 : Math.min(Math.round(8 + n * 1.1), kind === 'zig' ? 14 : 18);
   const pts = [{ x: 0, y: 0, r: 150 }];
-  let mode = kind === 'up' ? 'up' : 'right';
+  let mode = kind === 'up' || kind === 'lava' ? 'up' : 'right';
   for (let i = 1; i <= N; i++) {
     if (kind === 'zig' && i % 3 === 0) mode = mode === 'up' ? 'right' : 'up';
     const p = pts[i - 1]; let x, y;
     if (mode === 'right') { x = p.x + 270 + rnd() * 130; y = p.y + (rnd() - .5) * 300; if (kind === 'right') y = clamp(y, -420, 420); }
-    else { y = p.y - (240 + rnd() * 100); x = p.x + (rnd() - .5) * 440; if (kind === 'up') x = clamp(x, -380, 380); }
+    else { y = p.y - (240 + rnd() * 100); x = p.x + (rnd() - .5) * 440; if (kind === 'up' || kind === 'lava') x = clamp(x, -380, 380); }
     pts.push({ x, y, r: i === N ? 160 : i % 4 === 0 ? 190 + rnd() * 40 : 112 + rnd() * 55 });
   }
   // spline samples
@@ -575,6 +578,140 @@ function buildLevel(n) {
     else if (rnd() < .3) blob(g, rnd, p.x + (rnd() - .5) * 40, p.y + p.r * 1.0, p.r * .26, .6, 1.2);
   }
 
+  const { mask, tufts, vines } = paintTerrain(g, WW, HH, th, n);
+  const lvl = { n, th, kind, WW, HH, mask, canvas: c, pts, samples, total: dist, coins: [], spikes: [], lanterns: [], gate: null, spawn: null };
+  L = lvl;
+  decorate(g, rnd, th, tufts, vines);
+
+  // gameplay objects
+  const floorBelow = (x, y, max) => { for (let t = 0; t < max; t++) if (solid(x, y + t)) return y + t; return null; };
+  const sp = pts[0], sf = floorBelow(sp.x, sp.y, 500) || sp.y + 100;
+  lvl.lanterns.push({ x: sp.x - 50, y: floorBelow(sp.x - 50, sp.y, 500) || sf, lit: true, rx: sp.x, ry: sf - R - 4 });
+  for (let i = 5; i < N - 1; i += 5) {
+    for (const j of [i, i + 1, i - 1, i + 2, i - 2]) {
+      const p = pts[j], f = floorBelow(p.x, p.y, p.r * 2 + 120);
+      if (f && clearAt(p.x, f - 40, 18)) { lvl.lanterns.push({ x: p.x, y: f, lit: false, rx: p.x, ry: f - R - 4 }); break; }
+    }
+  }
+  const lp = pts[N], gf = floorBelow(lp.x, lp.y, 400) || lp.y + lp.r;
+  lvl.gate = { x: lp.x, y: gf };
+  const spikeP = n < 2 ? 0 : Math.min(.15 + n * .04, .55);
+  for (let i = 2; i < N - 1; i++) {
+    if (i % 5 === 0 || i % 5 === 4 || i % 5 === 1 && i > 5) continue;
+    if (rnd() >= spikeP) continue;
+    const p = pts[i];
+    for (let sx = p.x - 62; sx <= p.x + 62; sx += 13) {
+      const f = floorBelow(sx, p.y, p.r * 1.5);
+      if (f) lvl.spikes.push({ x: sx, y: f });
+    }
+  }
+  for (let i = 1; i < N; i++) {
+    const p = pts[i], x = p.x + (rnd() - .5) * p.r * .8, y = p.y + (rnd() - .5) * p.r * .6;
+    if (clearAt(x, y, 22)) lvl.coins.push({ x, y, got: false, ph: rnd() * 6 });
+  }
+  for (const s of lvl.spikes) drawSpike(g, s.x, s.y);
+  lvl.spawn = { x: sp.x, y: sf - R - 3 };
+  lvl.par = Math.round(dist / 200 + 6);
+  lvl.blades = [];
+  if (n >= 7 || kind === 'lava') for (let i = 3; i < N - 1; i += 3) {
+    const p = pts[i]; if (rnd() < .5 || !clearAt(p.x, p.y, 40)) continue;
+    const horiz = kind !== 'lava' && kind !== 'up';
+    lvl.blades.push({ cx: p.x, cy: p.y, ax: horiz ? p.r * .55 : 0, ay: horiz ? 0 : p.r * .45, sp: .9 + rnd() * .6, ph: rnd() * 6 });
+  }
+  if (kind === 'lava') lvl.lava = { y: lvl.spawn.y + 380, speed: 52 + n * 1.5 };
+  return lvl;
+}
+
+// open-air levels: a ceiling over the abyss, or islands and bamboo in the sky
+function buildOpen(n, kind, rnd, th) {
+  const len = Math.min(3400 + n * 110, 5600), WW = len + 560, HH = 1350, pathY = kind === 'ceiling' ? 430 : 560;
+  const c = document.createElement('canvas'); c.width = WW; c.height = HH;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.fillStyle = '#fff';
+  const sx0 = 240, ex0 = WW - 260;
+  const hangers = [], poles = [];
+  if (kind === 'ceiling') {
+    // ceiling with gaps you have to fly across
+    const gaps = []; for (let x = 900; x < ex0 - 500; x += 700 + rnd() * 400) gaps.push([x, x + 190 + rnd() * 110 + n * 4]);
+    const ceilAt = x => 150 + Math.sin(x * .004) * 50 + Math.sin(x * .013 + n) * 18;
+    let segStart = -40;
+    const seg = (a, b) => { g.beginPath(); g.moveTo(a, -60); for (let x = a; x <= b; x += 16) g.lineTo(x, ceilAt(x) + (x - a < 30 ? (30 - (x - a)) * 1.6 : 0) + (b - x < 30 ? (30 - (b - x)) * 1.6 : 0)); g.lineTo(b, -60); g.closePath(); g.fill(); };
+    for (const [a, b] of gaps) { seg(segStart, a); segStart = b; }
+    seg(segStart, WW + 40);
+    // stalactites: the lower ones are the best anchors
+    for (let x = 300; x < ex0 - 100; x += 140 + rnd() * 160) {
+      if (gaps.some(([a, b]) => x > a - 40 && x < b + 40)) continue;
+      const len2 = 40 + rnd() * (rnd() < .3 ? 230 : 110);
+      blob(g, rnd, x, ceilAt(x) + len2 * .45, 18 + rnd() * 16, 1, len2 / 30);
+    }
+    // floating stones over the wider gaps
+    for (const [a, b] of gaps) if (b - a > 230) { const hx = (a + b) / 2, hy = 260 + rnd() * 80; blob(g, rnd, hx, hy, 26, 1.2, .8); hangers.push([hx, hy]); }
+  } else {
+    // sky islands and bamboo stalks
+    let x = 520;
+    while (x < ex0 - 260) {
+      const y = 330 + rnd() * 420, r = 46 + rnd() * 60;
+      blob(g, rnd, x, y, r, 1.1 + rnd() * .5, .55 + rnd() * .3);
+      if (rnd() < .65) { const px = x + 150 + rnd() * 60, top = 170 + rnd() * 160, h = 200 + rnd() * 260; g.fillRect(px - 8, top, 16, h); poles.push([px, top, h]); }
+      x += 300 + rnd() * 140;
+    }
+  }
+  // start and finish islands
+  blob(g, rnd, sx0, 700, 140, 1, .42);
+  blob(g, rnd, ex0, 700, 150, 1, .42);
+  if (kind === 'ceiling') { blob(g, rnd, sx0 + 10, 160, 120, 1.4, .7); blob(g, rnd, ex0, 160, 130, 1.4, .7); }
+
+  const { mask, tufts, vines } = paintTerrain(g, WW, HH, th, n);
+  // bamboo skin over the stalks
+  for (const [px, top, h] of poles) {
+    const gr = g.createLinearGradient(px - 8, 0, px + 8, 0); gr.addColorStop(0, '#5e8f2f'); gr.addColorStop(.5, '#9fd162'); gr.addColorStop(1, '#4b7a25');
+    g.fillStyle = gr; g.fillRect(px - 8, top, 16, h);
+    g.fillStyle = '#3d6420'; for (let y = top + 30; y < top + h - 10; y += 46) g.fillRect(px - 9, y, 18, 4);
+    g.strokeStyle = '#2c4a16'; g.lineWidth = 1.5; g.strokeRect(px - 8, top, 16, h);
+  }
+  const lvl = { n, th, kind, WW, HH, mask, canvas: c, open: true, voidY: HH - 50, coins: [], spikes: [], lanterns: [], gate: null, spawn: null, blades: [] };
+  L = lvl;
+  decorate(g, rnd, th, tufts, vines);
+  // straight-ish route for progress, pick-ups and placement
+  const route = x => pathY + Math.sin(x * .0023 + n) * 90;
+  const pts = []; for (let x = sx0; x <= ex0; x += 300) pts.push({ x, y: route(x), r: 150 });
+  pts[pts.length - 1] = { x: ex0, y: route(ex0), r: 150 };
+  const samples = []; let dist = 0;
+  for (let x = sx0; x <= ex0; x += 8) { const y = route(x); if (samples.length) { const q = samples[samples.length - 1]; dist += hyp(x - q.x, y - q.y); } samples.push({ x, y, r: 150, d: dist }); }
+  Object.assign(lvl, { pts, samples, total: dist });
+  const floorBelow = (x, y, max) => { for (let t = 0; t < max; t++) if (solid(x, y + t)) return y + t; return null; };
+  const ceilAbove = (x, y, max) => { for (let t = 0; t < max; t++) if (solid(x, y - t)) return y - t; return null; };
+  const sf = floorBelow(sx0, 450, 600), ef = floorBelow(ex0, 450, 600);
+  lvl.spawn = { x: sx0, y: sf - R - 3 };
+  lvl.lanterns.push({ x: sx0 - 60, y: floorBelow(sx0 - 60, 450, 600) || sf, lit: true, rx: sx0, ry: sf - R - 4 });
+  lvl.gate = { x: ex0, y: ef };
+  // checkpoints: hanging lanterns under the ceiling, or on island tops
+  for (let x = sx0 + 1100; x < ex0 - 500; x += 1100) {
+    for (let dx = 0; dx < 400; dx += 20) {
+      const xx = x + dx;
+      if (kind === 'ceiling') {
+        const cy = ceilAbove(xx, route(xx), 420);
+        if (cy && clearAt(xx, cy + 90, 24)) { lvl.lanterns.push({ x: xx, y: cy + 66, cy, hang: true, lit: false, rx: xx, ry: cy + 150 }); break; }
+      } else {
+        const f = floorBelow(xx, 150, 900);
+        if (f && f < HH - 200 && clearAt(xx, f - 40, 18)) { lvl.lanterns.push({ x: xx, y: f, lit: false, rx: xx, ry: f - R - 4 }); break; }
+      }
+    }
+  }
+  for (let x = sx0 + 260; x < ex0 - 200; x += 230 + rnd() * 80) {
+    const y = route(x) + (rnd() - .5) * 160;
+    if (clearAt(x, y, 22)) lvl.coins.push({ x, y, got: false, ph: rnd() * 6 });
+  }
+  // flying, spinning katanas
+  const nb = Math.min(3 + Math.floor(n / 3), 8);
+  for (let k = 0; k < nb; k++) {
+    const x = sx0 + 600 + (k + .5) * ((ex0 - sx0 - 900) / nb), y = route(x) + (rnd() - .5) * 120, vert = rnd() < .45;
+    lvl.blades.push({ cx: x, cy: y, ax: vert ? 0 : 110 + rnd() * 90, ay: vert ? 120 + rnd() * 80 : 0, sp: .8 + rnd() * .7, ph: rnd() * 6 });
+  }
+  lvl.par = Math.round(dist / 210 + 9);
+  return lvl;
+}
+function paintTerrain(g, WW, HH, th, n) {
   const im = g.getImageData(0, 0, WW, HH), d = im.data, A = WW * HH;
   const mask = new Uint8Array(A);
   for (let i = 0, j = 3; i < A; i++, j += 4) if (d[j] > 127) mask[i] = 1;
@@ -627,40 +764,7 @@ function buildLevel(n) {
     }
   }
   g.putImageData(im, 0, 0);
-  const lvl = { n, th, kind, WW, HH, mask, canvas: c, pts, samples, total: dist, coins: [], spikes: [], lanterns: [], gate: null, spawn: null };
-  L = lvl;
-  decorate(g, rnd, th, tufts, vines);
-
-  // gameplay objects
-  const floorBelow = (x, y, max) => { for (let t = 0; t < max; t++) if (solid(x, y + t)) return y + t; return null; };
-  const sp = pts[0], sf = floorBelow(sp.x, sp.y, 500) || sp.y + 100;
-  lvl.lanterns.push({ x: sp.x - 50, y: floorBelow(sp.x - 50, sp.y, 500) || sf, lit: true, rx: sp.x, ry: sf - R - 4 });
-  for (let i = 5; i < N - 1; i += 5) {
-    for (const j of [i, i + 1, i - 1, i + 2, i - 2]) {
-      const p = pts[j], f = floorBelow(p.x, p.y, p.r * 2 + 120);
-      if (f && clearAt(p.x, f - 40, 18)) { lvl.lanterns.push({ x: p.x, y: f, lit: false, rx: p.x, ry: f - R - 4 }); break; }
-    }
-  }
-  const lp = pts[N], gf = floorBelow(lp.x, lp.y, 400) || lp.y + lp.r;
-  lvl.gate = { x: lp.x, y: gf };
-  const spikeP = n < 2 ? 0 : Math.min(.15 + n * .04, .55);
-  for (let i = 2; i < N - 1; i++) {
-    if (i % 5 === 0 || i % 5 === 4 || i % 5 === 1 && i > 5) continue;
-    if (rnd() >= spikeP) continue;
-    const p = pts[i];
-    for (let sx = p.x - 62; sx <= p.x + 62; sx += 13) {
-      const f = floorBelow(sx, p.y, p.r * 1.5);
-      if (f) lvl.spikes.push({ x: sx, y: f });
-    }
-  }
-  for (let i = 1; i < N; i++) {
-    const p = pts[i], x = p.x + (rnd() - .5) * p.r * .8, y = p.y + (rnd() - .5) * p.r * .6;
-    if (clearAt(x, y, 22)) lvl.coins.push({ x, y, got: false, ph: rnd() * 6 });
-  }
-  for (const s of lvl.spikes) drawSpike(g, s.x, s.y);
-  lvl.spawn = { x: sp.x, y: sf - R - 3 };
-  lvl.par = Math.round(dist / 200 + 6);
-  return lvl;
+  return { mask, tufts, vines };
 }
 function decorate(g, rnd, th, tufts, vines) {
   g.lineCap = 'round';
@@ -700,7 +804,7 @@ function drawSpike(g, x, y) {
 
 function solid(x, y) {
   x = Math.floor(x); y = Math.floor(y);
-  if (x < 0 || x >= L.WW || y < 0 || y >= L.HH) return 1;
+  if (x < 0 || x >= L.WW || y < 0 || y >= L.HH) return L.open ? 0 : 1;
   return L.mask[y * L.WW + x];
 }
 function clearAt(x, y, r) {
@@ -788,11 +892,17 @@ function startLevel(n) {
   tut = (n === 1 && !save.tut) ? 0 : -1; tutT = 0;
   updateHud(true);
   if (tut === 0) hint('<b>Держи Кошку</b> левым пальцем: она выстрелит и будет держать. Отпустишь — отцепится.');
-  else hint(`Уровень ${n} · ${THEMES[(n - 1) % THEMES.length].name} · путь ${KIND_LABEL[L.kind]}`, 3);
+  else if (L.kind === 'ceiling') hint('<b>Потолок.</b> Внизу пропасть: цепляйся только вверх и перелетай провалы. Крутящиеся катаны не сломать.', 5);
+  else if (L.kind === 'lava') hint('<b>Лавовый колодец.</b> Лава поднимается, как только начнёшь. Лезь быстрее неё!', 5);
+  else if (L.kind === 'abyss') hint('<b>Пропасть.</b> Цепляйся за острова и бамбук, не падай вниз.', 5);
+  else hint(`Уровень ${n} · ${L.th.name} · путь ${KIND_LABEL[L.kind]}`, 3);
 }
 function respawn() {
   w.x = checkpoint.rx; w.y = checkpoint.ry; w.vx = 0; w.vy = 0; dead = 0;
   rope.st = 'none'; rope.pts = []; hero.ang = 0; hero.inv = 1.2;
+  // under a ceiling there is no floor: come back hanging from the lantern's hook
+  if (checkpoint.hang) { rope.st = 'on'; rope.pts = [{ x: checkpoint.x, y: checkpoint.cy + 2, side: 1 }]; rope.seg = 0; rope.len = w.y - checkpoint.cy; }
+  if (L.lava) L.lava.y = Math.max(L.lava.y, checkpoint.ry + 420);
 }
 
 // ---------- aim, rope, sword ----------
@@ -945,6 +1055,8 @@ function update(dt) {
     if (rope.st === 'on') wrap();
   }
   if (w.ground && rope.st !== 'on' && !ix) { w.vx *= Math.exp(-10 * dt); if (Math.abs(w.vx) < 6) w.vx = 0; }
+  if (L.open) { if (w.x < 14) { w.x = 14; w.vx = Math.abs(w.vx) * .3; } if (w.x > L.WW - 14) { w.x = L.WW - 14; w.vx = -Math.abs(w.vx) * .3; } }
+  updateHazards(dt);
 
   // hero pose
   let target = 0;
@@ -991,13 +1103,16 @@ function update(dt) {
       if (dh < R + 12 && hero.inv <= 0) { die(); break; }
     }
     if (dead <= 0) for (const s of L.spikes) if (hyp(s.x - w.x, s.y - 8 - w.y) < R + 5) { die(); break; }
+    if (dead <= 0) for (const b of L.blades) if (hyp(b.x - w.x, b.y - w.y) < R + 15) { die(); break; }
+    if (dead <= 0 && L.voidY && w.y > L.voidY) { pop('Пропасть'); die(true); }
+    if (dead <= 0 && L.lava && w.y + R > L.lava.y + 6) { pop('Лава'); die(true); }
     if (dead <= 0 && hyp(L.gate.x - w.x, L.gate.y - 48 - w.y) < 62) win();
   }
   if (finished) { doneT += dt; if (doneT > 1.1 && state === 'play') showDone(); }
 }
-function die() {
-  if (hero.inv > 0 || dead > 0) return;
-  if (run.shields > 0) {
+function die(force) {
+  if (dead > 0 || (hero.inv > 0 && !force)) return;
+  if (run.shields > 0 && !force) {
     run.shields--; hero.inv = 1.4; w.vy = -340; w.vx *= -.4; SFX.lantern(); pop('Оберег спас'); updateHud(true);
     for (let i = 0; i < 24; i++) { const a = i / 24 * 6.28; parts.push({ x: w.x, y: w.y, vx: Math.cos(a) * 220, vy: Math.sin(a) * 220, life: .5, max: .5, col: '#ffd36a', s: 3, g: 0 }); }
     return;
@@ -1055,8 +1170,9 @@ function updateCam(dt) {
   const k = 1 - Math.exp(-(state === 'menu' ? 1.5 : 4.5) * dt);
   cam.x += (tx - cam.x) * k; cam.y += (ty - cam.y) * k;
   cam.x = vw >= L.WW ? L.WW / 2 : clamp(cam.x, vw / 2, L.WW - vw / 2);
-  const top = camCY / z, bot = (H - camCY) / z;
-  cam.y = top + bot >= L.HH ? L.HH / 2 : clamp(cam.y, top, L.HH - bot);
+  // the glass controls cover the bottom of the screen, so the camera may look a little past the world's floor
+  const top = camCY / z, bot = (H - camCY) / z, cover = state === 'menu' ? 0 : deckH * .85 / z;
+  cam.y = top + bot >= L.HH + cover ? (L.HH + cover) / 2 : clamp(cam.y, top, L.HH - bot + cover);
 }
 
 // ---------- render ----------
@@ -1109,8 +1225,10 @@ function render() {
   const ex = clamp(Math.ceil(vx0 + vw) + 2, 0, L.WW), ey = clamp(Math.ceil(vy0 + vh) + 2, 0, L.HH);
   drawGate(true);
   if (ex > sx && ey > sy) ctx.drawImage(L.canvas, sx, sy, ex - sx, ey - sy, sx, sy, ex - sx, ey - sy);
+  if (!L.open && vy0 + vh > L.HH) { ctx.fillStyle = L.th.rock[1]; ctx.fillRect(vx0 - 4, L.HH - 1, vw + 8, vy0 + vh - L.HH + 4); }
   for (const l of L.lanterns) drawLantern(l);
   drawGate(false);
+  for (const b of L.blades || []) drawBlade(b);
   for (const c of L.coins) if (!c.got) drawCoin(c);
   for (const e of L.enemies || []) if (e.alive) e.t === 'ninja' ? drawNinja(e) : drawSpirit(e);
   drawPowers();
@@ -1120,6 +1238,7 @@ function render() {
   if (dead <= 0 && !(hero.inv > 0 && Math.floor(clock * 14) % 2)) drawHeroP(ctx, heroPose());
   if (hero.slash > 0 && dead <= 0) drawSlash();
   drawParts(); drawFloats();
+  drawLava(vx0, vx0 + vw); drawVoid(vx0, vx0 + vw);
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   drawPetals(lastFrameDt);
 }
@@ -1140,6 +1259,18 @@ function drawGate(back) {
   ctx.restore();
 }
 function drawLantern(l) {
+  if (l.hang) {
+    // hanging paper lantern on a chain
+    const x = l.x, y = l.y, sw = Math.sin(clock * 1.6 + x) * 2;
+    ctx.save();
+    if (l.lit) { const gl = ctx.createRadialGradient(x + sw, y, 2, x + sw, y, 64); gl.addColorStop(0, `rgba(255,190,90,${.55 + Math.sin(clock * 5 + x) * .08})`); gl.addColorStop(1, 'rgba(255,190,90,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x + sw, y, 64, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = '#2b2a33'; ctx.lineWidth = 1.6; ctx.setLineDash([3, 2]); ctx.beginPath(); ctx.moveTo(x, l.cy); ctx.lineTo(x + sw, y - 14); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = l.lit ? '#ff6b3d' : '#7a4b45'; ctx.strokeStyle = '#2b1414'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.ellipse(x + sw, y, 11, 14, 0, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(43,20,20,.5)'; ctx.beginPath(); ctx.moveTo(x + sw - 11, y - 4); ctx.lineTo(x + sw + 11, y - 4); ctx.moveTo(x + sw - 11, y + 4); ctx.lineTo(x + sw + 11, y + 4); ctx.stroke();
+    ctx.fillStyle = '#1e1a22'; ctx.fillRect(x + sw - 6, y - 16, 12, 3); ctx.fillRect(x + sw - 6, y + 13, 12, 3);
+    ctx.restore(); return;
+  }
   const x = l.x, y = l.y;
   ctx.save(); ctx.lineJoin = 'round';
   if (l.lit) {
@@ -1259,7 +1390,7 @@ function show(id) {
 function buildMenu() {
   const box = $('#levels'); box.innerHTML = '';
   for (let i = 1; i <= LEVELS; i++) {
-    const b = document.createElement('button'); b.className = 'lv' + (i === save.last ? ' cur' : '');
+    const b = document.createElement('button'); b.className = 'lv' + (i === save.last ? ' cur' : '') + (['ceiling', 'lava', 'abyss'].includes(KINDS[i - 1]) ? ' nk' : '');
     b.disabled = i > save.unlocked; b.id = 'lv' + i;
     const st = save.stars[i] || 0, k = KINDS[(i - 1) % KINDS.length];
     b.innerHTML = `<span class="n">${i}</span><span class="k">${i > save.unlocked ? 'закрыт' : KIND_LABEL[k]}</span><span class="s">${st ? [1, 2, 3].map(j => starSvg(j <= st)).join('') : ''}</span>`;
@@ -1375,6 +1506,54 @@ function frame(t) {
   requestAnimationFrame(frame);
 }
 
+
+// ---------- hazards: spinning katanas, rising lava, the abyss ----------
+function updateHazards(dt) {
+  for (const b of L.blades) { const t = clock * b.sp + b.ph; b.x = b.cx + b.ax * Math.sin(t); b.y = b.cy + b.ay * Math.sin(t); }
+  const lv = L.lava;
+  if (lv && started && !finished && dead <= 0) {
+    const gap = lv.y - w.y;
+    lv.y -= (lv.speed + Math.max(0, gap - 520) * .9) * dt;
+  }
+}
+function drawBlade(b) {
+  if (b.x == null) { b.x = b.cx; b.y = b.cy; }
+  ctx.save();
+  // faint track so the motion can be read in advance
+  ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2; ctx.setLineDash([4, 6]);
+  ctx.beginPath(); ctx.moveTo(b.cx - b.ax, b.cy - b.ay); ctx.lineTo(b.cx + b.ax, b.cy + b.ay); ctx.stroke(); ctx.setLineDash([]);
+  ctx.translate(b.x, b.y); ctx.rotate(clock * 11); ctx.scale(1.3, 1.3);
+  const g = ctx.createRadialGradient(0, 0, 4, 0, 0, 30); g.addColorStop(0, 'rgba(255,255,255,.25)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 30, 0, 7); ctx.fill();
+  for (let k = 0; k < 2; k++) {
+    ctx.rotate(Math.PI);
+    ctx.strokeStyle = '#1a1820'; ctx.lineWidth = 3.4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(3, 0); ctx.quadraticCurveTo(14, -2, 25, -6); ctx.stroke();
+    ctx.strokeStyle = '#e8edf6'; ctx.lineWidth = 1.8; ctx.stroke();
+  }
+  ctx.fillStyle = '#d4a63a'; ctx.strokeStyle = '#1a1820'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.arc(0, 0, 4.5, 0, 7); ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+function drawLava(x0, x1) {
+  const lv = L.lava; if (!lv) return;
+  const y0 = lv.y; x0 = Math.floor(x0 / 12) * 12 - 12;
+  const g = ctx.createLinearGradient(0, y0 - 10, 0, y0 + 260); g.addColorStop(0, '#ffd23f'); g.addColorStop(.12, '#ff7a1a'); g.addColorStop(.5, '#d6281a'); g.addColorStop(1, '#5a0c0c');
+  ctx.save();
+  const glow = ctx.createLinearGradient(0, y0 - 120, 0, y0); glow.addColorStop(0, 'rgba(255,120,30,0)'); glow.addColorStop(1, 'rgba(255,120,30,.35)');
+  ctx.fillStyle = glow; ctx.fillRect(x0, y0 - 120, x1 - x0 + 24, 120);
+  ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x0, y0 + 2000);
+  for (let x = x0; x <= x1 + 24; x += 12) ctx.lineTo(x, y0 + Math.sin(x * .03 + clock * 3) * 4 + Math.sin(x * .011 - clock * 2) * 5);
+  ctx.lineTo(x1 + 24, y0 + 2000); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(255,240,170,.85)';
+  for (let k = 0; k < 9; k++) { const bx = x0 + ((k * 137 + clock * 40 * (k % 3 + 1)) % (x1 - x0 + 24)), r = 2 + (Math.sin(clock * 4 + k) + 1) * 2; ctx.beginPath(); ctx.arc(bx, y0 + 6 + (k % 4) * 6, r, 0, 7); ctx.fill(); }
+  ctx.restore();
+}
+function drawVoid(x0, x1) {
+  if (!L.open) return;
+  const g = ctx.createLinearGradient(0, L.HH - 420, 0, L.HH + 60); g.addColorStop(0, 'rgba(10,8,24,0)'); g.addColorStop(1, 'rgba(10,8,24,.9)');
+  ctx.fillStyle = g; ctx.fillRect(x0 - 20, L.HH - 420, x1 - x0 + 40, 2000);
+}
 
 // ---------- catalog ----------
 const SKINS = {
