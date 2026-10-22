@@ -1492,7 +1492,7 @@ const inY = () => finished ? 0 : clamp((pad.d || keys.d) - (pad.u || keys.u), -1
 
 function startLevel(n) {
   buildLevel(n); placeEnemies(L); placePowers(L); applyUpgrades(); resetRun(); resetPowers();
-  run.shields += diff().shields; L.tasks = levelTasks(L);
+  run.shields += diff().shields; L.tasks = levelTasks(L); setTrack(levelTrack(n));
   save.last = n; persist();
   checkpoint = L.lanterns[0];
   respawn();
@@ -2066,7 +2066,7 @@ function buildMenu() {
 function toMenu() {
   state = 'menu'; hint('', 0); clearPad();
   if (!L || L.n !== save.last || L.style !== save.eq.style) { buildLevel(save.last); placeEnemies(L); checkpoint = L.lanterns[0]; respawn(); updateBossBar(); }
-  buildMenu(); show('menu');
+  buildMenu(); show('menu'); setTrack('menu');
 }
 function play(n) {
   const ch = levelDef(n).ch;
@@ -3156,18 +3156,38 @@ $('#bSetDiff').onclick = () => openDiff('settings');
 // ---------- music: streamed from a file, volume through Web Audio so iOS can change it ----------
 const music = new Audio();
 music.loop = true; music.preload = 'none'; music.setAttribute('playsinline', '');
-let musicGain = null, musicReady = false;
+let musicGain = null, musicReady = false, track = 'menu', fadeT = 0;
+// the menu and the bosses have their own themes; levels shuffle the rest, never the same track twice in a row
+const LEVEL_TRACKS = ['music', 'city2', 'sky', 'night', 'city3', 'night2'];
+const levelTrack = (() => {
+  const list = [], pick = n => Math.floor(Math.abs(Math.sin(n * 91.7) * 1e4)) % LEVEL_TRACKS.length;
+  let prev = -1;
+  for (let n = 1; n <= 50; n++) {
+    if (levelDef(n).type === 'boss') { list[n] = 'boss'; continue; }
+    let i = pick(n); if (i === prev) i = (i + 1) % LEVEL_TRACKS.length;
+    list[n] = LEVEL_TRACKS[i]; prev = i;
+  }
+  return n => list[n] || 'music';
+})();
+function setTrack(name) {
+  if (name === track) return;
+  track = name;
+  if (!musicReady) return;
+  clearTimeout(fadeT);
+  if (musicGain) musicGain.gain.setTargetAtTime(0, AC.currentTime, .08);
+  fadeT = setTimeout(() => { music.src = track + '.mp4'; applyMusic(); }, 260);
+}
 function musicKick() {
   if (!AC) return;
   if (!musicReady) {
-    musicReady = true; music.src = 'music.mp4';
+    musicReady = true; music.src = track + '.mp4';
     try { const src = AC.createMediaElementSource(music); musicGain = AC.createGain(); src.connect(musicGain).connect(AC.destination); } catch (e) { musicGain = null; }
   }
   applyMusic();
 }
 function applyMusic() {
   const v = save.music !== false ? save.musicVol : 0;
-  if (musicGain) musicGain.gain.value = v * .8; else music.volume = Math.min(1, v * .8);
+  if (musicGain) { musicGain.gain.cancelScheduledValues(AC.currentTime); musicGain.gain.value = v * .8; } else music.volume = Math.min(1, v * .8);
   if (v > 0 && musicReady && !document.hidden) { const p = music.play(); if (p && p.catch) p.catch(() => {}); }
   else music.pause();
 }
