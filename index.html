@@ -18,7 +18,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&family=Yuji+Syuku&family=Zen+Antique&family=Zen+Old+Mincho:wght@400;700;900&display=swap">
 <style>
 /* Layout: full-bleed scene; controls float on glass over the bottom (actions under the left thumb, d-pad under the right); menus are iOS-style sheets. */
 :root{
@@ -320,12 +320,6 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border:0;border-radiu
 .lcard span{color:var(--label2);font-size:14px;line-height:1.35;padding:0 16px}
 .lcard.on{box-shadow:inset 0 0 0 2px var(--tint)}
 .lcard:nth-child(2) b{font-family:'Pixelify Sans',monospace;letter-spacing:.02em}
-/* pixel mode: a pixel typeface and squarer glass */
-#app.px{--sf:'Pixelify Sans',ui-monospace,monospace;--sfd:'Pixelify Sans',ui-monospace,monospace;font-family:var(--sf)}
-#app.px h1,#app.px h2,#app.px .intro b,#app.px .bigtime{letter-spacing:0}
-#app.px .sheet{border-radius:12px}
-#app.px .sheet .list,#app.px .dcard,#app.px .lcard,#app.px .chip,#app.px .lv{border-radius:6px}
-#app.px .appicon{border-radius:8px;image-rendering:pixelated}
 .dcard{border-radius:18px;padding:14px 16px;background:var(--fill2);text-align:left;display:flex;flex-direction:column;gap:4px;border:0;transition:transform .08s}
 .dcard:active{transform:scale(.98)}
 .dcard b{font-family:var(--sfd);font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px}
@@ -382,6 +376,289 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
 .set li .seg{justify-self:end}
 #app.swap #deckL{left:auto;right:0;padding-left:0;padding-right:max(22px,env(safe-area-inset-right,0px))}
 #app.swap #deckR{right:auto;left:0;padding-right:0;padding-left:max(22px,env(safe-area-inset-left,0px))}
+/* ===== Achievements: badge cards, shared by both looks ===== */
+.achhero{display:flex;align-items:center;gap:16px;padding:14px 16px}
+.ah-count{display:flex;align-items:baseline;gap:4px;flex:none}
+.ah-count b{font-family:var(--sfd);font-size:44px;line-height:1}
+.ah-count span{color:var(--label2);font-size:17px}
+.ah-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.ah-bar{height:10px;overflow:hidden}
+.ah-bar i{display:block;height:100%}
+.ah-meta small{color:var(--label2);font-size:13px;line-height:1.3}
+.badges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:6px}
+#app.px .badges{gap:14px;padding:0 3px}
+.badge{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:14px 10px 12px;min-width:0}
+.badge .bt{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;min-width:0}
+.badge .bt b{font-size:14.5px;line-height:1.2}
+.badge .bt small{font-size:12px;line-height:1.3;color:var(--label2)}
+.badge .bp{display:block;width:80%;height:6px;overflow:hidden;margin-top:3px}
+.badge .bp i{display:block;height:100%}
+.badge em{font-style:normal;font-size:11.5px;color:var(--label2);font-variant-numeric:tabular-nums}
+.badge .br{position:absolute;top:8px;right:9px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:2px;color:var(--gold)}
+.badge .br .mon-i{width:12px;height:12px}
+.seal{width:54px;height:54px;flex:none;display:grid;place-items:center;position:relative}
+.seal svg{width:28px;height:28px}
+.badge .ok{position:absolute;top:8px;left:9px;font-size:12px;font-weight:800}
+.achtoast .seal{width:40px;height:40px}
+.achtoast .seal svg{width:22px;height:22px}
+
+/* ===== Painted look: ink, washi paper and vermilion lacquer ===== */
+#app.ink{--ink:#241912;--ink2:rgba(36,25,18,.7);--ink3:rgba(36,25,18,.4);--shu:#c8321f;--shu2:#8e1e12;--kin:#c99a2e;--cream:#f6ecd8;
+  --sf:'Zen Old Mincho','Noto Serif JP',Georgia,serif;--sfd:'Zen Antique','Zen Old Mincho',serif;--brush:'Yuji Syuku','Zen Antique',serif;font-family:var(--sf);
+  --paper:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .3 0 0 0 0 .16 0 0 0 .11 0'/%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .22' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .38 0 0 0 0 .22 0 0 0 .5 -.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E")}
+#app.ink .screen{background:radial-gradient(ellipse at 50% 40%,rgba(30,18,8,.25),rgba(20,12,6,.6));--label:var(--ink);--label2:var(--ink2);--label3:var(--ink3);--fill:rgba(70,45,22,.12);--fill2:rgba(255,250,236,.5);--tint:var(--shu);--gold:#9a6c0c;--green:#4f7a28}
+#app.ink .sheet{color:var(--ink);background:var(--paper),linear-gradient(176deg,#f9f0de,#eddcbb);-webkit-backdrop-filter:none;backdrop-filter:none;border:0;border-top:10px solid #4a2c1a;border-bottom:10px solid #4a2c1a;border-radius:3px;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(36,25,18,.25),0 0 0 2px var(--ink),0 0 0 4px rgba(201,154,46,.55),0 24px 60px rgba(0,0,0,.55)}
+#app.ink h1,#app.ink h2{font-weight:400;letter-spacing:.01em}
+#app.ink h1{font-size:34px;letter-spacing:-.01em}
+#app.ink h2{font-size:30px}
+#app.ink .title{font-weight:700;color:var(--shu2);letter-spacing:.14em;font-size:12.5px;display:flex;align-items:center;gap:8px;margin-top:6px}
+#app.ink .title::before,#app.ink .title::after{content:"";height:1.5px;background:currentColor;opacity:.55}
+#app.ink .title::before{width:16px}#app.ink .title::after{flex:1}
+#app.ink .cta{border-radius:5px;background:linear-gradient(180deg,#d9472f,#b52a17);color:#fff7ea;font-weight:900;letter-spacing:.05em;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 0 2px var(--ink),0 4px 0 var(--ink);transition:transform .06s}
+#app.ink .cta:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 0 2px var(--ink),0 1px 0 var(--ink);filter:none}
+#app.ink .cta.gold{background:linear-gradient(180deg,#f2cf6a,#cf9f30);color:var(--ink)}
+#app.ink .cta.gold .mon-i{color:var(--ink)}
+#app.ink .sec,#app.ink .shopbtn,#app.ink .back,#app.ink .diffchip,#app.ink .tab,#app.ink .gear{border-radius:5px;background:rgba(255,251,240,.7);color:var(--ink);font-weight:700;box-shadow:0 0 0 1.5px var(--ink),0 3px 0 var(--ink)}
+#app.ink .sec:active,#app.ink .shopbtn:active,#app.ink .back:active,#app.ink .tab:active{transform:translateY(2px);box-shadow:0 0 0 1.5px var(--ink),0 1px 0 var(--ink)}
+#app.ink .gear{background:var(--ink);color:var(--cream)}
+#app.ink .tab.on{background:var(--ink);color:var(--cream)}
+#app.ink .dot{background:var(--shu);box-shadow:0 0 0 2px #f6ecd8}
+#app.ink .wallet{border-radius:4px;background:var(--ink);color:#f0c95a}
+#app.ink .diffchip i,#app.ink .rowbtn i{color:var(--ink2)}
+#app.ink .seg{background:transparent;border-radius:5px;box-shadow:0 0 0 1.5px var(--ink)}
+#app.ink .seg button{border-radius:4px;color:var(--ink2)}
+#app.ink .seg button.on{background:var(--ink);color:var(--cream)}
+#app.ink .switch{background:rgba(36,25,18,.18);box-shadow:inset 0 0 0 1.5px var(--ink)}
+#app.ink .switch::after{background:var(--cream);box-shadow:0 0 0 1.5px var(--ink)}
+#app.ink .switch[aria-checked="true"]{background:var(--shu)}
+#app.ink input[type=range]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(90deg,var(--shu) var(--p,50%),rgba(36,25,18,.3) var(--p,50%))}
+#app.ink input[type=range]::-webkit-slider-thumb{width:24px;height:24px;margin-top:-10.5px;border-radius:4px;background:var(--shu);box-shadow:0 0 0 2px var(--ink);transform:rotate(45deg)}
+#app.ink .list,#app.ink .chlock{border-radius:5px;background:rgba(255,251,240,.55);box-shadow:inset 0 0 0 1.5px rgba(36,25,18,.75)}
+#app.ink .list li + li{border-top:1px dashed rgba(36,25,18,.35)}
+#app.ink .list .chip{border-radius:4px;background:var(--shu)!important;color:var(--cream)!important;transform:rotate(-4deg)}
+#app.ink .lv,#app.ink .chc,#app.ink .wchip,#app.ink .item,#app.ink .dcard,#app.ink .lcard,#app.ink .achrow,#app.ink .badge{border-radius:5px;background:rgba(255,251,240,.6);box-shadow:inset 0 0 0 1.5px var(--ink)}
+#app.ink .lv .n{font-weight:900}
+#app.ink .lv.cur{background:var(--shu);color:var(--cream);box-shadow:inset 0 0 0 2px var(--ink)}
+#app.ink .lv.cur .ti,#app.ink .lv.cur .s svg.o{color:rgba(246,236,216,.6)}
+#app.ink .lv.boss{background:var(--ink);color:var(--cream)}
+#app.ink .lv.boss .ti{color:#ff7a5e}
+#app.ink .lv .s{color:#c08a12}
+#app.ink .lv .s svg.o{color:rgba(36,25,18,.18)}
+#app.ink .lv .td i{border-radius:1px;background:rgba(36,25,18,.2)}
+#app.ink .lv .td i.on{background:#4f7a28}
+#app.ink .lv.cur .td i,#app.ink .lv.boss .td i{background:rgba(246,236,216,.25)}
+#app.ink .lv.cur .td i.on,#app.ink .lv.boss .td i.on{background:#a7d070}
+#app.ink .chc.on,#app.ink .wchip.on,#app.ink .item.eq,#app.ink .dcard.on,#app.ink .lcard.on{box-shadow:inset 0 0 0 1.5px var(--ink),0 0 0 3px var(--shu);background:rgba(200,50,31,.1)}
+#app.ink .wchip.on span{color:var(--ink)}
+#app.ink .chc .cn{font-weight:900}
+#app.ink .chc canvas,#app.ink .lcard canvas{border-bottom:1.5px solid var(--ink)}
+#app.ink .dcard b,#app.ink .lcard b{font-family:var(--sfd);font-weight:400;font-size:24px}
+#app.ink .dcard.e b{color:#4f7a28}#app.ink .dcard.n b{color:#9a6c0c}#app.ink .dcard.h b{color:var(--shu)}
+#app.ink .dcard b em{background:var(--ink);color:var(--cream);border-radius:3px;font-family:var(--sf)}
+#app.ink .buy{border-radius:4px;background:linear-gradient(180deg,#f2cf6a,#cf9f30);color:var(--ink);box-shadow:0 0 0 1.5px var(--ink),0 2px 0 var(--ink)}
+#app.ink .buy .mon-i{color:var(--ink)}
+#app.ink .buy.own{background:var(--ink);color:var(--cream)}
+#app.ink .buy.eqd{background:transparent;color:var(--ink2);box-shadow:inset 0 0 0 1px rgba(36,25,18,.4)}
+#app.ink .buy.poor{background:rgba(36,25,18,.08);color:var(--ink3);box-shadow:inset 0 0 0 1px rgba(36,25,18,.25)}
+#app.ink .buy.poor .mon-i{color:var(--ink3)}
+#app.ink .buy.confirm{background:var(--shu);color:var(--cream)}
+#app.ink .pv{background:var(--ink)}
+#app.ink .pips i{background:rgba(36,25,18,.15)}#app.ink .pips i.on{background:var(--shu)}
+#app.ink .gift{border-radius:5px;background:linear-gradient(100deg,rgba(200,50,31,.14),rgba(201,154,46,.2));border:1.5px dashed var(--shu2)}
+#app.ink .gift button,#app.ink .prize button{border-radius:4px;background:var(--shu);color:var(--cream);box-shadow:0 0 0 1.5px var(--ink),0 2px 0 var(--ink)}
+#app.ink .trophy{border-radius:3px;background:var(--shu);box-shadow:0 0 0 1.5px var(--shu2),inset 0 0 0 2px rgba(246,236,216,.35);transform:rotate(-5deg)}
+#app.ink .trophy svg{stroke:var(--cream)}
+#app.ink .achrow .bar,#app.ink .ah-bar,#app.ink .badge .bp{border-radius:2px;background:rgba(36,25,18,.15)}
+#app.ink .achrow .bar i,#app.ink .ah-bar i,#app.ink .badge .bp i{background:linear-gradient(90deg,var(--shu),#e0a53a)}
+#app.ink .bigtime{font-weight:900;letter-spacing:-.02em}
+#app.ink .stars{color:#d4a22a}#app.ink .stars svg.o{color:rgba(36,25,18,.15)}
+#app.ink .total b{font-weight:900;color:#9a6c0c}
+#app.ink .slot{border-radius:6px;background:#2a1a12;color:var(--cream);border:0;box-shadow:0 0 0 2px var(--ink),inset 0 0 0 2px var(--kin);--label2:rgba(246,236,216,.65)}
+#app.ink .slot-head b{font-family:var(--sfd);font-weight:400;font-size:24px}
+#app.ink .reels{border-radius:4px;background:#120b07}
+#app.ink .reel{border-radius:3px;background:linear-gradient(180deg,#d9c9a4,#f6ecd8 50%,#d9c9a4)}
+#app.ink .reel::after{background:linear-gradient(180deg,rgba(40,24,10,.35),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 70%,rgba(40,24,10,.35))}
+#app.ink .prize{border-radius:4px;background:rgba(246,236,216,.1)}
+#app.ink .tasks .ck{border-radius:3px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink3)}
+#app.ink .tasks li.ok .ck{background:#4f7a28;color:var(--cream);box-shadow:none}
+#app.ink .tasks li.fresh{background:rgba(201,154,46,.18)}
+#app.ink .tasks li.fresh .ck{background:var(--shu);color:var(--cream);box-shadow:none}
+#app.ink .new{border-radius:3px;background:var(--shu)}
+#app.ink img.appicon{border-radius:6px;box-shadow:0 0 0 2px var(--ink),0 0 0 4px rgba(201,154,46,.6)}
+#app.ink .achhero{border-radius:5px;background:var(--ink);color:var(--cream);--label2:rgba(246,236,216,.65)}
+#app.ink .ah-count b{font-weight:400;color:#f0c95a}
+#app.ink .ah-bar{background:rgba(246,236,216,.15)}
+/* hanko seals: red when earned, a faint outline until then */
+#app.ink .seal{font-family:var(--brush);font-size:30px;line-height:1;color:var(--cream);background:var(--shu);border-radius:6px;transform:rotate(-6deg);box-shadow:inset 0 0 0 2.5px rgba(246,236,216,.45),0 0 0 2px var(--shu2)}
+#app.ink .seal.t-silver{box-shadow:inset 0 0 0 2.5px rgba(246,236,216,.45),0 0 0 2px var(--shu2),0 0 0 4px #b9b6ad}
+#app.ink .seal.t-gold{box-shadow:inset 0 0 0 2.5px rgba(246,236,216,.45),0 0 0 2px var(--shu2),0 0 0 4px #d4a22a}
+#app.ink .badge.off .seal{background:transparent;color:rgba(36,25,18,.25);box-shadow:inset 0 0 0 2px rgba(36,25,18,.25);transform:none}
+#app.ink .badge.off{background:rgba(255,251,240,.35);box-shadow:inset 0 0 0 1.5px rgba(36,25,18,.35)}
+#app.ink .badge.off .bt b{color:var(--ink2)}
+#app.ink .badge .ok{color:var(--shu)}
+/* things that float over the scene: lacquer plaques and paper slips */
+#app.ink .glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+#app.ink .cap.glass,#app.ink .round.glass,#app.ink .pchip,#app.ink .bossbar.glass{background:rgba(30,20,13,.84);border:1px solid rgba(201,154,46,.7);border-radius:4px;color:var(--cream);font-weight:700}
+#app.ink .cap .dim{color:rgba(246,236,216,.45)}
+#app.ink .prog{height:5px;border-radius:1px;background:rgba(30,20,13,.6);box-shadow:0 0 0 1px rgba(201,154,46,.5)}
+#app.ink .prog i{border-radius:0;background:linear-gradient(90deg,var(--shu),#f0c95a)}
+#app.ink .ptime{font-weight:700;color:var(--cream)}
+#app.ink .bossbar span{color:#f0c95a;font-family:var(--sfd);font-weight:400;font-size:15px;letter-spacing:.04em;text-transform:none}
+#app.ink .bossbar .bb{border-radius:1px;background:rgba(246,236,216,.15)}
+#app.ink .bossbar .bb i{background:linear-gradient(90deg,#8e1e12,var(--shu))}
+#app.ink .toast.glass,#app.ink .achtoast{background:var(--paper),#f4e7cc;color:var(--ink);border:0;border-left:6px solid var(--shu);border-radius:3px;box-shadow:0 0 0 1.5px var(--ink),0 10px 26px rgba(0,0,0,.4);font-weight:700}
+#app.ink .toast b{color:var(--shu)}
+#app.ink #pop{font-family:var(--sfd);font-weight:400;font-size:17px;letter-spacing:.02em;text-transform:none}
+#app.ink .achtoast small{color:var(--shu2)}
+#app.ink .achtoast em{color:#9a6c0c}
+#app.ink .intro b{font-weight:400;font-size:38px;text-shadow:0 2px 0 rgba(36,25,18,.85),0 0 24px rgba(0,0,0,.55)}
+#app.ink .intro small{font-weight:700;letter-spacing:.2em}
+#app.ink .itasks{background:var(--paper),rgba(244,231,204,.95);color:var(--ink);border-radius:3px;box-shadow:0 0 0 1.5px var(--ink);text-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+/* controls: a brush-drawn enso for the d-pad and a lacquer seal for the hook */
+#app.ink .lg{-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none}
+#app.ink #dpad{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='rgba(24,15,8,.42)'/%3E%3Cpath d='M64 8.5A43 43 0 1 0 91.5 40' fill='none' stroke='%23f6ecd8' stroke-width='6.5' stroke-linecap='round'/%3E%3Cpath d='M71 11.5A44 44 0 0 1 93 45' fill='none' stroke='%23f6ecd8' stroke-width='2' stroke-linecap='round' opacity='.75'/%3E%3Cpath d='M27 13A41 41 0 0 0 11 60' fill='none' stroke='%23f6ecd8' stroke-width='2.5' opacity='.45'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+#app.ink #dpad .ch{color:var(--cream)}
+#app.ink #dpad .ch.on{color:#f0c95a}
+#app.ink #dpad .glow{background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(240,201,90,.35),rgba(240,201,90,0) 42%)}
+#app.ink #knob{background:var(--ink);color:var(--cream);box-shadow:0 0 0 2px var(--kin),0 0 0 4px rgba(246,236,216,.8)}
+#app.ink #knob.slash{background:var(--shu)}
+#app.ink #hookBtn{background:radial-gradient(circle at 36% 30%,#e65a3e,#b52a17 58%,#7e1a10);color:var(--cream);box-shadow:inset 0 0 0 3px rgba(246,236,216,.85),inset 0 0 0 7px rgba(126,26,16,.55),inset 0 0 0 8px rgba(240,201,90,.7),0 8px 18px rgba(0,0,0,.35)}
+#app.ink #hookBtn.hooked{background:radial-gradient(circle at 36% 30%,#ffe08a,#e0a53a 58%,#9a6c0c);color:var(--ink)}
+#app.ink #hookBtn.hooked span{color:var(--ink);text-shadow:none}
+#app.ink #hookBtn.kick{background:radial-gradient(circle at 36% 30%,#a7d070,#5b7f2e 60%,#2f4a14)}
+#app.ink .act span{font-weight:700;color:var(--cream)}
+#app.ink .scrim{background:linear-gradient(180deg,rgba(20,12,6,0),rgba(20,12,6,.28))}
+
+/* ===== Pixel look: 16-bit windows, bevelled buttons and notched frames ===== */
+#app.px{--sf:'Pixelify Sans',ui-monospace,monospace;--sfd:'Press Start 2P','Pixelify Sans',monospace;font-family:var(--sf)}
+#app.px .screen{background:repeating-conic-gradient(rgba(8,8,18,.5) 0 25%,rgba(8,8,18,.3) 0 50%) 0 0/4px 4px;--label:#f4f4f4;--label2:#94b0c2;--label3:#566c86;--fill:#333c57;--fill2:#1f2238;--tint:#b13e53;--gold:#ffcd75;--green:#38b764}
+#app.px .sheet{width:min(440px,calc(100% - 8px));background:#262b44;border:0;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;scrollbar-width:none;
+  box-shadow:inset 3px 3px 0 #333c57,inset -3px -3px 0 #1a1c2c,0 -4px 0 #94b0c2,0 4px 0 #94b0c2,-4px 0 0 #94b0c2,4px 0 0 #94b0c2,0 12px 0 rgba(0,0,0,.35)}
+#app.px .sheet::-webkit-scrollbar{display:none}
+#app.px h1,#app.px h2{font-weight:400;letter-spacing:0;line-height:1.35}
+#app.px h1{font-size:19px;color:#ffcd75;text-shadow:3px 3px 0 #b13e53}
+#app.px h2{font-size:16px;text-shadow:3px 3px 0 #1a1c2c}
+#app.px .title{font-family:var(--sfd);font-size:9px;font-weight:400;color:#73eff7;letter-spacing:.06em;margin-top:6px}
+#app.px .sub,#app.px .blurb{font-size:15px}
+#app.px .cta{height:50px;border-radius:0;background:#b13e53;color:#f4f4f4;font-family:var(--sfd);font-size:12px;font-weight:400;letter-spacing:0;transition:none;
+  box-shadow:inset 3px 3px 0 #ef7d57,inset -3px -3px 0 #5d275d,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .cta:active{transform:translateY(2px);filter:none;box-shadow:inset 3px 3px 0 #5d275d,inset -3px -3px 0 #ef7d57,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .cta.gold{background:#ffcd75;color:#1a1c2c;box-shadow:inset 3px 3px 0 #fff3c4,inset -3px -3px 0 #ef7d57,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .cta.gold .mon-i{color:#1a1c2c}
+#app.px .sec,#app.px .shopbtn,#app.px .back,#app.px .gear,#app.px .diffchip,#app.px .tab,#app.px .gift button,#app.px .prize button{border-radius:0;background:#333c57;color:#f4f4f4;font-weight:600;transition:none;
+  box-shadow:inset 3px 3px 0 #566c86,inset -3px -3px 0 #1a1c2c,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .sec:active,#app.px .shopbtn:active,#app.px .back:active,#app.px .gear:active,#app.px .tab:active{transform:translateY(2px);box-shadow:inset 3px 3px 0 #1a1c2c,inset -3px -3px 0 #566c86,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .tab.on,#app.px .gift button,#app.px .prize button{background:#41a6f6;color:#1a1c2c;box-shadow:inset 3px 3px 0 #73eff7,inset -3px -3px 0 #3b5dc9,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .gear{width:42px;height:42px}
+#app.px .wallet{border-radius:0;background:#1a1c2c;box-shadow:0 -3px 0 #ffcd75,0 3px 0 #ffcd75,-3px 0 0 #ffcd75,3px 0 0 #ffcd75;margin:0 3px}
+#app.px .wrow{gap:12px}
+#app.px .dot{border-radius:0;box-shadow:0 0 0 2px #1a1c2c}
+#app.px .seg{border-radius:0;background:#1a1c2c;padding:3px;box-shadow:0 0 0 2px #0e0f1c}
+#app.px .seg button{border-radius:0;font-size:14px}
+#app.px .seg button.on{background:#41a6f6;color:#1a1c2c;box-shadow:inset 2px 2px 0 #73eff7,inset -2px -2px 0 #3b5dc9}
+#app.px .switch{border-radius:0;background:#1a1c2c;box-shadow:inset 0 0 0 3px #566c86}
+#app.px .switch::after{border-radius:0;top:5px;left:5px;width:21px;height:21px;background:#94b0c2;box-shadow:inset -3px -3px 0 #566c86}
+#app.px .switch[aria-checked="true"]{background:#38b764}
+#app.px .switch[aria-checked="true"]::after{background:#f4f4f4;transform:translateX(20px)}
+#app.px input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:0;background:linear-gradient(90deg,#41a6f6 var(--p,50%),#1a1c2c var(--p,50%));box-shadow:0 0 0 2px #0e0f1c}
+#app.px input[type=range]::-webkit-slider-thumb{width:16px;height:24px;margin-top:-9px;border-radius:0;background:#f4f4f4;box-shadow:inset -3px -3px 0 #94b0c2,0 0 0 3px #0e0f1c}
+#app.px .list,#app.px .chlock{border-radius:0;background:#1a1c2c;box-shadow:0 -3px 0 #333c57,0 3px 0 #333c57,-3px 0 0 #333c57,3px 0 0 #333c57}
+#app.px .list li + li{border-top:3px solid #262b44}
+#app.px .list .chip{border-radius:0;background:#3b5dc9!important;color:#f4f4f4!important;box-shadow:inset 2px 2px 0 #41a6f6,inset -2px -2px 0 #29366f}
+#app.px .lv,#app.px .chc,#app.px .wchip,#app.px .item,#app.px .dcard,#app.px .lcard,#app.px .achrow,#app.px .badge,#app.px .gift,#app.px .prize{border-radius:0;background:#333c57;border:0;
+  box-shadow:inset 3px 3px 0 #566c86,inset -3px -3px 0 #262b44,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .chapters,#app.px .ward{padding-top:5px;padding-bottom:7px}
+#app.px .lv .n{font-family:var(--sfd);font-size:13px;font-weight:400;margin:2px 0}
+#app.px .lv.cur{background:#b13e53;box-shadow:inset 3px 3px 0 #ef7d57,inset -3px -3px 0 #5d275d,0 -3px 0 #ffcd75,0 3px 0 #ffcd75,-3px 0 0 #ffcd75,3px 0 0 #ffcd75}
+#app.px .lv.boss{background:#5d275d;box-shadow:inset 3px 3px 0 #b13e53,inset -3px -3px 0 #1a1c2c,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .lv .s svg.o{color:#1a1c2c}
+#app.px .lv .td i{border-radius:0;background:#1a1c2c}
+#app.px .lv .td i.on{background:#a7f070}
+#app.px .chc.on,#app.px .wchip.on,#app.px .item.eq,#app.px .dcard.on,#app.px .lcard.on{background:#3b3f66;box-shadow:inset 3px 3px 0 #566c86,inset -3px -3px 0 #262b44,0 -3px 0 #ffcd75,0 3px 0 #ffcd75,-3px 0 0 #ffcd75,3px 0 0 #ffcd75}
+#app.px .chc canvas,#app.px .lcard canvas,#app.px .pv,#app.px .wchip canvas{image-rendering:pixelated}
+#app.px .chc canvas,#app.px .lcard canvas{margin:3px 3px 0;width:calc(100% - 6px)}
+#app.px .chc .lockb,#app.px .chc .lockb{border-radius:0}
+#app.px .dcard b,#app.px .lcard b{font-family:var(--sfd);font-size:14px;font-weight:400}
+#app.px .dcard b em{border-radius:0;font-family:var(--sf);background:#1a1c2c}
+#app.px .buy{border-radius:0;background:#ffcd75;color:#1a1c2c;box-shadow:inset 2px 2px 0 #fff3c4,inset -2px -2px 0 #ef7d57,0 0 0 2px #0e0f1c}
+#app.px .buy .mon-i{color:#1a1c2c}
+#app.px .buy.own{background:#f4f4f4;box-shadow:inset -2px -2px 0 #94b0c2,0 0 0 2px #0e0f1c}
+#app.px .buy.eqd{background:transparent;color:#94b0c2;box-shadow:inset 0 0 0 2px #566c86}
+#app.px .buy.poor{background:#1a1c2c;color:#ffcd75;box-shadow:inset 0 0 0 2px #566c86}
+#app.px .buy.poor .mon-i{color:#ffcd75}
+#app.px .buy.confirm{background:#b13e53;color:#f4f4f4;box-shadow:inset 2px 2px 0 #ef7d57,inset -2px -2px 0 #5d275d,0 0 0 2px #0e0f1c}
+#app.px .pips i{border-radius:0;background:#1a1c2c}#app.px .pips i.on{background:#ffcd75}
+#app.px .gift{background:#5d275d;box-shadow:inset 3px 3px 0 #b13e53,inset -3px -3px 0 #1a1c2c,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .trophy{border-radius:0;background:#ffcd75;box-shadow:inset 2px 2px 0 #fff3c4,inset -2px -2px 0 #ef7d57,0 0 0 2px #0e0f1c;color:#5d275d}
+#app.px .achrow .bar,#app.px .ah-bar,#app.px .badge .bp,#app.px .prog{border-radius:0;background:#1a1c2c;box-shadow:0 0 0 2px #0e0f1c}
+#app.px .achrow .bar i,#app.px .ah-bar i,#app.px .badge .bp i{border-radius:0;background:repeating-linear-gradient(90deg,#ffcd75 0 6px,#ef7d57 6px 8px)}
+#app.px .bigtime{font-family:var(--sfd);font-size:30px;font-weight:400;letter-spacing:0;text-shadow:3px 3px 0 #1a1c2c}
+#app.px .total b{font-family:var(--sfd);font-size:20px;font-weight:400}
+#app.px .slot{border-radius:0;background:#5d275d;border:0;box-shadow:inset 3px 3px 0 #b13e53,inset -3px -3px 0 #1a1c2c,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .slot-head b{font-family:var(--sfd);font-size:12px;font-weight:400;color:#ffcd75}
+#app.px .reels{border-radius:0;background:#1a1c2c;box-shadow:none}
+#app.px .reel{border-radius:0;background:#f4f4f4}
+#app.px .reel::after{background:repeating-linear-gradient(180deg,rgba(26,28,44,.12) 0 2px,transparent 2px 4px)}
+#app.px .reel.win{box-shadow:0 0 0 3px #ffcd75}
+#app.px .tasks .ck{border-radius:0;background:#333c57}
+#app.px .tasks li.ok .ck{background:#38b764;color:#1a1c2c}
+#app.px .tasks li.fresh{background:#3b3f66}
+#app.px .tasks li.fresh .ck{background:#ffcd75}
+#app.px .new{border-radius:0;font-family:var(--sf)}
+#app.px img.appicon{border-radius:0;box-shadow:0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .achhero{background:#1a1c2c;box-shadow:0 -3px 0 #ffcd75,0 3px 0 #ffcd75,-3px 0 0 #ffcd75,3px 0 0 #ffcd75;margin:3px}
+#app.px .ah-count b{font-weight:400;font-size:30px;color:#ffcd75;text-shadow:3px 3px 0 #b13e53}
+/* medals: pixel discs in bronze, silver or gold */
+#app.px .seal{background:var(--pxMedalB) center/100% 100% no-repeat;color:#1a1c2c;image-rendering:pixelated}
+#app.px .seal.t-silver{background-image:var(--pxMedalS)}
+#app.px .seal.t-gold{background-image:var(--pxMedalG)}
+#app.px .badge.on{background:#3b3f66;box-shadow:inset 3px 3px 0 #566c86,inset -3px -3px 0 #262b44,0 -3px 0 #ffcd75,0 3px 0 #ffcd75,-3px 0 0 #ffcd75,3px 0 0 #ffcd75}
+#app.px .badge.off .seal{background-image:var(--pxMedalOff);color:#566c86}
+#app.px .badge.off{background:#262b44;box-shadow:inset 3px 3px 0 #333c57,inset -3px -3px 0 #1f2238,0 -3px 0 #0e0f1c,0 3px 0 #0e0f1c,-3px 0 0 #0e0f1c,3px 0 0 #0e0f1c}
+#app.px .badge.off .bt b{color:#94b0c2}
+#app.px .badge .bt b{font-weight:700}
+#app.px .badge .ok{color:#a7f070}
+/* things that float over the scene: dark dialog boxes with a light frame */
+#app.px .glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+#app.px .cap.glass,#app.px .round.glass,#app.px .pchip,#app.px .bossbar.glass{border-radius:0;border:0;background:rgba(26,28,44,.9);color:#f4f4f4;font-size:16px;box-shadow:0 -3px 0 #94b0c2,0 3px 0 #94b0c2,-3px 0 0 #94b0c2,3px 0 0 #94b0c2}
+#app.px .hud-row{gap:12px;padding:0 3px}
+#app.px .prog{height:6px}
+#app.px .prog i{border-radius:0;background:#ffcd75}
+#app.px .ptime{font-size:15px;text-shadow:2px 2px 0 #1a1c2c}
+#app.px .bossbar{margin:0 3px}
+#app.px .bossbar span{font-family:var(--sfd);font-size:9px;font-weight:400;color:#ffcd75}
+#app.px .bossbar .bb{border-radius:0;height:8px;background:#1a1c2c}
+#app.px .bossbar .bb i{background:linear-gradient(180deg,#ef7d57 0 2px,#b13e53 2px)}
+#app.px .bossbar.rage .bb i{background:linear-gradient(180deg,#b13e53 0 2px,#5d275d 2px)}
+#app.px .toast.glass,#app.px .achtoast{border-radius:0;border:0;background:#1a1c2c;color:#f4f4f4;font-size:16px;line-height:1.3;
+  box-shadow:inset 0 0 0 3px #333c57,0 -4px 0 #f4f4f4,0 4px 0 #f4f4f4,-4px 0 0 #f4f4f4,4px 0 0 #f4f4f4,0 10px 0 rgba(0,0,0,.35)}
+#app.px .toast b{color:#ffcd75}
+#app.px #pop{font-family:var(--sfd);font-size:10px;letter-spacing:0;line-height:1.4;padding:10px 14px}
+#app.px .achtoast small{font-family:var(--sfd);font-size:7px;letter-spacing:0;color:#73eff7}
+#app.px .achtoast b{font-size:16px}
+#app.px .intro{text-shadow:none}
+#app.px .intro b{font-family:var(--sfd);font-size:20px;font-weight:400;line-height:1.35;color:#ffcd75;letter-spacing:0;text-shadow:3px 3px 0 #b13e53,-2px 0 0 #1a1c2c,2px 0 0 #1a1c2c,0 -2px 0 #1a1c2c,0 2px 0 #1a1c2c}
+#app.px .intro small{font-family:var(--sfd);font-size:9px;letter-spacing:.04em;text-shadow:2px 2px 0 #1a1c2c}
+#app.px .intro span{font-size:16px;text-shadow:2px 2px 0 #1a1c2c}
+#app.px .itasks{border-radius:0;background:#1a1c2c;font-size:15px;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 -3px 0 #f4f4f4,0 3px 0 #f4f4f4,-3px 0 0 #f4f4f4,3px 0 0 #f4f4f4}
+/* controls: a pixel cross for the d-pad and chunky pixel buttons */
+#app.px .lg{-webkit-backdrop-filter:none;backdrop-filter:none;border:0;box-shadow:none;background:none}
+#app.px #dpad{background:var(--pxPad) center/100% 100% no-repeat;border-radius:0;image-rendering:pixelated}
+#app.px #dpad .glow{display:none}
+#app.px #dpad .ch{color:#f4f4f4;filter:drop-shadow(2px 2px 0 #0e0f1c);transition:none}
+#app.px #dpad .ch.on{color:#ffcd75;transform:none}
+#app.px #dpad .ch svg{width:20px;height:20px}
+#app.px #knob{background:var(--pxKnob) center/100% 100% no-repeat;border-radius:0;color:#f4f4f4;image-rendering:pixelated}
+#app.px #knob.slash{background-image:var(--pxKnobOn)}
+#app.px #hookBtn{background:var(--pxHook) center/100% 100% no-repeat;border-radius:0;image-rendering:pixelated;transition:none}
+#app.px #hookBtn.hooked{background-image:var(--pxHookOn)}
+#app.px #hookBtn.hooked span,#app.px #hookBtn.hooked svg{color:#1a1c2c;filter:none;text-shadow:none}
+#app.px #hookBtn.kick{background-image:var(--pxHookKick)}
+#app.px .act.on{transform:translateY(3px)}
+#app.px .act span{font-family:var(--sfd);font-size:8px;font-weight:400;letter-spacing:0;text-shadow:2px 2px 0 #0e0f1c}
+#app.px .act svg,#app.px #knob svg{filter:drop-shadow(2px 2px 0 #0e0f1c)}
+#app.px .scrim{display:none}
 @media (prefers-reduced-motion:reduce){.toast,.cta,.sec,.act,.lv,.prog i,#dpad .ch{transition:none}}
 </style>
 
@@ -423,7 +700,7 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
 
   <div id="hint" class="toast glass off" role="status"></div>
   <div id="pop" class="toast glass off"></div>
-  <div id="achToast" class="achtoast glass off" role="status"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="at"><small data-en="Achievement unlocked" data-ru="Достижение получено">Achievement unlocked</small><b id="achName"></b></span><em id="achRew"></em></div>
+  <div id="achToast" class="achtoast glass off" role="status"><span class="seal" id="achSeal"></span><span class="at"><small data-en="Achievement unlocked" data-ru="Достижение получено">Achievement unlocked</small><b id="achName"></b></span><em id="achRew"></em></div>
   </div>
 
   <div class="deck" id="deckL" hidden>
@@ -563,8 +840,8 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
         <button class="back" id="bAchBack" data-aen="Back" data-aru="Назад" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-chev"/></svg><span data-en="Back" data-ru="Назад">Back</span></button>
         <h2 data-en="Achievements" data-ru="Достижения">Achievements</h2>
       </div>
-      <p class="blurb" id="achBlurb"></p>
-      <ul class="list achlist" id="achList"></ul>
+      <div class="achhero" id="achHero"></div>
+      <div id="achList"></div>
     </div>
   </section>
 
@@ -1514,9 +1791,9 @@ function overlaps() { for (const o of OFFS) if (solid(w.x + o[0], w.y + o[1])) r
 const inX = () => finished ? 0 : clamp((pad.r || keys.r) - (pad.l || keys.l), -1, 1);
 const inY = () => finished ? 0 : clamp((pad.d || keys.d) - (pad.u || keys.u), -1, 1);
 
-function startLevel(n) {
+function startLevel(n, keepMusic) {
   buildLevel(n); placeEnemies(L); placePowers(L); applyUpgrades(); resetRun(); resetPowers();
-  run.shields += diff().shields; L.tasks = levelTasks(L); setTrack(levelTrack(n));
+  run.shields += diff().shields; L.tasks = levelTasks(L); levelMusic(n, keepMusic);
   save.last = n; persist();
   checkpoint = L.lanterns[0];
   respawn();
@@ -2096,10 +2373,10 @@ function toMenu() {
   if (!L || L.n !== save.last || L.style !== save.eq.style) { buildLevel(save.last); placeEnemies(L); checkpoint = L.lanterns[0]; respawn(); updateBossBar(); }
   buildMenu(); show('menu'); setTrack('menu');
 }
-function play(n) {
+function play(n, keepMusic) {
   const ch = levelDef(n).ch;
   if (!chapterOpen(ch)) { menuCh = ch; toMenu(); pop(T2('This chapter is still locked', 'Эта глава пока закрыта')); return; }
-  show(null); state = 'load'; hint(T2('Building the level…', 'Строю уровень…')); setTimeout(() => { startLevel(n); state = 'play'; layout(); }, 40);
+  show(null); state = 'load'; hint(T2('Building the level…', 'Строю уровень…')); setTimeout(() => { startLevel(n, keepMusic); state = 'play'; layout(); }, 40);
 }
 function showDone() { showResults(true); }
 function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clearPad(); $('#hookBtn').classList.remove('on'); renderTaskList($('#pTasks'), false); show('pause'); }
@@ -2107,10 +2384,10 @@ function pause() { if (state !== 'play') return; hookUp(); state = 'pause'; clea
 $('#bPause').onclick = pause;
 $('#bResume').onclick = () => { state = 'play'; show(null); };
 $('#bMenu').onclick = toMenu;
-$('#bRestart').onclick = () => play(L.n);
+$('#bRestart').onclick = () => play(L.n, true);
 $('#bMenu').onclick = toMenu;
-$('#bNext').onclick = () => { menuCh = levelDef(Math.min(LEVELS, L.n + 1)).ch; play(Math.min(LEVELS, L.n + 1)); };
-$('#bAgain').onclick = () => play(L.n);
+$('#bNext').onclick = () => { menuCh = levelDef(Math.min(LEVELS, L.n + 1)).ch; play(Math.min(LEVELS, L.n + 1), true); };
+$('#bAgain').onclick = () => play(L.n, true);
 $('#bLevels').onclick = () => { menuCh = levelDef(L.n).ch; toMenu(); };
 $('#bDiff').onclick = () => { audio(); openDiff('menu'); };
 
@@ -2945,7 +3222,9 @@ function drawHeroP(c, p) {
 // ---------- world styles ----------
 function applyStyle() {
   cv.className = isPx() || pixelStyle() ? 'st-pixel' : '';
-  app.classList.toggle('px', isPx());
+  // each look brings its own interface: pixel windows, or ink and paper
+  app.classList.toggle('px', isPx()); app.classList.toggle('ink', !isPx());
+  if (typeof swapIcons === 'function') swapIcons(isPx());
   $('#fx').className = 'fx fx-' + save.eq.style;
   resize();
 }
@@ -3189,21 +3468,25 @@ $('#bSetDiff').onclick = () => openDiff('settings');
 const music = new Audio();
 music.loop = true; music.preload = 'none'; music.setAttribute('playsinline', '');
 let musicGain = null, musicReady = false, track = 'menu', fadeT = 0;
-// the menu and the bosses have their own themes; levels shuffle the rest, never the same track twice in a row
+// the menu and the bosses loop their own themes; levels play the other songs one after another, never the same twice in a row
 const LEVEL_TRACKS = ['music', 'city2', 'sky', 'city3'];
-const levelTrack = (() => {
-  const list = [], pick = n => Math.floor(Math.abs(Math.sin(n * 91.7) * 1e4)) % LEVEL_TRACKS.length;
-  let prev = -1;
-  for (let n = 1; n <= 50; n++) {
-    if (levelDef(n).type === 'boss') { list[n] = 'boss'; continue; }
-    let i = pick(n); if (i === prev) i = (i + 1) % LEVEL_TRACKS.length;
-    list[n] = LEVEL_TRACKS[i]; prev = i;
-  }
-  return n => list[n] || 'music';
-})();
+let lastSong = '';
+function freshSong() {
+  let pool = LEVEL_TRACKS.filter(t => t !== track && t !== lastSong);
+  if (!pool.length) pool = LEVEL_TRACKS.filter(t => t !== track);
+  return pool[Math.random() * pool.length | 0];
+}
+// keep: going on with "Next" or "Again" lets the current song play on; coming from the menu starts a new one
+function levelMusic(n, keep) {
+  if (levelDef(n).type === 'boss') { setTrack('boss'); return; }
+  if (keep && LEVEL_TRACKS.includes(track)) return;
+  setTrack(freshSong());
+}
+music.addEventListener('ended', () => { if (LEVEL_TRACKS.includes(track)) setTrack(freshSong()); });
 function setTrack(name) {
   if (name === track) return;
-  track = name;
+  track = name; music.loop = !LEVEL_TRACKS.includes(name);
+  if (!music.loop) lastSong = name;
   if (!musicReady) return;
   clearTimeout(fadeT);
   if (musicGain) musicGain.gain.setTargetAtTime(0, AC.currentTime, .08);
@@ -3599,8 +3882,8 @@ function pline(x0, y0, x1, y1, fn) {
 const PH_HEAD = [
   '.....OOOOO......',
   '...OOHHHHHOO....',
-  '..OHHHHHHHHHO...',
-  '.OHHHHHHHHHHHO..',
+  '..OHHgggHHHHO...',
+  '.OHHgHHHHHHHHO..',
   '.OHHHHHHHHHHHHO.',
   '.OHhHHHHHHHHHHO.',
   '.OHhHMMMMMMMMMO.',
@@ -3647,7 +3930,7 @@ function heroSprite(skinId, legs) {
   const head = PH_HEAD.slice(), patch = PH_MASKS[sk.mask] || {};
   for (const k in patch) head[k] = patch[k];
   const rows = [...PH_TOP[sk.ears ? 'ears' : sk.horns ? 'horns' : 'none'], ...head, ...PH_BODY, ...PH_LEGS[legs]];
-  const map = { O: PX_OUT, S: PX_SKIN, m: '#c0566a', E: '#ffffff', e: sk.eye, M: sk.maskC, H: sk.hair, h: sk.hair2, W: sk.top, w: sk.shade, K: sk.knot, B: sk.belt, L: sk.sock, F: '#16141c', Y: sk.eye, I: '#f2e6c9', r: '#d83a2e', V: '#ffffff' };
+  const gl = hex(sk.hair).map(v => Math.round(v + (255 - v) * .6)), map = { g: '#' + gl.map(v => v.toString(16).padStart(2, '0')).join(''), O: PX_OUT, S: PX_SKIN, m: '#c0566a', E: '#ffffff', e: sk.eye, M: sk.maskC, H: sk.hair, h: sk.hair2, W: sk.top, w: sk.shade, K: sk.knot, B: sk.belt, L: sk.sock, F: '#16141c', Y: sk.eye, I: '#f2e6c9', r: '#d83a2e', V: '#ffffff' };
   const spr = sprite(rows, map);
   const tail = sk.tail ? sprite(PH_TAIL, { O: PX_OUT, H: sk.hair, E: '#ffffff' }) : null;
   return (heroSprites[key] = { spr, tail, sk });
@@ -3784,23 +4067,30 @@ function qcol(Q, col) {
   const p = Q.P[Q.lut[((c[0] >> 3) << 10) | ((c[1] >> 3) << 5) | (c[2] >> 3)]];
   return (Q.memo[col] = `rgb(${p[0]},${p[1]},${p[2]})`);
 }
-// solid shapes keep a hard edge and get a dark outline; glows and mist turn into ordered dither
+// opaque shapes keep a hard edge and a dark outline; their soft rims are trimmed so edges stay clean,
+// and free-floating glows and mist become a solid core with a checkerboard fringe
 let crunchM = new Uint8Array(0);
 function crunch(g, X, Y, w, h, Q) {
   const im = g.getImageData(X, Y, w, h), d = im.data, n = w * h, { lut, P, ol } = Q;
   if (crunchM.length < n) crunchM = new Uint8Array(n);
   const m = crunchM; let any = false;
+  for (let i = 0; i < n; i++) m[i] = d[(i << 2) + 3] >= 200 ? 2 : 0;
   for (let y = 0, i = 0; y < h; y++) for (let x = 0; x < w; x++, i++) {
     const j = i << 2, a = d[j + 3];
-    if (a < 14) { m[i] = 0; d[j + 3] = 0; continue; }
-    if (a < 150) { if (a * 16 / 185 <= B4[(((y + Y) & 3) << 2) | ((x + X) & 3)] + .5) { m[i] = 0; d[j + 3] = 0; continue; } m[i] = 1; } else m[i] = 2;
+    if (m[i] !== 2) {
+      if (a < 40) { d[j + 3] = 0; continue; }
+      const rim = (x > 0 && m[i - 1] === 2) || (x < w - 1 && m[i + 1] === 2) || (y > 0 && m[i - w] === 2) || (y < h - 1 && m[i + w] === 2);
+      if (rim) { if (a >= 128) m[i] = 3; else { d[j + 3] = 0; continue; } }
+      else if (a >= 110 || (a >= 55 && !((x + X + y + Y) & 1))) m[i] = 1;
+      else { d[j + 3] = 0; continue; }
+    }
     const p = P[lut[((d[j] >> 3) << 10) | ((d[j + 1] >> 3) << 5) | (d[j + 2] >> 3)]];
     d[j] = p[0]; d[j + 1] = p[1]; d[j + 2] = p[2]; d[j + 3] = 255; any = true;
   }
   if (!any) return false;
   for (let y = 0, i = 0; y < h; y++) for (let x = 0; x < w; x++, i++) {
-    if (m[i] === 2) continue;
-    if ((x > 0 && m[i - 1] === 2) || (x < w - 1 && m[i + 1] === 2) || (y > 0 && m[i - w] === 2) || (y < h - 1 && m[i + w] === 2)) { const j = i << 2; d[j] = ol[0]; d[j + 1] = ol[1]; d[j + 2] = ol[2]; d[j + 3] = 255; }
+    if (m[i] >= 2) continue;
+    if ((x > 0 && m[i - 1] >= 2) || (x < w - 1 && m[i + 1] >= 2) || (y > 0 && m[i - w] >= 2) || (y < h - 1 && m[i + w] >= 2)) { const j = i << 2; d[j] = ol[0]; d[j + 1] = ol[1]; d[j + 2] = ol[2]; d[j + 3] = 255; }
   }
   g.putImageData(im, X, Y); return true;
 }
@@ -3860,31 +4150,31 @@ function bakePixelTerrain(lvl) {
     }
     const up = rn[i], down = db[i], dp = dd[i];
     const edgeSide = !at(x - 1, y) || !at(x + 1, y), edgeDown = !at(x, y + 1);
-    const tk = P.tk + (hash(x >> 1, 7) % (P.tv + 1));
+    const tk = P.tk + Math.round((Math.sin(x * .21 + lvl.n) + Math.sin(x * .057 + 1) + 2) / 4 * P.tv);
     if (up <= tk) {
       let col = up === 1 ? C.top[0] : up === tk ? C.top[2] : C.top[1];
       if (th.top === 'tiles' && up > 1) { const row = up >> 1, tx = (x + (row & 1) * 3) % 6; col = tx === 0 ? C.top[3] : up === tk ? C.top[2] : C.top[1]; }
-      else if (up > 1 && up < tk && hash(x, y) < 40) col = C.top[0];
+      else if (up === 2 && (x + (x >> 3)) % 5 === 0) col = C.top[0];
       if (edgeSide && up > 1) col = C.top[3];
-      if (th.id === 'sakura' && up > 1 && hash(x * 3, y) < 12) col = C.acc[2];
+      if (th.id === 'sakura' && up === tk - 1 && (x + (x >> 2)) % 7 === 0) col = C.acc[2];
       put(i, col); continue;
     }
-    if (P.drip && up <= tk + (hash(x, 11) % (P.drip + 1))) { put(i, edgeSide ? C.ol : C.top[3]); continue; }
+    // the top layer hangs over in little wedges
+    if (P.drip) { const seg = Math.floor(x / 6), lx = x % 6, L = hash(seg, 11 + lvl.n) % (P.drip + 2), dl = Math.max(0, Math.round(L * [0, .5, 1, 1, .5, 0][lx])); if (up <= tk + dl) { put(i, edgeSide ? C.ol : C.top[3]); continue; } }
     if (edgeSide || edgeDown) { put(i, C.ol); continue; }
     if (down <= 2) { put(i, C.body[4]); continue; }
-    const v = dp + (dth(x, y) / 16 - .5) * 3;
+    const v = dp + ((x + y) & 1 ? .5 : -.5);
     let b = v < 5 ? 0 : v < 10 ? 1 : v < 16 ? 2 : v < 24 ? 3 : 4;
     let col = null;
     if (X === 'moss' || X === 'ink') {
       // cobbles of different sizes sunk into the earth
       const row = Math.floor(y / 7), sx = x + (hash(row, seed) % 13), cell = Math.floor(sx / 11), lx = sx % 11, ly = y % 7, h = hash(cell, row + seed);
       if (dp > 5 && h < 110) { if (lx === 0 || ly === 0) b = Math.min(4, b + 1); else if (ly === 1 || lx === 1) b = Math.max(0, b - 1); else if (ly === 6) b = Math.min(4, b + 1); }
-      else if (hash(x >> 1, y >> 1) < 8) col = C.acc[hash(x, y) & 1 ? 0 : 2];
-      else if (up - tk < 6 && hash(x, y >> 2) < 18) col = C.acc[1];
+      else if (hash(x >> 1, y >> 1) < 4) col = (x & 1) || (y & 1) ? C.acc[0] : C.acc[2];
       if (X === 'ink' && !col && hash(x >> 2, y) < 30) b = Math.min(4, b + 1);
     }
     else if (X === 'stone') { const row = Math.floor(y / 5), off = row & 1 ? 4 : 0; if (y % 5 === 0 || (x + off) % 8 === 0) b = Math.min(4, b + 1); else if (y % 5 === 1 && (x + off) % 8 === 1) col = C.acc[0]; }
-    else if (X === 'ice') { if ((x * 3 + y) % 11 === 0 && hash(x >> 2, y >> 2) < 30) col = C.acc[0]; else if (hash(x >> 1, y >> 1) < 5) col = C.acc[1]; }
+    else if (X === 'ice') { if (y % 9 === 0 && ((x >> 3) + (y >> 3)) % 3 === 0) b = Math.min(4, b + 1); else if (hash(x >> 2, y >> 2) < 5 && (x & 3) < 2 && (y & 3) < 2) col = (x & 1) || (y & 1) ? C.acc[1] : C.acc[0]; }
     else if (X === 'basalt' && dp > 3) { const cv = Math.abs(vnoise(x, y, 30, seed) - .5) + Math.abs(vnoise(x, y, 11, seed + 3) - .5) * .25; if (cv < .009) col = C.acc[1]; else if (cv < .018) col = C.acc[0]; else if (cv < .026) col = C.acc[2]; else if ((x + (hash(y >> 3, 3) & 1)) % 9 === 0) b = Math.min(4, b + 1); }
     else if (X === 'city' && dp > 4) {
       const cx = x % 10, cy = y % 12;
@@ -4039,7 +4329,7 @@ function pxBg(th) {
   const def = PXBG[th.id] || PXBG.bamboo, bg = { def, layers: def.layers(), skies: {} };
   // the sun or moon, drawn once
   const [, , r, c0, c1, kind] = def.sun, s = mkC(r * 2 + 9, r * 2 + 9), g = pxCtx(s), o = r + 4;
-  g.fillStyle = c1; for (let y = -r - 3; y <= r + 3; y++) for (let x = -r - 3; x <= r + 3; x++) { const dd = Math.hypot(x, y); if (dd > r && dd <= r + 3 && dth(x + 8, y + 8) < (r + 3 - dd) * 4) g.fillRect(o + x, o + y, 1, 1); }
+  g.fillStyle = c1; for (let y = -r - 3; y <= r + 3; y++) for (let x = -r - 3; x <= r + 3; x++) { const dd = Math.hypot(x, y); if (dd > r && dd <= r + 2.5 && !((x + y) & 1)) g.fillRect(o + x, o + y, 1, 1); }
   disc(g, o, o, r, c1); disc(g, o - 1, o - 1, r - 1, c0);
   if (kind === 'moon' || kind === 'redmoon') { const sp = kind === 'moon' ? c1 : '#c84a2a'; disc(g, o + 3, o - 2, Math.max(1, r / 4 | 0), sp); disc(g, o - 3, o + 4, Math.max(1, r / 5 | 0), sp); disc(g, o + 2, o + 5, 1, sp); }
   if (kind === 'stripes') { g.clearRect(0, o + 2, s.width, 1); g.clearRect(0, o + 6, s.width, 2); g.clearRect(0, o + 11, s.width, 2); g.clearRect(0, o + 16, s.width, 3); }
@@ -4053,7 +4343,7 @@ function pxSky(bg, th, bh) {
   for (let y = 0; y < H; y++) {
     const v = Math.min(n - 1, y / (H * .78) * (n - 1)), lo = v | 0, fr = v - lo;
     for (let x = 0; x < 256; x++) {
-      const k = fr > .7 && (fr - .7) / .3 * 16 > dth(x, y) ? Math.min(n - 1, lo + 1) : lo, j = (y * 256 + x) << 2, p = cols[k];
+      const k = fr > .82 && (x + y) & 1 ? Math.min(n - 1, lo + 1) : lo, j = (y * 256 + x) << 2, p = cols[k];
       d[j] = p[0]; d[j + 1] = p[1]; d[j + 2] = p[2]; d[j + 3] = 255;
     }
   }
@@ -4087,7 +4377,7 @@ function drawPxWeather(g, th, bw, bh, dt) {
     if (flash > 0) { g.fillStyle = '#e8e0ff'; for (let y = 0; y < bh; y++) for (let x = (y & 1); x < bw; x += 2) if (dth(x, y) < flash * 7) g.fillRect(x, y, 1, 1); flash = Math.max(0, flash - dt * 2.5); }
     return;
   }
-  const n = kind === 'snow' ? 70 : kind === 'embers' ? 50 : kind === 'inkdrops' ? 14 : 26;
+  const n = kind === 'snow' ? 45 : kind === 'embers' ? 50 : kind === 'inkdrops' ? 14 : 26;
   for (let k = 0; k < n; k++) {
     const p = FX[k];
     if (kind === 'embers') {
@@ -4175,7 +4465,7 @@ function renderPixel() {
       g.restore();
     } else {
       const [x, y] = A(e.x, e.y + Math.sin(e.ph * 3) * 3), s = spiritSpr[Math.floor(e.ph * 5) & 1];
-      g.fillStyle = '#5a2a9a'; for (let yy = -10; yy <= 10; yy++) for (let xx = -11; xx <= 11; xx++) { const d = Math.hypot(xx, yy); if (d > 8 && d < 11 && dth(xx + 16, yy + 16) < (11 - d) * 3) g.fillRect(x + xx, y + yy, 1, 1); }
+      g.fillStyle = '#5a2a9a'; for (let yy = -10; yy <= 10; yy++) for (let xx = -11; xx <= 11; xx++) { const d = Math.hypot(xx, yy); if (d > 8.5 && d < 10.5 && !((xx + yy) & 1)) g.fillRect(x + xx, y + yy, 1, 1); }
       g.drawImage(s, x - 7, y - 8);
       const look = w.x > e.x ? 1 : 0; g.fillStyle = '#ff2d55'; g.fillRect(x - 4 + look, y - 2, 1, 2); g.fillRect(x + 2 + look, y - 2, 1, 2);
     }
@@ -4306,6 +4596,83 @@ if (save.owned['style:pixel']) { delete save.owned['style:pixel']; save.ryo += S
 if (save.eq.style === 'pixel') save.eq.style = 'paint';
 delete STYLES.pixel;
 
+// ---------- pixel UI: icons drawn on a 12 x 12 grid, and controls drawn as pixel art ----------
+const PXI = {
+  trophy: ['..########..', '##.######.##', '##.######.##', '.#.######.#.', '..########..', '...######...', '....####....', '.....##.....', '.....##.....', '....####....', '...######...', '...######...'],
+  gear: ['.....##.....', '..#.####.#..', '.##########.', '..###..###..', '.###....###.', '####....####', '####....####', '.###....###.', '..###..###..', '.##########.', '..#.####.#..', '.....##.....'],
+  play: ['............', '..#.........', '..##........', '..###.......', '..####......', '..#####.....', '..######....', '..#####.....', '..####......', '..###.......', '..##........', '..#.........'],
+  pause: ['............', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '..###..###..', '............'],
+  bag: ['....####....', '...#....#...', '...#....#...', '.##########.', '.##########.', '.###.##.###.', '.##########.', '.##########.', '.##########.', '.##########.', '..########..', '............'],
+  chev: ['............', '............', '............', '.....##.....', '....####....', '...######...', '..###..###..', '.###....###.', '.##......##.', '............', '............', '............'],
+  star: ['.....##.....', '.....##.....', '....####....', '############', '.##########.', '..########..', '...######...', '...######...', '..###..###..', '..##....##..', '.##......##.', '............'],
+  hook: ['.....##.....', '....#..#....', '....#..#....', '.....##.....', '.....##.....', '.....##.....', '#....##....#', '##...##...##', '.##..##..##.', '..########..', '...######...', '............'],
+  sword: ['..........##', '.........###', '........###.', '.......###..', '......###...', '.....###....', '.#..###.....', '.####.......', '..##........', '.####.......', '##..#.......', '#...........'],
+  shield: ['............', '.##########.', '.##########.', '.###....###.', '.###....###.', '.##########.', '..########..', '..########..', '...######...', '....####....', '.....##.....', '............'],
+  skull: ['............', '...######...', '..########..', '.##########.', '.##..##..##.', '.##..##..##.', '.##########.', '..###..###..', '...######...', '...#.##.#...', '............', '............'],
+  torii: ['............', '############', '.##########.', '...##..##...', '.##########.', '...##..##...', '...##..##...', '...##..##...', '...##..##...', '...##..##...', '..###..###..', '............'],
+  coin: ['............', '...######...', '..########..', '.##########.', '.####..####.', '.###....###.', '.###....###.', '.####..####.', '.##########.', '..########..', '...######...', '............'],
+  gem: ['............', '............', '...######...', '..#.#..#.#..', '.##########.', '..########..', '...######...', '....####....', '.....##.....', '............', '............', '............'],
+};
+const pxIconPath = rows => rows.map((r, y) => { let d = '', x = 0; while (x < 12) { if (r[x] !== '#') { x++; continue; } let e = x; while (e < 12 && r[e] === '#') e++; d += `M${x} ${y}h${e - x}v1h-${e - x}z`; x = e; } return d; }).join('');
+const PXI_ORIG = {};
+(() => {
+  const defs = document.querySelector('svg defs'); let html = '';
+  for (const k in PXI) html += `<symbol id="pi-${k}" viewBox="0 0 12 12"><path d="${pxIconPath(PXI[k])}" style="fill:currentColor;stroke:none" shape-rendering="crispEdges"/></symbol>`;
+  defs.insertAdjacentHTML('beforeend', html);
+})();
+// in pixel mode the regular icons are swapped for their pixel versions, everywhere they are used
+function swapIcons(on) {
+  for (const k in PXI) {
+    const sym = document.getElementById('i-' + k); if (!sym) continue;
+    if (!PXI_ORIG[k]) PXI_ORIG[k] = { vb: sym.getAttribute('viewBox'), html: sym.innerHTML };
+    if (on) { sym.setAttribute('viewBox', '0 0 12 12'); sym.innerHTML = `<path d="${pxIconPath(PXI[k])}" style="fill:currentColor;stroke:none" shape-rendering="crispEdges"/>`; }
+    else { sym.setAttribute('viewBox', PXI_ORIG[k].vb); sym.innerHTML = PXI_ORIG[k].html; }
+  }
+}
+function pxSvgUri(n, colorAt) {
+  let rects = '';
+  for (let y = 0; y < n; y++) { let x = 0; while (x < n) { const c = colorAt(x, y); if (!c) { x++; continue; } let e = x + 1; while (e < n && colorAt(e, y) === c) e++; rects += `<rect x="${x}" y="${y}" width="${e - x}" height="1" fill="${c}"/>`; x = e; } }
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges">${rects}</svg>`)}")`;
+}
+// a bevelled pixel disc lit from the upper left, with an optional inner ring
+function pxDisc(n, fill, hi, lo, ol, ring) {
+  const c = (n - 1) / 2, r = n / 2 - .3, inside = (x, y) => Math.hypot(x - c, y - c) <= r;
+  return pxSvgUri(n, (x, y) => {
+    if (!inside(x, y)) return null;
+    if (!inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || !inside(x, y + 1)) return ol;
+    const d = Math.hypot(x - c, y - c);
+    if (ring && Math.abs(d - (r - 3.6)) < .55) return ring;
+    if (!inside(x - 2, y - 2) || !inside(x - 2, y) && !inside(x, y - 2)) return hi;
+    if (!inside(x + 2, y + 2) || !inside(x + 2, y) && !inside(x, y + 2)) return lo;
+    if (x - c < -r * .25 && y - c < -r * .25 && d > r * .45 && d < r * .62) return hi;
+    return fill;
+  });
+}
+function pxCross(n, fill, hi, lo, ol, well) {
+  const a = Math.round(n * .32), b = n - a, inside = (x, y) => x >= 0 && y >= 0 && x < n && y < n && ((x >= a && x < b) || (y >= a && y < b));
+  return pxSvgUri(n, (x, y) => {
+    if (!inside(x, y)) return null;
+    if (!inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || !inside(x, y + 1)) return ol;
+    if (!inside(x - 2, y) || !inside(x, y - 2)) return hi;
+    if (!inside(x + 2, y) || !inside(x, y + 2)) return lo;
+    if (x > a + 1 && x < b - 2 && y > a + 1 && y < b - 2) return well;
+    return fill;
+  });
+}
+{
+  const set = (k, v) => app.style.setProperty(k, v);
+  set('--pxPad', pxCross(38, '#333c57', '#566c86', '#262b44', '#0e0f1c', '#262b44'));
+  set('--pxKnob', pxDisc(14, '#333c57', '#566c86', '#1a1c2c', '#0e0f1c'));
+  set('--pxKnobOn', pxDisc(14, '#5d275d', '#b13e53', '#1a1c2c', '#0e0f1c'));
+  set('--pxHook', pxDisc(27, '#b13e53', '#ef7d57', '#5d275d', '#0e0f1c', '#7a2b4a'));
+  set('--pxHookOn', pxDisc(27, '#ffcd75', '#fff3c4', '#ef7d57', '#0e0f1c', '#e8a94f'));
+  set('--pxHookKick', pxDisc(27, '#38b764', '#a7f070', '#257179', '#0e0f1c', '#2a9a5a'));
+  set('--pxMedalB', pxDisc(18, '#ef7d57', '#ffcd75', '#b13e53', '#1a1c2c', '#c9614a'));
+  set('--pxMedalS', pxDisc(18, '#94b0c2', '#f4f4f4', '#566c86', '#1a1c2c', '#7a93a8'));
+  set('--pxMedalG', pxDisc(18, '#ffcd75', '#fff3c4', '#ef7d57', '#1a1c2c', '#e8a94f'));
+  set('--pxMedalOff', pxDisc(18, '#262b44', '#333c57', '#1a1c2c', '#0e0f1c', '#1f2238'));
+}
+
 // ---------- level challenges: three per level ----------
 save.tasks = Object.assign({}, save.tasks);
 save.ach = Object.assign({}, save.ach);
@@ -4423,6 +4790,19 @@ const ACH = [
   A('style', 'New Eyes', 'Новый взгляд', 'Clear a level in another art style', 'Пройди уровень в другом стиле рисовки', 1, () => stats.style, 200),
   A('daily7', 'Devoted', 'Преданная', 'Claim the daily gift 7 days in a row', 'Забери подарок дня 7 дней подряд', 7, () => save.gift.streak || 0, 700),
 ];
+// achievements come in families; each has a seal character for the painted look and an icon for the pixel one
+const ACH_CATS = [
+  { name: T2('Rope', 'Верёвка'), kanji: '翔', icon: 'hook', ids: ['hook1', 'hook300', 'hook3000', 'kick25'] },
+  { name: T2('Blade', 'Клинок'), kanji: '斬', icon: 'sword', ids: ['kill1', 'kill100', 'kill1000', 'air50', 'combo3', 'combo6', 'deflect50'] },
+  { name: T2('Demons', 'Демоны'), kanji: '鬼', icon: 'skull', ids: ['boss1', 'bossAll', 'pureBoss', 'hardBoss'] },
+  { name: T2('Journey', 'Путь'), kanji: '道', icon: 'torii', ids: ['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'worlds'] },
+  { name: T2('Mastery', 'Мастерство'), kanji: '極', icon: 'star', ids: ['stars30', 'stars150', 'tasks30', 'tasks150', 'flawless10', 'fast', 'hardWin'] },
+  { name: T2('Fortune', 'Удача'), kanji: '金', icon: 'coin', ids: ['coin500', 'coin3000', 'rich', 'picks50', 'lv3', 'spins10', 'jackpot'] },
+  { name: T2('Style', 'Стиль'), kanji: '雅', icon: 'gem', ids: ['outfits', 'upmax', 'style', 'daily7'] },
+];
+const achCat = id => ACH_CATS.find(c => c.ids.includes(id)) || ACH_CATS[0];
+const achTier = a => a.reward >= 1500 ? 't-gold' : a.reward >= 500 ? 't-silver' : 't-bronze';
+const sealHtml = a => { const c = achCat(a.id); return isPx() ? `<svg viewBox="0 0 12 12"><use href="#pi-${c.icon}"/></svg>` : c.kanji; };
 let achQueue = [], achShowing = false;
 function checkAch() {
   let got = false;
@@ -4434,8 +4814,9 @@ function checkAch() {
 }
 function showAchToast() {
   if (achShowing || !achQueue.length) return;
-  const a = achQueue.shift(), el = $('#achToast');
+  const a = achQueue.shift(), el = $('#achToast'), seal = $('#achSeal');
   achShowing = true;
+  seal.className = 'seal ' + achTier(a); seal.innerHTML = sealHtml(a);
   $('#achName').textContent = a.name; $('#achRew').innerHTML = `+${fmtR(a.reward)} ${RYO()}`;
   el.classList.remove('off'); SFX.lantern();
   setTimeout(() => { el.classList.add('off'); setTimeout(() => { achShowing = false; showAchToast(); }, 400); }, 2600);
@@ -4446,11 +4827,15 @@ function renderAchSummary() {
   $('#achBar').style.width = (done / ACH.length * 100) + '%';
 }
 function openAch() {
-  const done = ACH.filter(a => save.ach[a.id]).length;
-  $('#achBlurb').textContent = T2(`${done} of ${ACH.length} unlocked. Each one pays out ryo.`, `Получено ${done} из ${ACH.length}. За каждое — рё.`);
-  $('#achList').innerHTML = ACH.slice().sort((a, b) => (save.ach[b.id] ? 1 : 0) - (save.ach[a.id] ? 1 : 0)).map(a => {
-    const on = !!save.ach[a.id], cur = Math.min(a.get(), a.goal);
-    return `<li class="${on ? '' : 'off'}"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="t"><b>${a.name}</b><small>${a.desc}${on || a.goal === 1 ? '' : ` · ${fmtR(cur)}/${fmtR(a.goal)}`}</small>${on || a.goal === 1 ? '' : `<div class="pb"><i style="width:${cur / a.goal * 100}%"></i></div>`}</span><span class="v">${on ? '✓' : `${MON}${fmtR(a.reward)}`}</span></li>`;
+  const done = ACH.filter(a => save.ach[a.id]), earned = done.reduce((s, a) => s + a.reward, 0), all = ACH.reduce((s, a) => s + a.reward, 0);
+  $('#achHero').innerHTML = `<div class="ah-count"><b>${done.length}</b><span>/ ${ACH.length}</span></div><div class="ah-meta"><div class="ah-bar"><i style="width:${done.length / ACH.length * 100}%"></i></div><small>${T2(`Earned ${fmtR(earned)} of ${fmtR(all)} ryo`, `Получено ${fmtR(earned)} из ${fmtR(all)} рё`)}</small></div>`;
+  $('#achList').innerHTML = ACH_CATS.map(c => {
+    const list = c.ids.map(id => ACH.find(a => a.id === id)), got = list.filter(a => save.ach[a.id]).length;
+    return `<div class="title">${c.name} · ${got}/${list.length}</div><div class="badges">` + list.map(a => {
+      const on = !!save.ach[a.id], cur = Math.min(a.get(), a.goal), multi = a.goal > 1 && !on;
+      return `<div class="badge ${on ? 'on' : 'off'}"><span class="seal ${achTier(a)}">${sealHtml(a)}</span>${on ? '<span class="ok">✓</span>' : ''}<span class="br">${MON}${fmtR(a.reward)}</span>`
+        + `<span class="bt"><b>${a.name}</b><small>${a.desc}</small>${multi ? `<span class="bp"><i style="width:${cur / a.goal * 100}%"></i></span><em>${fmtR(cur)} / ${fmtR(a.goal)}</em>` : ''}</span></div>`;
+    }).join('') + '</div>';
   }).join('');
   show('achs');
 }
@@ -4484,7 +4869,7 @@ cam.z = clamp(Math.sqrt(W * H) / 560, .6, 1.4);
 toMenu();
 if (!save.diff) openDiff('boot'); else if (!save.mode) openLook('boot');
 requestAnimationFrame(loop);
-window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; }, save, openShop, applyStyle, givePower, showResults, get inv() { return inv; }, hitBoss, levelDef, openDiff, get pb() { return pb; }, PXO, setMode, tick: n => { for (let i = 0; i < n; i++) frame(last + 1000 / 60); } };
+window.__koshka = { w, rope, hero, cam, pad, get L() { return L; }, play, startLevel, hookDown, hookUp, slashPress, setState: s => state = s, get state() { return state; }, get contactT() { return contactT; }, save, openShop, applyStyle, givePower, showResults, get inv() { return inv; }, hitBoss, levelDef, openDiff, get pb() { return pb; }, PXO, get track() { return track; }, music, toMenu, setMode, tick: n => { for (let i = 0; i < n; i++) frame(last + 1000 / 60); } };
 })();
 </script>
 
