@@ -673,6 +673,7 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
     <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 01-10 0z"/><path d="M7 6H4v1a3 3 0 003 3M17 6h3v1a3 3 0 01-3 3M12 13v4M8 20h8M9 17h6"/></symbol>
     <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
     <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M12 3v2M7 17v-6a5 5 0 0110 0v6zM5 17h14M11 20.5h2"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></symbol>
   </defs>
 </svg>
@@ -687,6 +688,7 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
     <div class="hud-row">
       <div class="cap glass"><svg class="i c-gold" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><rect x="10" y="10" width="4" height="4"/></svg><span id="cN">0</span><span class="dim">/<span id="cT">0</span></span></div>
       <div class="cap glass"><svg class="i c-tint" viewBox="0 0 24 24"><path d="M12 3c3 3 6 5.5 6 10a6 6 0 01-12 0c0-2 1-3.5 2-4.5.5 2 1.5 3 3 3-1.5-3-.5-6 1-8.5z"/></svg><span id="kN">0</span><span class="dim">/<span id="kT">0</span></span></div>
+      <div class="cap glass" id="hBell" hidden><svg class="i c-gold" viewBox="0 0 24 24"><use href="#i-bell"/></svg><span id="bN">0</span><span class="dim">/<span id="bT">0</span></span></div>
       <div class="cap glass" id="hShield" hidden><svg class="i c-gold" viewBox="0 0 24 24"><use href="#i-shield"/></svg><span id="sN">0</span></div>
       <div class="spacer"></div>
       <div class="cap glass ryo"><svg class="mon-i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/><rect x="9.6" y="9.6" width="4.8" height="4.8" fill="rgba(0,0,0,.55)"/></svg><span id="rN">+0</span></div>
@@ -943,6 +945,9 @@ const SFX = {
   thunder: () => { noise(.7, .3, 1800, .08); tone(90, 40, .5, 'sawtooth', .07); },
   bossHurt: () => { noise(.1, .22, 1500, .3); tone(240, 90, .14, 'square', .07); },
   bossDown: () => { noise(1.2, .3, 2400, .05); [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, f, .22, 'triangle', .09, .2 + i * .12)); },
+  bell: () => { tone(880, 876, 1.2, 'sine', .08); tone(2210, 2200, .8, 'sine', .03); tone(1320, 1316, 1, 'triangle', .025, .01); },
+  gust: () => noise(1.6, .11, 600, .7),
+  tear: () => { noise(.3, .18, 3200, 1.5); tone(600, 180, .22, 'sawtooth', .04); },
   win: () => { [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, f, .16, 'triangle', .08, i * .1)); },
 };
 
@@ -988,21 +993,25 @@ const CHAPTERS = [
 ];
 // every chapter follows the same rhythm of level types
 const LAYOUT = [
-  { type: 'cave', sub: 'right' }, { type: 'ceiling' }, { type: 'cave', sub: 'up' }, { type: 'chase', sub: 'wall' }, { type: 'boss', mini: true },
-  { type: 'cave', sub: 'zig' }, { type: 'sky' }, { type: 'chase', sub: 'rise' }, { type: 'ceiling', hard: true }, { type: 'boss' },
+  { type: 'cave', sub: 'right' }, { type: 'ceiling' }, { type: 'kites' }, { type: 'chase', sub: 'wall' }, { type: 'boss', mini: true },
+  { type: 'bells', sub: 'zig' }, { type: 'wind' }, { type: 'chase', sub: 'rise' }, { type: 'dark', sub: 'up' }, { type: 'boss' },
 ];
 const LEVEL_NAMES = [
-  [T2('Apprentice\'s Path', 'Тропа ученицы'), T2('Bridge of Clouds', 'Мост из облаков'), T2('Dew Well', 'Колодец росы'), T2('Forest Fire', 'Лесной пожар'), T2('Young Tengu', 'Тэнгу-младший'), T2('Green Labyrinth', 'Зелёный лабиринт'), T2('Crane Islands', 'Острова журавлей'), T2('Spring Flood', 'Половодье'), T2('Waterfall Ceiling', 'Потолок водопада'), T2('Great Tengu', 'Великий Тэнгу')],
-  [T2('Petal Grotto', 'Лепестковый грот'), T2('Hanging Garden', 'Висячий сад'), T2('Pagoda Tower', 'Башня пагоды'), T2('Pink Mist', 'Розовый туман'), T2('Fox Cub', 'Лисёнок-оборотень'), T2('Old Cherry Roots', 'Корни старой вишни'), T2('Sky Garden', 'Небесный сад'), T2('Koi Pond', 'Пруд карпов'), T2('Shrine Roof', 'Крыша святилища'), T2('Nine-Tailed Kitsune', 'Девятихвостая Кицунэ')],
-  [T2('Ice Vein', 'Ледяная жила'), T2('Icicles over the Abyss', 'Сосульки над бездной'), T2('Frozen Well', 'Замёрзший колодец'), T2('Avalanche', 'Лавина'), T2('Snow Spirit', 'Снежный дух'), T2('Crystal Labyrinth', 'Хрустальный лабиринт'), T2('Northern Lights', 'Северное сияние'), T2('Icy Water', 'Ледяная вода'), T2('Glacier Ledge', 'Карниз ледника'), T2('Ice Oni', 'Ледяной они')],
-  [T2('Ash Mine', 'Пепельная штольня'), T2('Bridge over the Crater', 'Мост над жерлом'), T2('Fire Chimney', 'Огненный дымоход'), T2('Wall of Fire', 'Огненный вал'), T2('Salamander', 'Саламандра'), T2('Obsidian Labyrinth', 'Обсидиановый лабиринт'), T2('Floating Rocks', 'Парящие скалы'), T2('Lava Well', 'Лавовый колодец'), T2('Crater Ceiling', 'Потолок кратера'), T2('Fire Dragon', 'Огненный дракон')],
-  [T2('Subway', 'Подземка'), T2('Neon Wires', 'Неоновые провода'), T2('Elevator Shaft', 'Лифтовая шахта'), T2('Thunderstorm', 'Гроза'), T2('Storm Drummer', 'Барабанщик бури'), T2('Back Alleys', 'Переулки'), T2('Rooftops in the Clouds', 'Крыши в облаках'), T2('Flooded Block', 'Затопленный квартал'), T2('Under the Bridge', 'Под мостом'), T2('Raijin', 'Райдзин')],
+  [T2('Apprentice\'s Path', 'Тропа ученицы'), T2('Bridge of Clouds', 'Мост из облаков'), T2('Kite Festival', 'Праздник змеев'), T2('Forest Fire', 'Лесной пожар'), T2('Young Tengu', 'Тэнгу-младший'), T2('Bamboo Shrine', 'Бамбуковое святилище'), T2('Crane Islands', 'Острова журавлей'), T2('Spring Flood', 'Половодье'), T2('Firefly Well', 'Колодец светлячков'), T2('Great Tengu', 'Великий Тэнгу')],
+  [T2('Petal Grotto', 'Лепестковый грот'), T2('Hanging Garden', 'Висячий сад'), T2('Koi Streamers', 'Карпы на ветру'), T2('Pink Mist', 'Розовый туман'), T2('Fox Cub', 'Лисёнок-оборотень'), T2('Temple Bells', 'Храмовые колокола'), T2('Spring Gale', 'Весенний шквал'), T2('Koi Pond', 'Пруд карпов'), T2('Night Garden', 'Ночной сад'), T2('Nine-Tailed Kitsune', 'Девятихвостая Кицунэ')],
+  [T2('Ice Vein', 'Ледяная жила'), T2('Icicles over the Abyss', 'Сосульки над бездной'), T2('Snow Kites', 'Снежные змеи'), T2('Avalanche', 'Лавина'), T2('Snow Spirit', 'Снежный дух'), T2('Ice Bells', 'Ледяные колокола'), T2('Blizzard', 'Метель'), T2('Icy Water', 'Ледяная вода'), T2('Polar Night', 'Полярная ночь'), T2('Ice Oni', 'Ледяной они')],
+  [T2('Ash Mine', 'Пепельная штольня'), T2('Bridge over the Crater', 'Мост над жерлом'), T2('Sky Lanterns', 'Небесные фонари'), T2('Wall of Fire', 'Огненный вал'), T2('Salamander', 'Саламандра'), T2('Hall of Gongs', 'Зал гонгов'), T2('Ash Storm', 'Пепельная буря'), T2('Lava Well', 'Лавовый колодец'), T2('Smoke Caves', 'Дымные пещеры'), T2('Fire Dragon', 'Огненный дракон')],
+  [T2('Subway', 'Подземка'), T2('Neon Wires', 'Неоновые провода'), T2('Drone Lane', 'Трасса дронов'), T2('Thunderstorm', 'Гроза'), T2('Storm Drummer', 'Барабанщик бури'), T2('Alarm Bells', 'Сигнальные колокола'), T2('Rooftops in the Clouds', 'Крыши в облаках'), T2('Flooded Block', 'Затопленный квартал'), T2('Blackout', 'Блэкаут'), T2('Raijin', 'Райдзин')],
 ];
 const TYPE_INFO = {
   cave: { label: T2('cave', 'пещера'), hint: T2('Cave: find the way to the gate, collect ryo and cut down shadows.', 'Пещера: ищи путь к воротам, собирай рё, руби теней.') },
   ceiling: { label: T2('ceiling', 'потолок'), hint: T2('Over the abyss: hook only onto the ceiling and fly across the gaps. Do not fall.', 'Над бездной: цепляйся только за потолок и перелетай провалы. Падать нельзя.') },
   sky: { label: T2('sky', 'небо'), hint: T2('Sky islands: swing from island to bamboo, there is nothing below.', 'Небесные острова: прыгай от острова к бамбуку, внизу пустота.') },
   chase: { label: T2('chase', 'погоня'), hint: T2('Chase! Keep moving, it is catching up.', 'Погоня! Не останавливайся, оно догоняет.') },
+  kites: { label: T2('kites', 'змеи'), hint: T2('Kites: there is no ground to hold. Hook the kites and wheels and let them carry you over the abyss.', 'Змеи: держаться не за что. Цепляйся за воздушных змеев и колёса — они перенесут тебя через пропасть.') },
+  bells: { label: T2('shrine', 'святилище'), hint: T2('Shrine: the gate is sealed. Ring every bell — hook it, touch it or strike it.', 'Святилище: ворота запечатаны. Позвони во все колокола — кошкой, касанием или мечом.') },
+  wind: { label: T2('wind', 'ветер'), hint: T2('Wind: gusts sweep the islands. Watch the streaks of air and hold on to the rope.', 'Ветер: порывы сносят с островов. Следи за струями воздуха и держись за верёвку.') },
+  dark: { label: T2('darkness', 'тьма'), hint: T2('Darkness: you only see what is near you. Light the lanterns; fireflies show the way.', 'Тьма: видно только то, что рядом. Зажигай фонари, светлячки подскажут путь.') },
   boss: { label: T2('boss', 'босс'), hint: T2('Boss! Hit it in mid-air, dodge its shots and grab weapons.', 'Босс! Руби его в полёте, уворачивайся от снарядов, подбирай оружие.') },
 };
 const CHASE_INFO = {
@@ -1036,12 +1045,14 @@ function buildLevel(n) {
   const base = THEMES[def.ch], th = save.eq.style === 'ink' ? Object.assign({}, INK, { wall: base.wall, rise: base.rise }) : base;
   let lvl;
   if (def.type === 'ceiling') lvl = buildOpen(n, 'ceiling', rnd, th, def);
-  else if (def.type === 'sky') lvl = buildOpen(n, 'abyss', rnd, th, def);
+  else if (def.type === 'sky' || def.type === 'wind') lvl = buildOpen(n, 'abyss', rnd, th, def);
+  else if (def.type === 'kites') lvl = buildOpen(n, 'kites', rnd, th, def);
   else if (def.type === 'boss') lvl = buildArena(n, rnd, th, def);
   else lvl = buildCave(n, def.type === 'chase' ? (def.sub === 'rise' ? 'lava' : 'right') : def.sub, rnd, th, def);
   lvl.def = def; lvl.type = def.type; lvl.world = base; lvl.style = save.eq.style;
   { const a = hex(th.rock[0]), b = hex(th.rock[1]); lvl.deep = `rgb(${(a[0] + b[0]) * .43 | 0},${(a[1] + b[1]) * .43 | 0},${(a[2] + b[2]) * .43 | 0})`; }
   if (def.type === 'chase' && def.sub === 'wall') lvl.chase = { x: lvl.spawn.x - 560, speed: (100 + n * 1.2) * D.chase, style: th.wall };
+  addMechanics(lvl, def, rnd);
   if (def.type === 'chase' && def.sub === 'rise') lvl.lava = { y: lvl.spawn.y + 380, speed: (50 + n * .8) * D.chase, style: th.rise };
   return lvl;
 }
@@ -1155,6 +1166,9 @@ function buildOpen(n, kind, rnd, th, def) {
       blob(g, rnd, x, ceilAt(x) + len2 * .45, 18 + rnd() * 16, 1, len2 / 30);
     }
     for (const [a, b] of gaps) if (b - a > 230) blob(g, rnd, (a + b) / 2, 260 + rnd() * 80, 26, 1.2, .8);
+  } else if (kind === 'kites') {
+    // only a few rest islands; everything in between is held up by kites
+    for (let x = 1450; x < ex0 - 700; x += 1300 + rnd() * 250) blob(g, rnd, x, 660 + rnd() * 50, 66 + rnd() * 18, 1.3, .5);
   } else {
     let x = 520;
     while (x < ex0 - 260) {
@@ -1202,7 +1216,7 @@ function buildOpen(n, kind, rnd, th, def) {
     const y = route(x) + (rnd() - .5) * 160;
     if (clearAt(x, y, 22)) lvl.coins.push({ x, y, got: false, ph: rnd() * 6 });
   }
-  const nb = Math.round(Math.min(3 + Math.floor(n / 6) + (hard ? 2 : 0), 9) * D.blades);
+  const nb = Math.round(Math.min(3 + Math.floor(n / 6) + (hard ? 2 : 0), 9) * D.blades * (kind === 'kites' ? .4 : 1));
   for (let k = 0; k < nb; k++) {
     const x = sx0 + 600 + (k + .5) * ((ex0 - sx0 - 900) / nb), y = route(x) + (rnd() - .5) * 120, vert = rnd() < .45;
     lvl.blades.push({ cx: x, cy: y, ax: vert ? 0 : 110 + rnd() * 90, ay: vert ? 120 + rnd() * 80 : 0, sp: .8 + rnd() * .7, ph: rnd() * 6 });
@@ -1687,8 +1701,8 @@ function drawWeather(c, th, W, H, dt) {
       c.fillRect(p.x * W, p.y * H, 2 * p.s + 1, 2 * p.s + 1);
       continue;
     }
-    p.y += dt * p.v * (kind === 'snow' ? .1 : .12); p.x += dt * (.03 + Math.sin(clock + p.r) * .03); p.r += dt * 2;
-    if (p.y > 1.05) { p.y = -.05; p.x = Math.random(); } if (p.x > 1.05) p.x = -.05;
+    p.y += dt * p.v * (kind === 'snow' ? .1 : .12); p.x += dt * (.03 + Math.sin(clock + p.r) * .03 + windPush() * .0011); p.r += dt * 2;
+    if (p.y > 1.05) { p.y = -.05; p.x = Math.random(); } if (p.x > 1.05) p.x = -.05; if (p.x < -.05) p.x = 1.05;
     const x = p.x * W, y = p.y * H;
     if (kind === 'snow') { c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.arc(x, y, 1.2 + p.s * 1.6, 0, 7); c.fill(); continue; }
     c.fillStyle = kind === 'leaves' ? (p.i % 3 ? 'rgba(120,180,80,.85)' : 'rgba(190,220,120,.85)') : kind === 'inkdrops' ? 'rgba(20,16,12,.55)' : 'rgba(255,190,214,.88)';
@@ -1820,7 +1834,7 @@ function showIntro(def) {
 }
 function respawn() {
   w.x = checkpoint.rx; w.y = checkpoint.ry; w.vx = 0; w.vy = 0; dead = 0;
-  rope.st = 'none'; rope.pts = []; hero.ang = 0; hero.inv = 1.2; hero.wasGround = true;
+  rope.st = 'none'; rope.pts = []; rope.an = null; hero.ang = 0; hero.inv = 1.2; hero.wasGround = true; resetMechanics();
   // under a ceiling there is no floor: come back hanging from the lantern's hook
   if (checkpoint.hang) { rope.st = 'on'; rope.pts = [{ x: checkpoint.x, y: checkpoint.cy + 2, side: 1 }]; rope.seg = 0; rope.len = w.y - checkpoint.cy; }
   if (L.lava) L.lava.y = Math.max(L.lava.y, checkpoint.ry + 420);
@@ -1835,7 +1849,8 @@ function computeAim() {
   else { const e = iy < 0 ? 1.2 : iy > 0 ? -.4 : .8; base = Math.atan2(-Math.sin(e), Math.cos(e) * Math.sign(ix)); }
   hero.aimAng = base; hero.hookAng = base; hero.hookHit = null;
   for (const off of aimOffs) {
-    const a = base + off, h = ray(w.x, w.y, Math.cos(a), Math.sin(a), ropeMax, R);
+    const a = base + off, ht = ray(w.x, w.y, Math.cos(a), Math.sin(a), ropeMax, R), ha = L.anchors.length ? anchorRay(w.x, w.y, Math.cos(a), Math.sin(a), R, ropeMax) : null;
+    const h = ha && (!ht || ha.t < ht.t) ? ha : ht;
     if (h) { hero.hookAng = a; hero.hookHit = h; break; }
   }
 }
@@ -1867,8 +1882,8 @@ function fire() {
   if (Math.abs(rope.dx) > .15) hero.face = Math.sign(rope.dx);
   started = true; SFX.fire();
 }
-function attach(x, y) {
-  rope.st = 'on'; rope.pts = [{ x, y, side: 1 }]; rope.seg = 0;
+function attach(x, y, an) {
+  rope.st = 'on'; rope.pts = [{ x, y, side: 1 }]; rope.seg = 0; rope.an = an || null; if (an) an.hang = 0;
   rope.len = Math.min(hyp(w.x - x, w.y - y), ropeMax); contactT = 9;
   SFX.hook(); stats.hooks++; checkAch();
   for (let i = 0; i < 6; i++) parts.push({ x, y, vx: (Math.random() - .5) * 160, vy: (Math.random() - .5) * 160, life: .3, max: .3, col: 'rgba(255,240,200,.9)', s: 2, g: 200 });
@@ -1877,13 +1892,15 @@ function attach(x, y) {
 }
 function release() {
   if (rope.st === 'on' && tut === 2) { tut = 3; hint(T2('In the air, <b>hold</b> the Hook again. While you hold it, it grabs the first thing in reach.', 'В полёте снова <b>зажми</b> Кошку. Пока держишь, она сама зацепится за первое, до чего достанет.')); }
-  rope.st = 'none'; rope.pts = [];
+  rope.st = 'none'; rope.pts = []; rope.an = null;
 }
 function constrain(iy, h) {
   const a = rope.pts[rope.pts.length - 1];
   const dx = w.x - a.x, dy = w.y - a.y, d = hyp(dx, dy), free = Math.max(6, rope.len - rope.seg);
   if (d < .01) return;
-  const nx = dx / d, ny = dy / d, vr = w.vx * nx + w.vy * ny;
+  // a moving anchor (a kite or a wheel) carries the heroine: only her speed relative to it is stopped
+  const avx = rope.an ? rope.an.vx : 0, avy = rope.an ? rope.an.vy : 0;
+  const nx = dx / d, ny = dy / d, vr = (w.vx - avx) * nx + (w.vy - avy) * ny;
   if (d > free) {
     // a soft rope only takes back part of the stretch each step, so jerks are cushioned
     const soft = save.set.soft, k = 1 - soft * .8;
@@ -1897,6 +1914,7 @@ function constrain(iy, h) {
   }
 }
 function wrap() {
+  if (rope.an) return;
   const pts = rope.pts, a = pts[pts.length - 1];
   const dx = w.x - a.x, dy = w.y - a.y, d = hyp(dx, dy);
   if (d > 8 && pts.length < 40) {
@@ -1933,7 +1951,10 @@ function update(dt) {
   smoothInput(ix, iy, dt);
   if (rope.st === 'fly') {
     const end = Math.min(rope.d + ROPE_SPEED * dt, ropeMax); let hit = false;
+    if (L.bells) ringAlong(rope.sx, rope.sy, rope.dx, rope.dy, rope.d, end);
+    const ha = L.anchors.length ? anchorRay(rope.sx, rope.sy, rope.dx, rope.dy, rope.d, end) : null;
     for (let t = rope.d; t <= end; t++) {
+      if (ha && t >= ha.t) { attach(ha.x, ha.y, ha.an); hit = true; break; }
       const x = rope.sx + rope.dx * t, y = rope.sy + rope.dy * t;
       if (solid(x, y)) { attach(rope.sx + rope.dx * (t - 1.5), rope.sy + rope.dy * (t - 1.5)); hit = true; break; }
     }
@@ -1941,6 +1962,7 @@ function update(dt) {
   }
 
   w.vy += G * dt;
+  if (L.wind && L.wind.f) w.vx += L.wind.f * (w.ground ? .2 : rope.st === 'on' ? .65 : 1) * dt;
   if (rope.st === 'on') {
     const a = rope.pts[rope.pts.length - 1];
     const dx = w.x - a.x, dy = w.y - a.y, l = hyp(dx, dy) || 1, tx = dy / l, ty = -dx / l;
@@ -1980,7 +2002,7 @@ function update(dt) {
   hero.wasGround = w.ground;
   if (w.ground && rope.st !== 'on' && !ix) { w.vx *= Math.exp(-10 * dt); if (Math.abs(w.vx) < 6) w.vx = 0; }
   if (L.open) { if (w.x < 14) { w.x = 14; w.vx = Math.abs(w.vx) * .3; } if (w.x > L.WW - 14) { w.x = L.WW - 14; w.vx = -Math.abs(w.vx) * .3; } }
-  updateHazards(dt);
+  updateHazards(dt); updateMechanics(dt);
 
   // hero pose
   let target = 0;
@@ -2132,21 +2154,28 @@ function render() {
   if (ex > sx && ey > sy) ctx.drawImage(L.canvas, sx, sy, ex - sx, ey - sy, sx, sy, ex - sx, ey - sy);
   if (!L.open && vy0 + vh > L.HH) { ctx.fillStyle = L.deep || L.th.rock[1]; ctx.fillRect(vx0 - 4, L.HH - 1, vw + 8, vy0 + vh - L.HH + 4); }
   for (const l of L.lanterns) drawLantern(l);
+  drawMechanics();
   drawGate(false);
   for (const b of L.blades || []) drawBlade(b);
   for (const c of L.coins) if (!c.got) drawCoin(c);
   for (const e of L.enemies || []) if (e.alive) e.t === 'ninja' ? drawNinja(e) : drawSpirit(e);
   drawBossScene();
   drawPowers();
-  if (state === 'play' && rope.st === 'none' && dead <= 0 && !finished) drawAim();
+  const aimOn = state === 'play' && rope.st === 'none' && dead <= 0 && !finished;
+  if (aimOn && !L.dark) drawAim();
   drawRope();
   for (let i = 0; i < ghosts.length; i++) { ghosts[i].alpha = .08 + .28 * (i + 1) / ghosts.length; drawHeroP(ctx, ghosts[i]); }
   if (dead <= 0 && !(hero.inv > 0 && Math.floor(clock * 14) % 2)) drawHeroP(ctx, heroPose());
   if (hero.slash > 0 && dead <= 0) drawSlash();
   drawParts(); drawFloats();
   drawLava(vx0, vx0 + vw); drawChase(vy0, vy0 + vh); drawVoid(vx0, vx0 + vw);
+  if (L.dark) {
+    drawDarkPaint(vx0, vy0, z);
+    if (aimOn) { ctx.setTransform(DPR * z, 0, 0, DPR * z, DPR * (W / 2 - cam.x * z + sh), DPR * (camCY - cam.y * z + sv)); drawAim(); }
+  }
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   drawWeather(ctx, L.th, W, H, lastFrameDt);
+  if (L.wind) { ctx.lineCap = 'round'; for (const [x, y, l, a] of windStreaks(lastFrameDt, W, H)) { ctx.strokeStyle = `rgba(255,255,255,${.3 * a})`; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + l, y + Math.sin(x * .02) * 3); ctx.stroke(); } }
   if (pixelStyle()) pixelPass(ctx, cv.width, cv.height, save.eq.style);
 }
 function drawGate(back) {
@@ -2273,6 +2302,7 @@ function updateHud(force) {
   if (force) {
     $('#cN').textContent = coinsGot; $('#cT').textContent = L.coins.length; $('#kN').textContent = kills; $('#kT').textContent = (L.enemies || []).length;
     $('#hShield').hidden = !run.shields; $('#sN').textContent = run.shields;
+    $('#hBell').hidden = !L.bells; if (L.bells) { $('#bN').textContent = L.bells.filter(b => b.rung).length; $('#bT').textContent = L.bells.length; }
   }
   const rt = runTotal(); if (rt !== lastRun) { $('#rN').textContent = '+' + fmtR(rt); lastRun = rt; }
   const s = fmt(time); if (s !== lastTimeStr) { $('#hTime').textContent = s; lastTimeStr = s; }
@@ -2301,6 +2331,10 @@ function show(id) {
   resize();
 }
 const TYPE_ICON = {
+  kites: '<svg viewBox="0 0 24 24"><path d="M12 2.5l6 7.5-6 7.5L6 10z"/><path d="M12 17.5c-1.5 1.5 1.5 2.5 0 4"/></svg>',
+  bells: '<svg viewBox="0 0 24 24"><path d="M12 3v2M7 17v-6a5 5 0 0110 0v6zM5 17h14M11 20.5h2"/></svg>',
+  wind: '<svg viewBox="0 0 24 24"><path d="M3 9h11a3 3 0 10-3-3M3 15h15a3 3 0 11-3 3"/></svg>',
+  dark: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg>',
   cave: '<svg viewBox="0 0 24 24"><path d="M3 20h18M5 20V12a7 7 0 0114 0v8"/><path d="M10 20v-4a2 2 0 014 0v4"/></svg>',
   ceiling: '<svg viewBox="0 0 24 24"><path d="M3 4h18M7 4v5M12 4v8M17 4v4"/><path d="M12 15v5M9.5 17.5L12 20l2.5-2.5"/></svg>',
   sky: '<svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 010-8 5 5 0 019.6 1.5A3.5 3.5 0 0117 18z"/></svg>',
@@ -4370,6 +4404,7 @@ function drawPxBg(g, th, bw, bh, ox, oy) {
 }
 function drawPxWeather(g, th, bw, bh, dt) {
   const kind = th.fx;
+  if (L.wind) for (const [x, y, l, a] of windStreaks(dt, bw, bh)) { g.fillStyle = a > .5 ? '#f4f4f4' : '#94b0c2'; const x0 = Math.round(Math.min(x, x + l)), n = Math.round(Math.abs(l)); g.fillRect(x0, Math.round(y), n, 1); g.fillRect(x0 + (l > 0 ? n : -3), Math.round(y) + 1, 3, 1); }
   if (kind === 'rain') {
     g.fillStyle = '#8fa8e8';
     for (const p of FX) { p.y += dt * (1.6 + p.v); p.x -= dt * .25; if (p.y > 1.05) { p.y = -.05; p.x = Math.random() * 1.2; } const x = Math.round(p.x * bw), y = Math.round(p.y * bh); g.fillRect(x, y, 1, 2); g.fillRect(x - 1, y + 2, 1, 2); }
@@ -4385,8 +4420,8 @@ function drawPxWeather(g, th, bw, bh, dt) {
       if (Math.sin(clock * 6 + p.i) < -.3) continue;
       g.fillStyle = p.i % 4 ? ['#ffb347', '#ff7a1a', '#ffd23f'][p.i % 3] : '#5a4a4a'; g.fillRect(Math.round(p.x * bw), Math.round(p.y * bh), 1, 1); continue;
     }
-    p.y += dt * p.v * (kind === 'snow' ? .1 : .12); p.x += dt * (.03 + Math.sin(clock + p.r) * .03); p.r += dt * 2;
-    if (p.y > 1.05) { p.y = -.05; p.x = Math.random(); } if (p.x > 1.05) p.x = -.05;
+    p.y += dt * p.v * (kind === 'snow' ? .1 : .12); p.x += dt * (.03 + Math.sin(clock + p.r) * .03 + windPush() * .0011); p.r += dt * 2;
+    if (p.y > 1.05) { p.y = -.05; p.x = Math.random(); } if (p.x > 1.05) p.x = -.05; if (p.x < -.05) p.x = 1.05;
     const x = Math.round(p.x * bw), y = Math.round(p.y * bh), big = p.s > 1.1;
     g.fillStyle = kind === 'snow' ? '#ffffff' : kind === 'leaves' ? (p.i % 3 ? '#6fb043' : '#b8e07a') : kind === 'inkdrops' ? '#15120f' : (p.i % 2 ? '#ffb7d0' : '#ffd6e4');
     if (kind === 'snow') { g.fillRect(x, y, big ? 2 : 1, big ? 2 : 1); continue; }
@@ -4444,10 +4479,14 @@ function renderPixel() {
     for (const pw of L.powers || []) if (!pw.got && inView(pw.x, pw.y, 40)) boxAdd(b1, pw.x, pw.y, 40);
     boxAdd(b1, w.x, w.y, 160);
     for (const s of shots) boxAdd(b1, s.x, s.y, 30);
+    for (const a of L.anchors) if (inView(a.x, a.y, 60)) { boxAdd(b1, a.x, a.y, 66); if (a.kind === 'wheel') boxAdd(b1, a.cx, a.cy, 20); }
+    for (const b of L.bells || []) if (inView(b.x, b.y, 60)) { boxAdd(b1, b.x, b.y, 48); boxAdd(b1, b.x, b.cy, 10); }
+    for (const f of L.flies) if (inView(f.x, f.y, 20)) boxAdd(b1, f.x, f.y, 18);
   }
   pxLayerPass(Q, b1, () => {
     drawGate(true);
     for (const l of L.lanterns) drawLantern(l);
+    drawMechanics();
     drawGate(false);
     for (const b of L.blades || []) drawBlade(b);
     drawBossScene(); drawPowers();
@@ -4471,14 +4510,16 @@ function renderPixel() {
     }
   }
   // aim, rope, heroine
-  if (state === 'play' && rope.st === 'none' && dead <= 0 && !finished) {
+  const pxAim = () => {
     const hit = hero.hookHit, a = hero.hookAng, len = hit ? hit.t : ropeMax * .35, [x0, y0] = A(w.x + Math.cos(a) * 18, w.y + Math.sin(a) * 18), [x1, y1] = A(w.x + Math.cos(a) * len, w.y + Math.sin(a) * len);
     g.fillStyle = hit ? '#ffffff' : 'rgba(255,255,255,.45)'; const ph = Math.floor(clock * 12) % 4;
     pline(x0, y0, x1, y1, (x, y, k) => { if ((Math.round(k * 200) + ph) % 4 === 0) g.fillRect(x, y, 1, 1); });
     if (hit) { const [hx, hy] = A(hit.x, hit.y), r = Math.floor(clock * 6) & 1 ? 4 : 3; g.fillStyle = '#1d1626'; g.fillRect(hx - r - 1, hy - 1, 3, 3); g.fillRect(hx + r - 1, hy - 1, 3, 3); g.fillRect(hx - 1, hy - r - 1, 3, 3); g.fillRect(hx - 1, hy + r - 1, 3, 3);
       g.fillStyle = '#ffffff'; for (const [dx, dy] of [[-r, 0], [r, 0], [0, -r], [0, r], [-r + 1, 0], [r - 1, 0], [0, -r + 1], [0, r - 1]]) g.fillRect(hx + dx, hy + dy, 1, 1); g.fillStyle = '#ff375f'; g.fillRect(hx, hy, 1, 1); }
     else { g.fillStyle = 'rgba(255,255,255,.5)'; for (const d of [-1, 0, 1]) { g.fillRect(x1 + d, y1 + d, 1, 1); g.fillRect(x1 + d, y1 - d, 1, 1); } }
-  }
+  };
+  const aimOn = state === 'play' && rope.st === 'none' && dead <= 0 && !finished;
+  if (aimOn && !L.dark) pxAim();
   if (rope.st !== 'none') {
     const pts = rope.st === 'fly' ? [{ x: rope.sx + rope.dx * rope.d, y: rope.sy + rope.dy * rope.d }] : rope.pts, hand = handPos(), st = ROPES[save.eq.rope] || ROPES.hemp, all = [...pts, hand];
     let n = 0;
@@ -4521,6 +4562,7 @@ function renderPixel() {
     const [x, y] = A(p.x, p.y), k = clamp(p.life / p.max, 0, 1); if (k * 16 <= dth(x, y)) continue;
     const s = Math.max(1, Math.round(p.s / PXU)); g.fillStyle = qcol(Q, p.col); g.fillRect(x - (s >> 1), y - (s >> 1), s, s);
   }
+  if (L.dark) { drawDarkPixel(g, bw, bh, ox, oy); if (aimOn) pxAim(); }
   for (const f of bitmapFloats) { const [x, y] = A(f.x, f.y); if (f.life < .25 && (Math.floor(clock * 20) & 1)) continue; pxText(g, f.text, x, y - 3, qcol(Q, f.col)); }
   drawPxWeather(g, th, bw, bh, lastFrameDt);
   if (save.eq.style === 'pocket') pocketPass(g, bw, bh);
@@ -4611,6 +4653,7 @@ const PXI = {
   skull: ['............', '...######...', '..########..', '.##########.', '.##..##..##.', '.##..##..##.', '.##########.', '..###..###..', '...######...', '...#.##.#...', '............', '............'],
   torii: ['............', '############', '.##########.', '...##..##...', '.##########.', '...##..##...', '...##..##...', '...##..##...', '...##..##...', '...##..##...', '..###..###..', '............'],
   coin: ['............', '...######...', '..########..', '.##########.', '.####..####.', '.###....###.', '.###....###.', '.####..####.', '.##########.', '..########..', '...######...', '............'],
+  bell: ['.....##.....', '....####....', '...######...', '...######...', '...######...', '..########..', '..########..', '.##########.', '.##########.', '............', '.....##.....', '............'],
   gem: ['............', '............', '...######...', '..#.#..#.#..', '.##########.', '..########..', '...######...', '....####....', '.....##.....', '............', '............', '............'],
 };
 const pxIconPath = rows => rows.map((r, y) => { let d = '', x = 0; while (x < 12) { if (r[x] !== '#') { x++; continue; } let e = x; while (e < 12 && r[e] === '#') e++; d += `M${x} ${y}h${e - x}v1h-${e - x}z`; x = e; } return d; }).join('');
@@ -4673,12 +4716,267 @@ function pxCross(n, fill, hi, lo, ol, well) {
   set('--pxMedalOff', pxDisc(18, '#262b44', '#333c57', '#1a1c2c', '#0e0f1c', '#1f2238'));
 }
 
+// ---------- level mechanics: kites to ride, shrine bells, gusts of wind and dark caves ----------
+const KITE_LOOK = { bamboo: 'kite', sakura: 'koi', snow: 'kite', volcano: 'lantern', city: 'drone', ink: 'kite' };
+function addMechanics(lvl, def, rnd) {
+  lvl.anchors = []; lvl.bells = null; lvl.wind = null; lvl.dark = false; lvl.flies = [];
+  const ch = def.ch, D = diff();
+  if (def.type === 'kites') {
+    // the only things to hook are kites drifting over the abyss; later chapters add wheels and kites that tear
+    const route = x => 560 + Math.sin(x * .0023 + lvl.n) * 90, look = KITE_LOOK[lvl.world.id] || 'kite';
+    let i = 0;
+    for (let x = 470; x < lvl.WW - 560; x += 245 + rnd() * 55, i++) {
+      const cy = route(x) - 175 + (rnd() - .5) * 60, wheel = ch >= 2 && i % 3 === 2;
+      const a = wheel ? { kind: 'wheel', cx: x, cy: cy + 40, rad: 80, sp: (.75 + rnd() * .35) * (rnd() < .5 ? -1 : 1), ph: rnd() * 6, r: 24 }
+        : { kind: 'kite', look, cx: x, cy, ax: 30 + rnd() * (35 + ch * 14), ay: 16 + rnd() * 22, sp: .55 + rnd() * .3 + ch * .05, ph: rnd() * 6, r: 27, tear: ch >= 3 && i % 2 ? Math.max(1.6, 2.6 - (ch - 3) * .5) / Math.sqrt(D.chase) : 0 };
+      a.t = 0; a.hang = 0; a.gone = 0; posAnchor(a, 0); lvl.anchors.push(a);
+    }
+  }
+  if (def.type === 'bells') {
+    // the gate stays sealed until every bell has been rung
+    const P = lvl.pts, N = P.length - 1, nb = 3 + (ch >= 2 ? 1 : 0);
+    lvl.bells = [];
+    for (let k = 1; k <= nb; k++) {
+      const i0 = Math.round(k * N / (nb + 1));
+      for (let tries = 0; tries < 40; tries++) {
+        const p = P[clamp(i0 + (tries % 5) - 2, 1, N - 1)], x = p.x + (rnd() - .5) * p.r * 1.4;
+        let cy = null; for (let t = 0; t < p.r * 2; t++) if (solid(x, p.y - t)) { cy = p.y - t; break; }
+        if (cy === null) continue;
+        const y = cy + 58 + rnd() * 34;
+        if (!clearAt(x, y, 26) || lvl.bells.some(b => hyp(b.x - x, b.y - y) < 220) || hyp(lvl.spawn.x - x, lvl.spawn.y - y) < 260) continue;
+        lvl.bells.push({ x, y, cy, rung: false, sw: 0, ph: rnd() * 6 }); break;
+      }
+    }
+    if (lvl.bells.length) lvl.gateLocked = true; else lvl.bells = null;
+  }
+  if (def.type === 'wind') lvl.wind = { power: (360 + ch * 70) * (.75 + D.chase * .25), period: Math.max(4.6, 6.4 - ch * .35), gust: 2.6, warn: 1.1, t: 0, f: 0, dir: -1, cycle: -1, streaks: [] };
+  if (def.type === 'dark') {
+    lvl.dark = true;
+    for (let i = 24; i < lvl.samples.length - 24; i += 21) {
+      const s = lvl.samples[i], x = s.x + (rnd() - .5) * s.r * .9, y = s.y + (rnd() - .5) * s.r * .7;
+      if (clearAt(x, y, 12)) lvl.flies.push({ x, y, hx: x, hy: y, ph: rnd() * 6 });
+    }
+  }
+}
+function posAnchor(a, dt) {
+  const ox = a.x, oy = a.y; a.t += dt;
+  if (a.kind === 'wheel') { const ang = a.t * a.sp + a.ph; a.x = a.cx + Math.cos(ang) * a.rad; a.y = a.cy + Math.sin(ang) * a.rad; }
+  else { a.x = a.cx + Math.sin(a.t * a.sp + a.ph) * a.ax; a.y = a.cy + Math.sin(a.t * a.sp * 1.7 + a.ph * 2) * a.ay; }
+  // a torn kite drifts away and comes back a few seconds later
+  if (a.gone > 0) { const k = 4 - a.gone; a.x += k * 60; a.y -= k * k * 70; }
+  a.vx = dt ? (a.x - ox) / dt : 0; a.vy = dt ? (a.y - oy) / dt : 0;
+}
+// the nearest anchor along a ray: the hook catches anything within its radius of the line
+function anchorRay(x0, y0, dx, dy, t0, t1) {
+  let best = null;
+  for (const a of L.anchors || []) {
+    if (a.gone > 0) continue;
+    const px = a.x - x0, py = a.y - y0, t = px * dx + py * dy;
+    if (t < t0 - a.r || t > t1 + a.r) continue;
+    const off = Math.abs(px * dy - py * dx); if (off > a.r) continue;
+    const tt = Math.max(t0, t - Math.sqrt(a.r * a.r - off * off));
+    if (tt <= t1 && (!best || tt < best.t)) best = { t: tt, x: a.x, y: a.y, an: a };
+  }
+  return best;
+}
+function ringBell(b) {
+  if (b.rung) return;
+  b.rung = true; b.sw = 1; SFX.bell();
+  const left = L.bells.filter(q => !q.rung).length, n = L.bells.length;
+  for (let i = 0; i < 18; i++) { const a = Math.random() * 6.28, s = 80 + Math.random() * 180; parts.push({ x: b.x, y: b.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: .7, max: .7, col: i % 2 ? '#ffe08a' : '#ffffff', s: 2.6, g: 60 }); }
+  if (!left) { L.gateLocked = false; pop(T2('The gate is open!', 'Ворота открыты!')); setTimeout(() => SFX.lantern(), 350); }
+  else pop(T2(`Bell ${n - left} of ${n}`, `Колокол ${n - left} из ${n}`));
+  updateHud(true);
+}
+function ringAlong(x0, y0, dx, dy, t0, t1) {
+  for (const b of L.bells || []) {
+    if (b.rung) continue;
+    const px = b.x - x0, py = b.y - y0, t = px * dx + py * dy;
+    if (t >= t0 - 20 && t <= t1 + 20 && Math.abs(px * dy - py * dx) < 26) ringBell(b);
+  }
+}
+// called every physics step
+function updateMechanics(dt) {
+  for (const a of L.anchors || []) {
+    if (a.gone > 0) a.gone = Math.max(0, a.gone - dt);
+    posAnchor(a, dt);
+    if (rope.st === 'on' && rope.an === a && a.tear) {
+      a.hang += dt;
+      if (a.hang > a.tear) {
+        release(); a.gone = 4; a.hang = 0; SFX.tear(); pop(KITE_TORN[a.look] || KITE_TORN.kite);
+        for (let i = 0; i < 12; i++) parts.push({ x: a.x, y: a.y, vx: (Math.random() - .5) * 220, vy: (Math.random() - .5) * 220, life: .6, max: .6, col: i % 2 ? '#f6ecd8' : '#d83a2e', s: 3, g: 120, shape: 'petal', r: Math.random() * 6 });
+      }
+    }
+  }
+  if (rope.st === 'on' && rope.an) { const p = rope.pts[0]; p.x = rope.an.x; p.y = rope.an.y; }
+  if (L.bells) {
+    const wp = weapon(), sx = w.x + hero.face * 22 * wp.reach, sy = w.y - 4;
+    for (const b of L.bells) {
+      b.sw = Math.max(0, b.sw - dt * .45);
+      if (b.rung || dead > 0) continue;
+      if (hyp(b.x - w.x, b.y - w.y) < R + 24 || (hero.slash > 0 && hyp(b.x - sx, b.y - sy) < 40 * wp.reach)) ringBell(b);
+    }
+  }
+  const W = L.wind;
+  if (W) {
+    W.t += dt;
+    const cyc = Math.floor(W.t / W.period), ph = W.t - cyc * W.period;
+    if (cyc !== W.cycle) { W.cycle = cyc; W.dir = Math.random() < .62 ? -1 : 1; W.announced = false; }
+    W.warning = ph < W.warn;
+    W.f = ph < W.warn ? 0 : ph < W.warn + W.gust ? W.dir * W.power * Math.sin(Math.PI * (ph - W.warn) / W.gust) : 0;
+    if (!W.warning && !W.announced && started) { W.announced = true; SFX.gust(); pop(W.dir < 0 ? T2('← Gust', '← Порыв') : T2('Gust →', 'Порыв →')); }
+  }
+  for (const f of L.flies) { f.x = f.hx + Math.sin(clock * .7 + f.ph) * 16; f.y = f.hy + Math.cos(clock * .9 + f.ph * 1.3) * 11; }
+}
+const KITE_TORN = { kite: T2('The kite tore!', 'Змей порвался!'), koi: T2('The koi broke free!', 'Карп сорвался!'), lantern: T2('The lantern burnt out!', 'Фонарь прогорел!'), drone: T2('The drone shut down!', 'Дрон отключился!') };
+const windPush = () => L.wind ? L.wind.f : 0;
+function resetMechanics() { for (const a of L.anchors || []) { a.gone = 0; a.hang = 0; } }
+// lights that cut through a dark cave, in world units: [x, y, radius]
+function darkLights() {
+  const out = [[w.x, w.y, dead > 0 ? 120 : 200]];
+  for (const l of L.lanterns) out.push([l.x, l.y - 26, l.lit ? 320 : 64]);
+  if (L.gate) out.push([L.gate.x, L.gate.y - 50, 230]);
+  for (const f of L.flies) out.push([f.x, f.y, 62 + Math.sin(clock * 3 + f.ph) * 10]);
+  for (const c of L.coins) if (!c.got) out.push([c.x, c.y, 26]);
+  for (const e of L.enemies || []) if (e.alive && e.t === 'spirit') out.push([e.x, e.y, 70]);
+  return out;
+}
+
+// ---------- drawing (world coordinates, through ctx, so the pixel mode can pixelate it too) ----------
+function drawMechanics() {
+  for (const a of L.anchors || []) drawAnchor(a);
+  for (const b of L.bells || []) drawBell(b);
+  for (const f of L.flies) drawFly(f);
+}
+function drawAnchor(a) {
+  const c = ctx;
+  c.save(); c.lineJoin = 'round'; c.lineCap = 'round';
+  if (a.kind === 'wheel') {
+    c.strokeStyle = 'rgba(255,255,255,.22)'; c.lineWidth = 2; c.setLineDash([5, 7]); c.beginPath(); c.arc(a.cx, a.cy, a.rad, 0, 7); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = '#2a1d14'; c.lineWidth = 5; c.beginPath(); c.moveTo(a.cx, a.cy); c.lineTo(a.x, a.y); c.stroke();
+    c.strokeStyle = '#9a6a3a'; c.lineWidth = 2.5; c.stroke();
+    c.fillStyle = '#5a3a24'; c.strokeStyle = '#1a120c'; c.lineWidth = 2; c.beginPath(); c.arc(a.cx, a.cy, 13, 0, 7); c.fill(); c.stroke();
+    c.fillStyle = '#d4a63a'; c.beginPath(); c.arc(a.cx, a.cy, 5, 0, 7); c.fill();
+    c.fillStyle = '#d4a63a'; c.strokeStyle = '#1a120c'; c.lineWidth = 2; c.beginPath(); c.arc(a.x, a.y, 10, 0, 7); c.fill(); c.stroke();
+    c.fillStyle = '#1a120c'; c.beginPath(); c.arc(a.x, a.y, 4, 0, 7); c.fill();
+    c.restore(); return;
+  }
+  const shaking = a.tear && rope.an === a && a.hang > a.tear - .9;
+  c.translate(a.x + (shaking ? (Math.random() - .5) * 5 : 0), a.y);
+  if (a.gone > 0) c.globalAlpha = Math.min(1, a.gone / 1.5);
+  if (a.tear && !a.gone) { c.strokeStyle = 'rgba(255,90,70,.55)'; c.lineWidth = 2; c.setLineDash([3, 4]); c.beginPath(); c.arc(0, 0, 31, 0, 7); c.stroke(); c.setLineDash([]); }
+  const sway = Math.sin(clock * 2.2 + a.ph) * .14;
+  if (a.look === 'lantern') {
+    const g = c.createRadialGradient(0, 0, 4, 0, 0, 46); g.addColorStop(0, 'rgba(255,170,70,.6)'); g.addColorStop(1, 'rgba(255,170,70,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, 46, 0, 7); c.fill();
+    c.rotate(sway * .5);
+    c.fillStyle = '#ff9a3c'; c.strokeStyle = '#3a1408'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(-13, -16); c.lineTo(13, -16); c.lineTo(10, 16); c.lineTo(-10, 16); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#ffd27a'; c.fillRect(-6, -10, 12, 18);
+    c.fillStyle = '#3a1408'; c.fillRect(-11, 16, 22, 3); c.fillStyle = '#ffe08a'; c.beginPath(); c.arc(0, 20, 3, 0, 7); c.fill();
+  } else if (a.look === 'drone') {
+    c.rotate(sway * .4);
+    c.fillStyle = '#1b1f2e'; c.strokeStyle = '#06070f'; c.lineWidth = 2;
+    for (const s of [-1, 1]) { c.beginPath(); c.moveTo(0, 0); c.lineTo(s * 20, -6); c.stroke(); c.fillStyle = 'rgba(160,240,255,.5)'; c.beginPath(); c.ellipse(s * 20, -9, 11 * Math.abs(Math.sin(clock * 40 + s)), 2.5, 0, 0, 7); c.fill(); }
+    c.fillStyle = '#2a3050'; c.beginPath(); c.ellipse(0, 0, 13, 9, 0, 0, 7); c.fill(); c.stroke();
+    c.fillStyle = Math.sin(clock * 6 + a.ph) > 0 ? '#5ff0ff' : '#ff4fa3'; c.beginPath(); c.arc(0, -1, 3.5, 0, 7); c.fill();
+    c.strokeStyle = '#06070f'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 9); c.lineTo(0, 15); c.stroke();
+  } else if (a.look === 'koi') {
+    // a koi windsock streaming in the breeze
+    c.rotate(-.25 + sway);
+    c.strokeStyle = '#2a1414'; c.lineWidth = 2;
+    const wv = k => Math.sin(clock * 6 + a.ph + k) * 3;
+    c.fillStyle = '#e8323f'; c.beginPath(); c.moveTo(-14, -10); c.quadraticCurveTo(8, -13 + wv(0), 30, -6 + wv(1)); c.lineTo(38, -12 + wv(2)); c.lineTo(36, 0 + wv(2)); c.lineTo(38, 12 + wv(2)); c.lineTo(30, 6 + wv(1)); c.quadraticCurveTo(8, 13 + wv(0), -14, 10); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#ffffff'; for (const sx of [2, 14, 25]) { c.beginPath(); c.ellipse(sx, wv(sx * .1) * .5, 4, 5, 0, 0, 7); c.fill(); }
+    c.fillStyle = '#ffffff'; c.strokeStyle = '#2a1414'; c.beginPath(); c.arc(-11, -2, 4, 0, 7); c.fill(); c.stroke();
+    c.fillStyle = '#121016'; c.beginPath(); c.arc(-11, -2, 1.8, 0, 7); c.fill();
+    c.strokeStyle = '#d4a63a'; c.lineWidth = 3; c.beginPath(); c.ellipse(-14, 0, 2.5, 10, 0, 0, 7); c.stroke();
+  } else {
+    // a paper kite with a sun in the middle and a tail of bows
+    const snow = L.world.id === 'snow', body = snow ? '#e6f2ff' : '#fbfbf6', mark = snow ? '#5aa2ff' : '#d83a2e';
+    c.strokeStyle = '#2a1d14'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(0, 22);
+    for (let k = 1; k <= 5; k++) c.lineTo(Math.sin(clock * 5 + a.ph + k) * 5, 22 + k * 9); c.stroke();
+    c.fillStyle = mark; for (let k = 1; k <= 4; k++) { const tx = Math.sin(clock * 5 + a.ph + k) * 5, ty = 22 + k * 9; c.beginPath(); c.moveTo(tx - 5, ty - 3); c.lineTo(tx + 5, ty + 3); c.lineTo(tx + 5, ty - 3); c.lineTo(tx - 5, ty + 3); c.closePath(); c.fill(); }
+    c.rotate(sway);
+    c.fillStyle = body; c.strokeStyle = '#2a1d14'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(0, -25); c.lineTo(18, 0); c.lineTo(0, 23); c.lineTo(-18, 0); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = mark; c.beginPath(); c.arc(0, -1, 7, 0, 7); c.fill();
+    c.strokeStyle = 'rgba(42,29,20,.6)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(0, -25); c.lineTo(0, 23); c.moveTo(-18, 0); c.lineTo(18, 0); c.stroke();
+  }
+  c.restore();
+}
+function drawBell(b) {
+  const c = ctx, ang = b.sw * Math.sin(clock * 9) * .5 + (b.rung ? 0 : Math.sin(clock * 1.5 + b.ph) * .04);
+  c.save(); c.lineJoin = 'round'; c.lineCap = 'round';
+  c.strokeStyle = '#2b2a33'; c.lineWidth = 2; c.beginPath(); c.moveTo(b.x, b.cy); c.lineTo(b.x + Math.sin(ang) * (b.y - b.cy - 16), b.y - 16); c.stroke();
+  c.translate(b.x + Math.sin(ang) * (b.y - b.cy - 16), b.y - 16); c.rotate(ang);
+  if (!b.rung) { const p = .5 + .5 * Math.sin(clock * 4 + b.ph), g = c.createRadialGradient(0, 16, 4, 0, 16, 40); g.addColorStop(0, `rgba(255,214,110,${.35 + p * .25})`); g.addColorStop(1, 'rgba(255,214,110,0)'); c.fillStyle = g; c.beginPath(); c.arc(0, 16, 40, 0, 7); c.fill(); }
+  c.fillStyle = b.rung ? '#ffd36a' : '#c8902a'; c.strokeStyle = '#3a2408'; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(-6, 0); c.quadraticCurveTo(-12, 2, -12, 16); c.lineTo(-16, 28); c.lineTo(16, 28); c.lineTo(12, 16); c.quadraticCurveTo(12, 2, 6, 0); c.closePath(); c.fill(); c.stroke();
+  c.fillStyle = '#3a2408'; c.fillRect(-14, 21, 28, 2.5);
+  c.fillStyle = b.rung ? '#fff3c4' : '#e8b44a'; c.fillRect(-7, 6, 3, 12);
+  c.fillStyle = '#3a2408'; c.beginPath(); c.arc(Math.sin(clock * 9) * b.sw * 5, 31, 3.5, 0, 7); c.fill();
+  c.restore();
+}
+function drawFly(f) {
+  const c = ctx, p = .6 + .4 * Math.sin(clock * 3 + f.ph);
+  const g = c.createRadialGradient(f.x, f.y, 1, f.x, f.y, 16); g.addColorStop(0, `rgba(220,255,120,${.55 * p})`); g.addColorStop(1, 'rgba(220,255,120,0)');
+  c.fillStyle = g; c.beginPath(); c.arc(f.x, f.y, 16, 0, 7); c.fill();
+  c.fillStyle = '#f2ffb0'; c.beginPath(); c.arc(f.x, f.y, 2.6, 0, 7); c.fill();
+}
+// darkness for the painted look: a screen-sized veil with holes cut by every light
+let darkCv = null, darkG = null;
+function drawDarkPaint(vx0, vy0, z) {
+  const W2 = cv.width, H2 = cv.height;
+  if (!darkCv || darkCv.width !== W2 || darkCv.height !== H2) { darkCv = document.createElement('canvas'); darkCv.width = W2; darkCv.height = H2; darkG = darkCv.getContext('2d'); }
+  const g = darkG, k = z * DPR;
+  g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W2, H2); g.fillStyle = 'rgba(5,4,12,.95)'; g.fillRect(0, 0, W2, H2);
+  g.globalCompositeOperation = 'destination-out';
+  for (const [x, y, r] of darkLights()) {
+    const sx = (x - vx0) * k, sy = (y - vy0) * k, sr = r * k;
+    if (sx < -sr || sy < -sr || sx > W2 + sr || sy > H2 + sr) continue;
+    const gr = g.createRadialGradient(sx, sy, sr * .3, sx, sy, sr); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.beginPath(); g.arc(sx, sy, sr, 0, 7); g.fill();
+  }
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(darkCv, 0, 0);
+}
+// darkness for the pixel look: solid black, a checkerboard rim and a clear core around each light
+let pxDarkM = new Uint8Array(0), pxDarkIm = null, pxDarkCv = null;
+function drawDarkPixel(g, bw, bh, ox, oy) {
+  const n = bw * bh; if (pxDarkM.length < n) pxDarkM = new Uint8Array(n);
+  const m = pxDarkM; m.fill(2, 0, n);
+  for (const [x, y, r] of darkLights()) {
+    const cx = x / PXU - ox, cy = y / PXU - oy, rr = r / PXU, core = rr * .62;
+    const x0 = Math.max(0, Math.floor(cx - rr)), x1 = Math.min(bw - 1, Math.ceil(cx + rr)), y0 = Math.max(0, Math.floor(cy - rr)), y1 = Math.min(bh - 1, Math.ceil(cy + rr));
+    for (let yy = y0; yy <= y1; yy++) for (let xx = x0; xx <= x1; xx++) {
+      const d = Math.hypot(xx - cx, yy - cy), i = yy * bw + xx;
+      if (d < core) m[i] = 0; else if (d < rr * .82 && m[i] > 1) m[i] = 1; else if (d < rr && m[i] > 1) m[i] = 3;
+    }
+  }
+  if (!pxDarkCv || pxDarkCv.width !== bw || pxDarkCv.height !== bh) { pxDarkCv = mkC(bw, bh); pxDarkIm = pxDarkCv.getContext('2d').createImageData(bw, bh); }
+  const d = pxDarkIm.data;
+  for (let y = 0, i = 0; y < bh; y++) for (let x = 0; x < bw; x++, i++) {
+    const v = m[i], on = v === 2 || (v === 1 && ((x + y) & 1)) || (v === 3 && ((x & 1) | (y & 1)) !== 0), j = i << 2;
+    d[j] = 6; d[j + 1] = 5; d[j + 2] = 14; d[j + 3] = on ? 255 : 0;
+  }
+  pxDarkCv.getContext('2d').putImageData(pxDarkIm, 0, 0); g.drawImage(pxDarkCv, 0, 0);
+}
+// gusts are shown as streaks of air across the screen
+function windStreaks(dt, Wd, Hd) {
+  const W = L.wind; if (!W) return [];
+  const want = W.warning ? 6 : Math.abs(W.f) / W.power * 30, dir = W.f ? Math.sign(W.f) : W.dir;
+  while (W.streaks.length < want) W.streaks.push({ x: Math.random(), y: Math.random() * .85, len: .05 + Math.random() * .09, v: .9 + Math.random() * .8, life: 1 });
+  for (const s of W.streaks) { s.x += dir * s.v * dt * (W.warning ? .5 : 1.4); s.life -= dt * .45; }
+  W.streaks = W.streaks.filter(s => s.life > 0 && s.x > -.2 && s.x < 1.2).slice(0, Math.ceil(want) + 4);
+  return W.streaks.map(s => [s.x * Wd, s.y * Hd, s.len * Wd * dir, Math.min(1, s.life * 2)]);
+}
+
 // ---------- level challenges: three per level ----------
 save.tasks = Object.assign({}, save.tasks);
 save.ach = Object.assign({}, save.ach);
 const stats = save.stats = Object.assign({ hooks: 0, kills: 0, air: 0, combo: 0, coins: 0, kicks: 0, deflects: 0, bossAny: 0, bosses: {}, hardBoss: 0, pureBoss: 0,
   wins: 0, flawless: 0, hardWin: 0, fast: 0, style: 0, spins: 0, jackpots: 0, picks: 0, lv3: 0 }, save.stats);
-const TASK_PLAN = [['coins', 'kills', 'time'], ['nodeath', 'coins', 'time'], ['coins', 'kicks', 'time'], ['nodeath', 'coins', 'time'], ['nodeath', 'deflect', 'bossfast'],
+const TASK_PLAN = [['coins', 'kills', 'time'], ['nodeath', 'coins', 'time'], ['coins', 'nodeath', 'time'], ['nodeath', 'coins', 'time'], ['nodeath', 'deflect', 'bossfast'],
   ['coins', 'nofloor', 'kills'], ['coins', 'airkills', 'nodeath'], ['nodeath', 'coins', 'time'], ['nodeath', 'coins', 'nopower'], ['nodeath', 'deflect', 'bossfast']];
 function levelTasks(lvl) {
   const plan = TASK_PLAN[lvl.def.k - 1].slice();
