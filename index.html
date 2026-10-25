@@ -766,6 +766,7 @@ img.appicon{width:64px;height:64px;border-radius:15px;flex:none;box-shadow:0 6px
       <button class="achrow" id="bAchRow"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-trophy"/></svg></span><span class="t"><span data-en="Achievements" data-ru="Достижения">Achievements</span><small id="achSum"></small></span><span class="bar"><i id="achBar"></i></span></button>
       </div>
       <div class="mcol">
+      <button class="achrow" id="bDojo"><span class="trophy"><svg viewBox="0 0 24 24"><use href="#i-hook"/></svg></span><span class="t"><span data-en="Training dojo" data-ru="Додзё: тренировка">Training dojo</span><small data-en="7 short lessons: swing, reel in, pole, wall kick" data-ru="7 коротких уроков: раскачка, подтягивание, шест, отскок">7 short lessons: swing, reel in, pole, wall kick</small></span><span class="new" id="dojoNew" data-en="NEW" data-ru="НОВОЕ">NEW</span></button>
       <div class="title" data-en="Look" data-ru="Образ">Look</div>
       <div class="ward" id="wardM"></div>
       <div class="title" data-en="Chapters" data-ru="Главы">Chapters</div>
@@ -1051,6 +1052,7 @@ const TYPE_INFO = {
   bells: { label: T2('shrine', 'святилище'), hint: T2('Shrine: the gate is sealed. Ring every bell — hook it, touch it or strike it.', 'Святилище: ворота запечатаны. Позвони во все колокола — кошкой, касанием или мечом.') },
   wind: { label: T2('wind', 'ветер'), hint: T2('Wind: gusts sweep the islands. Watch the streaks of air and hold on to the rope.', 'Ветер: порывы сносят с островов. Следи за струями воздуха и держись за верёвку.') },
   dark: { label: T2('darkness', 'тьма'), hint: T2('Darkness: you only see what is near you. Light the lanterns; fireflies show the way.', 'Тьма: видно только то, что рядом. Зажигай фонари, светлячки подскажут путь.') },
+  dojo: { label: T2('training', 'тренировка'), hint: '' },
   boss: { label: T2('boss', 'босс'), hint: T2('Boss! Hit it in mid-air, dodge its shots and grab weapons.', 'Босс! Руби его в полёте, уворачивайся от снарядов, подбирай оружие.') },
 };
 const CHASE_INFO = {
@@ -1058,6 +1060,7 @@ const CHASE_INFO = {
   water: T2('The water is rising', 'Вода поднимается'), ice: T2('Icy water is rising', 'Ледяная вода поднимается'), lava: T2('Lava is rising', 'Лава поднимается'), neon: T2('The block is flooding', 'Квартал затапливает'),
 };
 function levelDef(n) {
+  if (n === 0) return DOJO_DEF;
   const ch = Math.floor((n - 1) / 10), k = (n - 1) % 10;
   return Object.assign({ n, ch, k: k + 1, name: LEVEL_NAMES[ch][k], chapter: CHAPTERS[ch] }, LAYOUT[k]);
 }
@@ -1086,12 +1089,13 @@ function buildLevel(n) {
   if (def.type === 'ceiling') lvl = buildOpen(n, 'ceiling', rnd, th, def);
   else if (def.type === 'sky' || def.type === 'wind') lvl = buildOpen(n, 'abyss', rnd, th, def);
   else if (def.type === 'kites') lvl = buildOpen(n, 'kites', rnd, th, def);
+  else if (def.type === 'dojo') lvl = buildDojo(th);
   else if (def.type === 'boss') lvl = buildArena(n, rnd, th, def);
   else lvl = buildCave(n, def.type === 'chase' ? (def.sub === 'rise' ? 'lava' : 'right') : def.sub, rnd, th, def);
   lvl.def = def; lvl.type = def.type; lvl.world = base; lvl.style = save.eq.style;
   { const a = hex(th.rock[0]), b = hex(th.rock[1]); lvl.deep = `rgb(${(a[0] + b[0]) * .43 | 0},${(a[1] + b[1]) * .43 | 0},${(a[2] + b[2]) * .43 | 0})`; }
   if (def.type === 'chase' && def.sub === 'wall') lvl.chase = { x: lvl.spawn.x - 560, speed: (100 + n * 1.2) * D.chase, style: th.wall };
-  addMechanics(lvl, def, rnd);
+  if (def.type !== 'dojo') addMechanics(lvl, def, rnd); else Object.assign(lvl, { anchors: [], bells: null, wind: null, dark: false, flies: [] });
   if (def.type === 'chase' && def.sub === 'rise') lvl.lava = { y: lvl.spawn.y + 380, speed: (50 + n * .8) * D.chase, style: th.rise };
   return lvl;
 }
@@ -1783,6 +1787,7 @@ function pixelPass(c, w, h, name) {
 const pixelStyle = () => !isPx() && (save.eq.style === 'pixel' || save.eq.style === 'pocket');
 // ---------- enemies ----------
 function placeEnemies(lvl) {
+  if (lvl.dojo) return;
   const rnd = mulberry32(lvl.n * 991 + 7), P = lvl.pts, N = P.length - 1, out = [];
   const D = diff(), boss = lvl.type === 'boss';
   const nN = boss ? 0 : Math.round((lvl.n === 1 ? 1 : Math.min(1 + Math.floor(lvl.n / 2.5), 8)) * D.enemies);
@@ -1802,11 +1807,12 @@ function placeEnemies(lvl) {
   }
   lvl.enemies = out;
 }
-const ecy = e => e.t === 'ninja' ? e.y - 15 : e.y;
+const ecy = e => e.t === 'ninja' ? e.y - 15 : e.t === 'dummy' ? e.y - 26 : e.y;
 function updateEnemies(dt) {
   for (const e of L.enemies) {
     if (!e.alive) continue;
     e.ph += dt;
+    if (e.t === 'dummy') continue;
     if (e.t === 'ninja') {
       const near = Math.abs(w.x - e.x) < 230 && Math.abs(w.y - (e.y - 15)) < 70 && dead <= 0;
       if (near) e.dir = Math.sign(w.x - e.x) || e.dir;
@@ -1846,8 +1852,8 @@ const inY = () => finished ? 0 : clamp((pad.d || keys.d) - (pad.u || keys.u), -1
 
 function startLevel(n, keepMusic) {
   buildLevel(n); placeEnemies(L); placePowers(L); applyUpgrades(); resetRun(); resetPowers();
-  run.shields += diff().shields; L.tasks = levelTasks(L); levelMusic(n, keepMusic);
-  save.last = n; persist();
+  run.shields += diff().shields; L.tasks = L.dojo ? [] : levelTasks(L); levelMusic(n, keepMusic);
+  if (!L.dojo) { save.last = n; persist(); }
   checkpoint = L.lanterns[0];
   respawn();
   time = 0; started = false; finished = false; coinsGot = 0; kills = 0; doneT = 0; parts = []; progIdx = 0; ninjaHinted = false; slowT = 0;
@@ -1855,6 +1861,7 @@ function startLevel(n, keepMusic) {
   cam.x = w.x; cam.y = w.y; cam.z = baseZoom();
   tut = (n === 1 && !save.tut) ? 0 : -1; tutT = 0;
   hint('', 0); updateHud(true); updateBossBar(); showIntro(L.def);
+  if (L.dojo) { setTimeout(() => { if (L.dojo && !finished) hint(DOJO[L.dojo.i].text); }, 1400); return; }
   if (tut === 0) { hint(T2(`<b>Hold the Hook</b> with your ${hookSide().en} thumb: it fires and holds on. Let go to release.`, `<b>Держи Кошку</b> ${hookSide().ru} пальцем: она выстрелит и будет держать. Отпустишь — отцепится.`)); return; }
   const seen = save.seen || (save.seen = {}), key = L.type === 'chase' ? 'chase-' + L.def.sub : L.type;
   const chaseTxt = L.chase ? CHASE_INFO[L.chase.style] : L.lava ? CHASE_INFO[L.lava.style] : '';
@@ -1864,9 +1871,9 @@ function startLevel(n, keepMusic) {
 let introT = 0;
 function showIntro(def) {
   const el = $('#intro');
-  $('#introCh').textContent = T2(`Chapter ${def.ch + 1} · ${def.chapter.name}`, `Глава ${def.ch + 1} · ${def.chapter.name}`);
+  $('#introCh').textContent = def.type === 'dojo' ? T2('Training', 'Тренировка') : T2(`Chapter ${def.ch + 1} · ${def.chapter.name}`, `Глава ${def.ch + 1} · ${def.chapter.name}`);
   $('#introName').textContent = def.name;
-  $('#introType').textContent = `${def.ch + 1}-${def.k} · ` + (def.type === 'boss' ? (def.mini ? T2('mini-boss', 'мини-босс') : T2('chapter boss', 'босс главы')) : TYPE_INFO[def.type].label) + ` · ${diff().name}`;
+  if (def.type === 'dojo') $('#introType').textContent = T2('7 short lessons', '7 коротких уроков'); else $('#introType').textContent = `${def.ch + 1}-${def.k} · ` + (def.type === 'boss' ? (def.mini ? T2('mini-boss', 'мини-босс') : T2('chapter boss', 'босс главы')) : TYPE_INFO[def.type].label) + ` · ${diff().name}`;
   const done = save.tasks[def.n] || [];
   $('#introTasks').innerHTML = L.tasks.map((id, i) => `<li>${done[i] ? '✓' : '○'} ${taskLabel(id)}</li>`).join('');
   el.classList.remove('off'); clearTimeout(introT); introT = setTimeout(() => el.classList.add('off'), 3200);
@@ -2086,7 +2093,7 @@ function update(dt) {
       const ex = e.x, ey = ecy(e), dh = hyp(ex - w.x, ey - w.y);
       if (!ninjaHinted && dh < 380 && !save.ninja) { ninjaHinted = true; save.ninja = true; persist(); hint(T2('A shadow! Its touch kills. Strike first: <b>tap the centre of the d-pad</b>.', 'Тень! Касание убивает. Руби её первой: <b>тап по центру крестовины</b>.'), 5); }
       if (hero.slash > 0 && (hyp(ex - sx, ey - sy) < 36 * wp.reach || dh < R + 20 + (wp.wide ? 30 : 0))) { killEnemy(e); continue; }
-      if (dh < R + 12 && hero.inv <= 0) { die(); break; }
+      if (dh < R + 12 && hero.inv <= 0 && e.t !== 'dummy') { die(); break; }
     }
     if (L.boss && L.boss.alive && hero.slash > 0) {
       const b = L.boss, near = hyp(b.x - sx, b.y - sy) < b.r + 26 * wp.reach || hyp(b.x - w.x, b.y - w.y) < b.r + R + 14 + (wp.wide ? 30 : 0);
@@ -2099,7 +2106,7 @@ function update(dt) {
     if (dead <= 0 && L.chase && w.x - R < L.chase.x + 6) { pop(T2('Caught', 'Догнали')); die(true); }
     if (dead <= 0 && !L.gateLocked && hyp(L.gate.x - w.x, L.gate.y - 48 - w.y) < 62) win();
   }
-  if (finished) { doneT += dt; if (doneT > 1.1 && state === 'play') showDone(); }
+  if (finished) { doneT += dt; if (doneT > 1.1 && state === 'play') { if (L.dojo) { state = 'load'; setTimeout(dojoDone, 0); } else showDone(); } }
 }
 function die(force) {
   if (dead > 0 || (hero.inv > 0 && !force)) return;
@@ -2120,6 +2127,7 @@ function updateParts(dt) {
 }
 function win() {
   finished = true; doneT = 0; SFX.win(); release();
+  if (L.dojo) { hint('', 0); return; }
   const prev = save.best[L.n];
   L.firstClear = !prev;
   L.newBest = !prev || time < prev;
@@ -2204,7 +2212,7 @@ function render() {
   drawGate(false);
   for (const b of L.blades || []) drawBlade(b);
   for (const c of L.coins) if (!c.got) drawCoin(c);
-  for (const e of L.enemies || []) if (e.alive) e.t === 'ninja' ? drawNinja(e) : drawSpirit(e);
+  for (const e of L.enemies || []) if (e.alive) e.t === 'ninja' ? drawNinja(e) : e.t === 'dummy' ? drawDummy(e) : drawSpirit(e);
   drawBossScene();
   drawPowers();
   const aimOn = state === 'play' && rope.st === 'none' && dead <= 0 && !finished;
@@ -2439,6 +2447,7 @@ function buildMenu() {
   $('#bPlayLbl').textContent = T2('Play', 'Играть') + ` · ${levelDef(target).ch + 1}-${levelDef(target).k}`;
   $('#bPlay').onclick = () => { audio(); play(target); };
   $('#bDiff').innerHTML = `<i>${T2('Difficulty', 'Сложность')}</i> ${diff().name}`;
+  $('#dojoNew').hidden = !!save.dojo;
   $('#bLang').innerHTML = `<i>${T2('Language', 'Язык')}</i> ${lang === 'ru' ? 'RU' : 'EN'}`;
   renderAchSummary();
   $('#mWallet').innerHTML = `${MON}<span>${fmtR(save.ryo)}</span>`;
@@ -2504,6 +2513,16 @@ dpad.addEventListener('pointerdown', e => {
 dpad.addEventListener('pointermove', e => { if (dpPtrs.has(e.pointerId)) { dpPtrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); dpRefresh(); } });
 const dpEnd = e => { if (dpPtrs.delete(e.pointerId)) dpRefresh(); };
 dpad.addEventListener('pointerup', dpEnd); dpad.addEventListener('pointercancel', dpEnd); dpad.addEventListener('lostpointercapture', dpEnd);
+// a finger that lifts where the d-pad never hears about it (an iOS edge gesture, a slide off the button)
+// must not leave a direction held for ever, which would also cancel out the opposite one
+addEventListener('pointerup', dpEnd, true); addEventListener('pointercancel', dpEnd, true);
+const allUp = e => {
+  if (e.touches.length) return;
+  if (dpPtrs.size) clearPad();
+  const hb = $('#hookBtn'); if (hb.classList.contains('on')) { hb.classList.remove('on'); hookUp(); }
+};
+document.addEventListener('touchend', allUp, true); document.addEventListener('touchcancel', allUp, true);
+addEventListener('blur', () => { keys.l = keys.r = keys.u = keys.d = 0; clearPad(); });
 function bindAct(el, fn) {
   el.addEventListener('pointerdown', e => { e.preventDefault(); el.classList.add('on'); fn(); });
   const end = () => el.classList.remove('on');
@@ -2795,7 +2814,7 @@ function bossOnPlayerDeath() {
 }
 function updateBossBar() {
   const el = $('#bossBar');
-  if (!L || !L.boss) { el.hidden = true; return; }
+  if (!L || !L.boss || !L.boss.alive) { el.hidden = true; return; }
   el.hidden = false; $('#bossName').textContent = L.boss.name;
   $('#bossHp').style.width = (L.boss.hp / L.boss.max * 100) + '%';
   el.classList.toggle('rage', L.boss.phase === 2);
@@ -3639,6 +3658,7 @@ const POWER_ICON = {
 };
 let inv = {}, shots = [], lashes = [];
 function placePowers(lvl) {
+  if (lvl.dojo) { lvl.powers = []; return; }
   if (lvl.type === 'boss') { lvl.powers = lvl.spots.slice(0, 2).map(([x, y], i) => ({ x, y: y - 70, t: i ? 'foxfire' : 'shuriken', got: false, ph: i })); return; }
   const rnd = mulberry32(lvl.n * 313 + 5), P = lvl.pts, N = P.length - 1, types = ['shuriken', 'foxfire', 'whip', 'ward'];
   const want = lvl.n === 1 ? 1 : Math.min(2 + Math.floor(lvl.n / 3), 5);
@@ -3935,7 +3955,7 @@ function awardPrize(out, keys) {
   $('#dWallet').innerHTML = walletLine();
 }
 $('#bSpin').onclick = spin;
-$('#bQuit').onclick = () => { hookUp(); showResults(false); };
+$('#bQuit').onclick = () => { hookUp(); if (L.dojo) toMenu(); else showResults(false); };
 
 // ---------- pixel mode: the world redrawn at low resolution, pixel by pixel ----------
 const PXU = 2; // world units per art pixel
@@ -4081,6 +4101,8 @@ const NJ_TOP = [
 const NJ_LEGS = [['...ODO.ODO..', '..ODO...ODO.', '.ODO.....ODO', '.OO.......OO'], ['....ODDO....', '....ODDO....', '....ODDO....', '....OOOO....']];
 const NJ_MAP = { O: '#0b0910', D: '#25212f', d: '#1d1a26', R: '#ff453a', E: '#f2e4d4', r: '#ff2d2d' };
 const ninjaSpr = NJ_LEGS.map(l => sprite([...NJ_TOP, ...l], NJ_MAP));
+const DUMMY_SPR = sprite(['....OOOO....', '...OYYYYO...', '...OYyYYO...', '...OYYYYO...', '....OOOO....', '.....OO.....', 'OOOOOWWOOOOO', 'OWWWWWWWWWWO', 'OOOOOWWOOOOO', '....OYYO....', '...OYYYYO...', '...OrrrrO...', '...OYYyYO...', '....OYYO....', '.....WW.....', '.....WW.....', '.....WW.....', '...OOOOOO...'],
+  { O: '#3a2408', Y: '#e8c46a', y: '#c99a3a', W: '#7a4a24', r: '#d83a2e' });
 const SP_TOP = [
   '.....OOOO.....',
   '...OOPPPPOO...',
@@ -4545,6 +4567,7 @@ function renderPixel() {
     g.drawImage(spr, x - 4, y - 4);
   }
   for (const e of L.enemies || []) if (e.alive) {
+    if (e.t === 'dummy') { const [x, y] = A(e.x, e.y); g.drawImage(DUMMY_SPR, x - 6, y - 18); continue; }
     if (e.t === 'ninja') {
       const [x, y] = A(e.x, e.y), fr = Math.floor(e.ph * 4) & 1, s = ninjaSpr[fr];
       g.save(); g.translate(x, y); g.scale(e.dir, 1); g.drawImage(s, -6, -16 - (fr ? 1 : 0));
@@ -4876,6 +4899,7 @@ function updateMechanics(dt) {
     W.f = ph < W.warn ? 0 : ph < W.warn + W.gust ? W.dir * W.power * Math.sin(Math.PI * (ph - W.warn) / W.gust) : 0;
     if (!W.warning && !W.announced && started) { W.announced = true; SFX.gust(); pop(W.dir < 0 ? T2('← Gust', '← Порыв') : T2('Gust →', 'Порыв →')); }
   }
+  if (L.dojo) updateDojo(dt);
   for (const f of L.flies) { f.x = f.hx + Math.sin(clock * .7 + f.ph) * 16; f.y = f.hy + Math.cos(clock * .9 + f.ph * 1.3) * 11; }
 }
 const KITE_TORN = { kite: T2('The kite tore!', 'Змей порвался!'), koi: T2('The koi broke free!', 'Карп сорвался!'), lantern: T2('The lantern burnt out!', 'Фонарь прогорел!'), drone: T2('The drone shut down!', 'Дрон отключился!') };
@@ -5019,6 +5043,87 @@ function windStreaks(dt, Wd, Hd) {
   for (const s of W.streaks) { s.x += dir * s.v * dt * (W.warning ? .5 : 1.4); s.life -= dt * .45; }
   W.streaks = W.streaks.filter(s => s.life > 0 && s.x > -.2 && s.x < 1.2).slice(0, Math.ceil(want) + 4);
   return W.streaks.map(s => [s.x * Wd, s.y * Hd, s.len * Wd * dir, Math.min(1, s.life * 2)]);
+}
+
+// ---------- training dojo: seven small halls, one trick each ----------
+const DOJO_DEF = { n: 0, ch: 0, k: 1, type: 'dojo', name: T2('Training Dojo', 'Додзё'), chapter: { name: T2('Training', 'Тренировка') } };
+// each lesson: where it starts, what it says, when it counts as done, and below which height a fall sends you back
+const DOJO = [
+  { at: [250, 1500], text: T2('<b>1/7 · Hook</b> Hold the Hook button: the hook flies up and grabs the ceiling. Hang on for a moment.', '<b>1/7 · Кошка</b> Зажми кнопку Кошки: она вылетит вверх и зацепится за потолок. Повиси немного.'), done: d => d.hang > 1.2 },
+  { at: [880, 1500], text: T2('<b>2/7 · Swing</b> Hook the ceiling, rock with <b>← →</b> and let go at the top of the swing to fly over the pit.', '<b>2/7 · Раскачка</b> Зацепись за потолок, раскачайся <b>← →</b> и отпусти в верхней точке, чтобы перелететь яму.'), done: () => w.x > 1525 && w.y < 1505 },
+  { at: [1780, 1500], text: T2('<b>3/7 · Reel in</b> Hook the ceiling above the ledge and hold <b>↑</b> to climb the rope, then swing onto the ledge. <b>↓</b> lets the rope out.', '<b>3/7 · Подтягивание</b> Зацепись за потолок над уступом и держи <b>↑</b>, чтобы подняться, потом качнись на уступ. <b>↓</b> отпускает верёвку.'), done: () => w.x > 2095 && w.y < 1245 },
+  { at: [2480, 1240], text: T2('<b>4/7 · Pole</b> No ceiling in reach! Hold <b>↓</b> and press the Hook: it grabs the floor under you. Keep holding <b>↓</b> — the rope lifts you like a pole. High up, add <b>→</b> to tip over the step, then let go.', '<b>4/7 · Шест</b> До потолка не достать! Держи <b>↓</b> и жми Кошку — она зацепится за пол под тобой. Дальше держи <b>↓</b>: верёвка поднимет тебя как шест. Наверху добавь <b>→</b>, чтобы перевалиться на ступень, и отпусти.'), done: () => w.x > 2895 && w.y < 1045 },
+  { at: [2950, 1040], text: T2('<b>5/7 · Wall kick</b> Hang beside a wall and bump into it: while the button is green, let go to bounce off. Climb the shaft.', '<b>5/7 · Отскок</b> Повисни у стены и ударься о неё: пока кнопка зелёная, отпусти — оттолкнёшься. Поднимись по шахте.'), done: () => w.x > 3395 && w.y < 725 },
+  { at: [3460, 720], text: T2('<b>6/7 · Catch in the air</b> Swing, let go, and keep holding the Hook while you fly: it grabs the next rock by itself.', '<b>6/7 · Хват в полёте</b> Раскачайся, отпусти и в полёте снова держи Кошку — она сама схватит следующий камень.'), done: () => w.x > 4215 && w.y < 725, fall: 1150 },
+  { at: [4300, 720], text: T2('<b>7/7 · Sword</b> Tap the centre of the d-pad to strike. Cut down the straw dummy!', '<b>7/7 · Меч</b> Тап по центру крестовины — удар. Заруби соломенное чучело!'), done: () => !L.enemies[0].alive },
+  { at: [4300, 720], text: T2('<b>Well done!</b> Walk into the torii gate to finish your training.', '<b>Отлично!</b> Войди в ворота тории, чтобы закончить тренировку.'), done: () => false },
+];
+function buildDojo(th) {
+  const WW = 5200, HH = 1900, c = document.createElement('canvas'); c.width = WW; c.height = HH;
+  const g = c.getContext('2d', { willReadFrequently: true }), rnd = mulberry32(77);
+  g.fillStyle = '#fff'; g.fillRect(0, 0, WW, HH);
+  const carve = (x, y, w2, h2, r) => { g.globalCompositeOperation = 'destination-out'; g.beginPath(); g.roundRect(x, y, w2, h2, r || 40); g.fill(); g.globalCompositeOperation = 'source-over'; };
+  const fill = (x, y, w2, h2, r) => { g.fillStyle = '#fff'; g.beginPath(); g.roundRect(x, y, w2, h2, r || 14); g.fill(); };
+  carve(100, 1070, 1700, 430, 50);           // halls 1 and 2: a low ceiling to hang from
+  carve(1000, 1300, 500, 450, 40);           // the pit to swing over
+  carve(1700, 1070, 760, 430, 50);           // hall 3
+  fill(2085, 1240, 400, 300, 18);            // the ledge
+  carve(2400, 300, 700, 940, 60);            // hall 4: open to a ceiling far out of reach
+  fill(2880, 1040, 240, 260, 14);            // the step to vault onto
+  fill(3020, 300, 80, 600, 10);              // the left wall of the shaft
+  carve(3100, 560, 290, 480, 30);            // hall 5: the shaft
+  carve(3380, 560, 260, 160, 30);            // the way out at the top
+  carve(3600, 300, 620, 1350, 50);           // hall 6: a chasm with rocks hanging over it
+  for (const [x, y] of [[3730, 540], [3910, 560], [4090, 540]]) blob(g, rnd, x, y, 44, 1, .9);
+  carve(4200, 400, 900, 320, 50);            // hall 7 and the gate
+  const { mask, tufts, vines } = paintTerrain(g, WW, HH, th, 0);
+  const lvl = { n: 0, th, kind: 'dojo', WW, HH, mask, canvas: c, coins: [], spikes: [], lanterns: [], gate: { x: 4950, y: 720 }, spawn: null, blades: [], dojo: { i: 0, hang: 0 } };
+  L = lvl;
+  decorate(g, rnd, th, tufts, vines);
+  for (const ls of DOJO.slice(0, 7)) lvl.lanterns.push({ x: ls.at[0] - 50, y: ls.at[1], lit: ls === DOJO[0], rx: ls.at[0], ry: ls.at[1] - R - 4 });
+  lvl.spawn = { x: DOJO[0].at[0], y: DOJO[0].at[1] - R - 4 };
+  const route = [[250, 1480], [900, 1320], [1600, 1480], [2200, 1220], [2700, 1220], [3000, 1020], [3240, 820], [3500, 700], [3900, 620], [4300, 700], [4950, 700]];
+  const samples = []; let dist = 0;
+  for (let i = 0; i < route.length - 1; i++) {
+    const [x0, y0] = route[i], [x1, y1] = route[i + 1], n = Math.ceil(hyp(x1 - x0, y1 - y0) / 8);
+    for (let s = 0; s < n; s++) { const x = lerp(x0, x1, s / n), y = lerp(y0, y1, s / n); if (samples.length) { const q = samples[samples.length - 1]; dist += hyp(x - q.x, y - q.y); } samples.push({ x, y, r: 150, d: dist }); }
+  }
+  { const [x, y] = route[route.length - 1], q = samples[samples.length - 1]; dist += hyp(x - q.x, y - q.y); samples.push({ x, y, r: 150, d: dist }); }
+  for (const [x, y] of [[500, 1300], [1250, 1250], [1950, 1320], [2650, 1100], [3240, 760], [3910, 650], [4450, 640]]) lvl.coins.push({ x, y, got: false, ph: rnd() * 6 });
+  Object.assign(lvl, { pts: route.map(([x, y]) => ({ x, y, r: 150 })), samples, total: dist, par: 999, gateLocked: true });
+  lvl.enemies = [{ t: 'dummy', x: 4560, y: 720, dir: -1, alive: true, ph: 0 }];
+  lvl.powers = [];
+  return lvl;
+}
+function updateDojo(dt) {
+  const d = L.dojo, ls = DOJO[d.i];
+  if (rope.st === 'on') d.hang += dt;
+  if (ls.fall && w.y > ls.fall && dead <= 0) { respawn(); pop(T2('Try again', 'Ещё раз')); return; }
+  if (!ls.done(d)) return;
+  d.i++; d.hang = 0; SFX.lantern();
+  const next = DOJO[d.i], lan = L.lanterns[Math.min(d.i, L.lanterns.length - 1)];
+  if (d.i < 7) { lan.lit = true; checkpoint = lan; }
+  if (d.i === 7) L.gateLocked = false;
+  pop(T2('Lesson passed', 'Урок пройден'));
+  setTimeout(() => { if (L.dojo && L.dojo.i === d.i && !finished) hint(next.text); }, 700);
+}
+function dojoDone() {
+  const first = !save.dojo;
+  save.dojo = 1; if (first) save.ryo += 300; persist();
+  toMenu();
+  pop(first ? T2('Training complete · +300 ryo', 'Тренировка пройдена · +300 рё') : T2('Training complete', 'Тренировка пройдена'));
+}
+function drawDummy(e) {
+  const c = ctx, x = e.x, y = e.y, wob = Math.sin(clock * 2 + e.ph) * .03;
+  c.save(); c.translate(x, y); c.rotate(wob); c.lineJoin = 'round';
+  c.fillStyle = '#7a4a24'; c.strokeStyle = '#2a1608'; c.lineWidth = 1.6;
+  c.fillRect(-2.5, -18, 5, 18); c.strokeRect(-2.5, -18, 5, 18);
+  c.fillRect(-16, -27, 32, 4); c.strokeRect(-16, -27, 32, 4);
+  c.fillStyle = '#e8c46a'; c.beginPath(); c.ellipse(0, -19, 8, 10, 0, 0, 7); c.fill(); c.stroke();
+  c.fillStyle = '#d83a2e'; c.fillRect(-8, -20, 16, 3);
+  c.fillStyle = '#e8c46a'; c.beginPath(); c.arc(0, -36, 7.5, 0, 7); c.fill(); c.stroke();
+  c.strokeStyle = '#2a1608'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-4, -39); c.lineTo(-1, -36); c.moveTo(-1, -39); c.lineTo(-4, -36); c.moveTo(1, -39); c.lineTo(4, -36); c.moveTo(4, -39); c.lineTo(1, -36); c.stroke();
+  c.restore();
 }
 
 // ---------- level challenges: three per level ----------
@@ -5189,6 +5294,7 @@ function openAch() {
 }
 $('#bAch').onclick = () => { audio(); openAch(); };
 $('#bAchRow').onclick = () => { audio(); openAch(); };
+$('#bDojo').onclick = () => { audio(); play(0); };
 $('#bAchBack').onclick = () => { buildMenu(); show('menu'); };
 
 // ---------- language and hand settings ----------
