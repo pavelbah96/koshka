@@ -1,0 +1,14 @@
+{
+  "name": "Барселона Бро",
+  "short_name": "Барса Бро",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#131833",
+  "theme_color": "#131833",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
