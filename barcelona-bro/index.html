@@ -128,6 +128,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .stats span{color:var(--muted)}
 #again{background:var(--coral);color:#2a0d06;font-weight:700;font-size:18px;padding:12px;box-shadow:0 5px 0 var(--coral-d),0 7px 0 #0b0f22;letter-spacing:.06em}
 #again:active{transform:translateY(3px)}
+.recs{text-align:left;font-size:12px;color:var(--muted);max-height:26vh;overflow:auto}.recs span{color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}.recs ul{margin:6px 0 0;padding-left:16px;line-height:1.45;color:var(--cream)}
 .soon{margin:0;font-size:13px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){#dmore{animation:none}#card{transition:none}}
 </style>
@@ -183,6 +184,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
       <span>Поцелуи Нэт</span><b id="stH">0/7</b>
       <span>Рекорд монеток</span><b id="stB">0</b>
     </div>
+    <div id="stRW" class="recs" hidden><span>Коллекция пластинок</span><ul id="stR"></ul></div>
     <button id="again" type="button">ИГРАТЬ СНОВА</button>
     <p class="soon">С днём рождения, Кира!</p>
   </div>
@@ -513,12 +515,75 @@ const CAT_TOP=[
 const CAT_LEGS={a:[".....KK..KK....KK..KK...",".....KK..KK....KK..KK...","....kkk.kkk...kkk.kkk..."],b:["......KK.KK.....KK.KK...","......KK..KK...KK...KK..","......kk..kkk..kk...kkk."]};
 PAL.panther={K:'#22212b',k:'#141418',E:'#f2d23a',n:'#4a4a56'};
 PAL.jaguar={K:'#d9a040',k:'#9a6a28',E:'#3a8a3a',n:'#4a2a1a',o:'#3a2410'};
+PAL.gry={H:'#2a1c14',h:'#4a3424',S:'#d09870',s:'#a8744e',E:'#1a1110',D:'#5a4030',K:'#1a1a22',k:'#2e2e3a',R:'#c8302a',W:'#f2efe8',P:'#1a1a22',B:'#3a2a1a'};
+UP.gry=[
+ "...H..H.H.H.....",
+ "..HHHHHHHHHH....",
+ ".HHHhHHHHhHHH...",
+ "..HWWWWWWWWWH...",
+ "..HSSSSSSSSs....",
+ "..HSSESSSESs....",
+ "..HSSSSSSSSs....",
+ "..HDSSDDDSSD....",
+ "...DDDDDDDDD....",
+ ".....DDDDD......",
+ "...KKKSSKKKK....",
+ "..KKKKKSKKKKK...",
+ "..KkKKKKKKKkK...",
+ "..KKKKKKKKKKK...",
+ "..SKKRRRRRKKS...",
+ "..SKKKKKKKKKS...",
+ "...KKKKKKKKK....",
+ "...PPPPPPPPPP...",
+];
+PAL.yu={H:'#f4f4f8',h:'#cfd0dc',S:'#f0d2b4',s:'#d4b090',M:'#111116',E:'#e8e8f0',r:'#d0445a',J:'#ffffff',j:'#d8dce6',P:'#f0d2b4',B:'#f4f4f8'};
+UP.yu=[
+ "......HHHH......",
+ "....HHHHHHHH....",
+ "...HHHHHHHHHH...",
+ "...HHhHhHhHHH...",
+ "...HMMMMMMMMH...",
+ "...HMEMMMEMMH...",
+ "...HSSSSSSSsH...",
+ "...HHSSSrSSsH...",
+ "...HHHSSSSSHH...",
+ "...HHH.SSS.HH...",
+ "....JJJJJJJJ....",
+ "...JJJJJJJJJJ...",
+ "...SJJjJJjJJS...",
+ "...SJJJJJJJJS...",
+ "....JJJJJJJJ....",
+ "...jjjjjjjjjj...",
+ "..jjjjjjjjjjjj..",
+ "..jjjjjjjjjjjj..",
+];
+PAL.extra={H:'#111116',S:'#e0b090',s:'#c09070',M:'#000000',E:'#ffffff',K:'#15151b',k:'#2a2a34',W:'#f2efe8',P:'#15151b',B:'#0a0a0e'};
+UP.extra=[
+ "................",
+ ".....HHHHHH.....",
+ "....HHHHHHHH....",
+ "....HSSSSSSSs...",
+ "....MMMMMMMMM...",
+ "....MEMMMEMMM...",
+ "....SSSSSSSSs...",
+ "....SSSSSSSSs...",
+ ".....SSSSSSs....",
+ ".......SS.......",
+ "...KKKWWWKKKK...",
+ "..KKKKWWWKKKKK..",
+ "..KkKKKWKKKKkK..",
+ "..KKKKKWKKKKKK..",
+ "..SKKKKKKKKKKS..",
+ "..SKKKKKKKKKKS..",
+ "...KKKKKKKKKK...",
+ "...PPPPPPPPPP...",
+];
 
 (()=>{
 'use strict';
 // ================= constants =================
 let W=240;const H=160,GY=136,ROAD=152,WALKY=127,CARX=40,TOTAL_V=10,TOTAL_H=7;
-const NAME={hero:'Кира',bro:'Федя',dog:'Какус',nat:'Нэт',star:'Дева Кассель',girl:'Лаура',rob:'Воришка',cop:'Полиция',model:'Валерия',pepe:'Аркадик',fred:'Фредди',pasha:'Паша',vash:'Вашик',owner:'Хозяин HQ',granny:'Соседка',dj:'Сосед',tourist:'Туристка',all:'Все'};
+const NAME={hero:'Кира',bro:'Федя',dog:'Какус',nat:'Нэт',star:'Дева Кассель',girl:'Лаура',rob:'Воришка',cop:'Полиция',model:'Валерия',pepe:'Аркадик',fred:'Фредди',pasha:'Паша',vash:'Вашик',owner:'Хозяин HQ',granny:'Соседка',dj:'Сосед',tourist:'Туристка',all:'Все',gry:'Грязный',yu:'Ю'};
 const $=s=>document.querySelector(s);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v, rnd=(a,b)=>a+Math.random()*(b-a), ri=(a,b)=>Math.floor(rnd(a,b+1));
 function seeded(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -550,7 +615,7 @@ function buildSprites(){
   for(let i=0;i<70;i++)R(x,rr(r,0,43),rr(r,3,8),rr(r,1,2),1,['#3a7cc0','#f2c14e','#5aa65a','#e86a4e','#ffffff','#2d9a9a'][rr(r,0,5)]);
   R(x,0,2,44,1,'#c9c2b2');R(x,0,0,3,3,'#ece6d8');R(x,41,0,3,3,'#ece6d8');
   SPR.bench=b;
-  SPR.nat=human(UP.nat,PAL.nat);SPR.fred=human(UP.fred,PAL.fred);SPR.pasha=human(UP.pasha,PAL.pasha);SPR.vash=human(UP.vash,PAL.vash);buildCats();buildPassengers();buildVan();
+  SPR.nat=human(UP.nat,PAL.nat);SPR.fred=human(UP.fred,PAL.fred);SPR.pasha=human(UP.pasha,PAL.pasha);SPR.vash=human(UP.vash,PAL.vash);SPR.gry=human(UP.gry,PAL.gry);SPR.yu=human(UP.yu,PAL.yu);SPR.extra=human(UP.extra,PAL.extra);buildCats();buildPassengers();buildVan();
   buildFaces();
 }
 const SKINS=['#e2b08c','#c98c62','#8d5a3c','#f0c8a8'];
@@ -566,7 +631,7 @@ function buildPassengers(){PASS.concat([STAR]).forEach((p,i)=>{const rows=PASS_T
   const pal={H:p.H,h:shade(p.H,0.18),S:sk,s:shade(sk,-0.15),E:'#1a1110',G:'#0e0e12',r:p.t==='man'?shade(sk,-0.25):'#c8435a',C:p.C,c:shade(p.C,-0.22),P:'#2b2b33',B:'#1d1d1d',D:shade(p.H,-0.1)};p.set=human(rows,pal);});}
 // green compact van, body drawn once with window holes
 const VAN_WIN=[[4,5,8,7],[13,5,10,7],[25,5,10,7]];
-function buildVan(){const v=cvs(52,26),x=v.getContext('2d'),g='#4f9a4f',gd='#356f37',gl='#7cc070';
+function buildVan(){const v=cvs(52,26),x=v.getContext('2d'),g='#1f5f56',gd='#123c36',gl='#2f8274';
   R(x,1,3,38,21,g);R(x,3,2,34,1,g);for(let i=0;i<10;i++)R(x,39,4+i,1+Math.round(i*0.75),1,g);R(x,39,13,10,11,g);x.clearRect(48,13,1,1);
   R(x,2,3,36,1,gl);R(x,1,13,47,1,gd);R(x,1,18,47,1,gd);R(x,24,4,1,19,gd);R(x,36,13,1,10,gd);R(x,21,15,2,1,gd);R(x,33,15,2,1,gd);
   R(x,36,11,2,2,gd);R(x,46,14,3,2,'#fff1a8');R(x,47,17,2,3,'#2a2d33');R(x,1,6,2,7,'#e2453c');
@@ -584,7 +649,7 @@ function buildFaces(){
   FACES.hero=faceFrom(SPR.hero.idle[0],0,0,16,13,bg); FACES.bro=faceFrom(SPR.bro.idle[0],0,0,16,13,bg);
   FACES.rob=faceFrom(SPR.rob.idle[0],1,0,15,12,bg); FACES.girl=faceFrom(SPR.girl.idle[0],0,0,16,13,bg);
   FACES.model=faceFrom(SPR.model.idle[0],0,0,16,13,bg); FACES.cop=faceFrom(SPR.cop.idle[0],1,0,15,12,bg);
-  FACES.dog=faceFrom(SPR.dog.idle[0],5,0,11,8,bg);FACES.nat=faceFrom(SPR.nat.idle[0],0,0,16,13,bg);FACES.fred=faceFrom(SPR.fred.idle[0],1,0,15,12,bg);FACES.pasha=faceFrom(SPR.pasha.idle[0],1,0,15,12,bg);FACES.vash=faceFrom(SPR.vash.idle[0],0,0,16,13,bg);FACES.star=faceFrom(STAR.set.idle[0],0,0,16,13,bg);
+  FACES.dog=faceFrom(SPR.dog.idle[0],5,0,11,8,bg);FACES.nat=faceFrom(SPR.nat.idle[0],0,0,16,13,bg);FACES.fred=faceFrom(SPR.fred.idle[0],1,0,15,12,bg);FACES.pasha=faceFrom(SPR.pasha.idle[0],1,0,15,12,bg);FACES.vash=faceFrom(SPR.vash.idle[0],0,0,16,13,bg);FACES.gry=faceFrom(SPR.gry.idle[0],0,0,16,13,bg);FACES.yu=faceFrom(SPR.yu.idle[0],0,0,16,13,bg);FACES.star=faceFrom(STAR.set.idle[0],0,0,16,13,bg);
   const p=cvs(24,24),px=p.getContext('2d'); pepeHead(px,12,13,true,0); FACES.pepe=faceFrom(p,2,4,20,18,bg);
 }
 
@@ -618,6 +683,7 @@ const Snd={ac:null,out:null,mus:null,muted:false,nb:null,step:0,next:0,
   }
 };
 const sfx={
+  swish(){Snd.noise(0.12,{v:0.09,f:2400,sweep:3000,type:'highpass'});},
   whoosh(){Snd.noise(0.5,{v:0.08,f:600,sweep:1800,type:'bandpass',q:1.2});},
   growl(){Snd.tone(90,0.4,{type:'sawtooth',v:0.08,slide:-30});Snd.noise(0.35,{v:0.06,f:300});},
   boom(){Snd.noise(0.6,{v:0.1,f:400,sweep:-300});Snd.tone(80,0.3,{type:'triangle',v:0.05,slide:-40});},
@@ -646,8 +712,8 @@ const sfx={
 
 // ================= input =================
 const keys={left:false,right:false,a:false,b:false};
-const edge={a:false,b:false,tap:false};
-function press(k){if(k==='left'||k==='right'){keys[k]=true;return;}if(!keys[k])edge[k]=true;keys[k]=true;}
+const edge={a:false,b:false,tap:false,left:false,right:false};
+function press(k){if(!keys[k])edge[k]=true;keys[k]=true;}
 function release(k){keys[k]=false;}
 function consume(k){if(edge[k]){edge[k]=false;return true;}return false;}
 function bindInput(){
@@ -713,7 +779,8 @@ function cardTransition(title,sub,then){
 const G={coins:0,vinyls:new Set(),hearts:new Set(),friend:false,scene:null,t:0,lock:false,shake:0,pops:[],muted:false,best:0};
 function addCoins(n,sx,sy){G.coins+=n;G.pops.push({x:sx,y:sy,txt:'+'+n,life:70,col:'#f5c451'});if(n>=10)sfx.win();else sfx.coin();}
 function loseCoins(n,sx,sy){n=Math.min(n,G.coins);G.coins-=n;if(n>0)G.pops.push({x:sx,y:sy,txt:'-'+n,life:60,col:'#ff7a6a'});return n;}
-function addVinyl(id){if(G.vinyls.has(id))return;G.vinyls.add(id);sfx.vinyl();toast('Пластинка! '+G.vinyls.size+' из '+TOTAL_V);}
+const RECORDS={A1:'The Velvet Underground & Nico (1967)',A2:'Lou Reed — Transformer (1972)',D1:'Led Zeppelin — Led Zeppelin IV (1971)',C1:'Michael Jackson — Thriller (1982)',B1:'The Beatles — Revolver (1966)',B2:'Marvin Gaye — What’s Going On (1971)',E1:'David Bowie — Ziggy Stardust (1972)',T1:'Pink Floyd — The Dark Side of the Moon (1973)',P1:'The Rolling Stones — Sticky Fingers (1971)',M1:'Queen — A Night at the Opera (1975)'};
+function addVinyl(id){if(G.vinyls.has(id))return;G.vinyls.add(id);sfx.vinyl();toast('Пластинка '+G.vinyls.size+' из '+TOTAL_V+': '+(RECORDS[id]||''),3000);}
 function setScene(s){G.scene=s;}
 function kissFx(parts,x,y){sfx.kiss();for(let i=0;i<12;i++)parts.push({x:x+rnd(-5,5),y:y+rnd(-3,3),vx:rnd(-0.5,0.5),vy:rnd(-1.1,-0.4),life:ri(45,80),col:['#ff5a7a','#ff8fab','#e8336a'][ri(0,2)],heart:1});}
 function addHeart(id){if(G.hearts.has(id))return;G.hearts.add(id);toast('Цмок! Поцелуи: '+G.hearts.size+' из '+TOTAL_H);}
@@ -733,7 +800,7 @@ class Actor{
   draw(c,cx){
     if(!this.visible)return;if(this.inv>0&&(this.inv>>2)%2)return;
     const img=this.set[this.frame()][this.facing>0?0:1];
-    const x=Math.round(this.x-cx+(this.lunge>0?this.facing*3:0)),y=Math.round(this.y-(this.hop>0?Math.abs(Math.sin(this.hop*0.25))*7:0)-(this.board?3:0));if(this.board){R(c,x-8,y,16,2,'#d8a23a');R(c,x-6,y+2,2,1,'#222');R(c,x+4,y+2,2,1,'#222');}
+    const x=Math.round(this.x-cx+(this.lunge>0?this.facing*3:0)),y=Math.round(this.y-(this.hop>0?Math.abs(Math.sin(this.hop*0.25))*7:0)-(this.board?7:0));if(this.board){const by=y+3,f=this.facing;for(const wx of[-7,7]){disc(c,x+wx,by-3,4,'#1a1a1e');disc(c,x+wx,by-3,3,'#7a828e');disc(c,x+wx,by-3,2,'#1a1a1e');}const col='#2fbf4a';lineP(c,x-7,by-3,x-1,by-8,col);lineP(c,x-1,by-8,x+5,by-8,col);lineP(c,x+5,by-8,x+7,by-3,col);lineP(c,x-7,by-3,x+2,by-3,col);lineP(c,x+2,by-3,x-1,by-8,col);lineP(c,x+5*f,by-8,x+5*f,by-13,'#3a3a44');R(c,x+5*f-2,by-13,5,1,'#3a3a44');R(c,x-3,by-9,4,1,'#222');}
     if(this.fallen){c.save();c.translate(x,y);c.rotate(Math.PI/2);c.drawImage(this.set.idle[0],-img.width,-img.height/2);c.restore();return;}
     c.drawImage(img,x-8,y-img.height);
   }
@@ -751,7 +818,7 @@ function drawGreen(c,x,y,rot,o={}){
   x=Math.round(x);y=Math.round(y);const ox=x,oy=y-30;
   for(const [wx,wy,ww,wh] of VAN_WIN)R(c,ox+wx,oy+wy,ww,wh,'#b9dfea');
   for(let r=5;r<13;r++){const xe=38+Math.round((r-4)*0.75);R(c,ox+37,oy+r,xe-37,1,'#b9dfea');}
-  if(o.heads){c.save();c.beginPath();for(const [wx,wy,ww,wh] of VAN_WIN)c.rect(ox+wx,oy+wy,ww,wh);c.clip();c.drawImage(SPR.heads.bro,ox+10,oy+3);c.drawImage(SPR.heads.hero,ox+22,oy+4);c.restore();}
+  if(o.heads){c.save();c.beginPath();for(const [wx,wy,ww,wh] of VAN_WIN)c.rect(ox+wx,oy+wy,ww,wh);c.clip();c.drawImage(SPR.heads.hero,ox+11,oy+4);c.drawImage(SPR.heads.bro,ox+21,oy+3);c.restore();}
   c.globalAlpha=0.22;for(const [wx,wy,ww,wh] of VAN_WIN)R(c,ox+wx,oy+wy,ww,wh,'#6fb6d4');c.globalAlpha=1;
   for(const [wx,wy] of VAN_WIN)R(c,ox+wx+ 6,oy+wy+1,1,3,'rgba(255,255,255,.6)');
   c.drawImage(SPR.van,ox,oy);
@@ -837,6 +904,16 @@ function drawDecor(c,d,cx,s){
   else if(d.t==='hat'){R(c,x-6,GY-2,13,2,'#1a1a22');R(c,x-4,GY-11,9,9,'#1a1a22');R(c,x-4,GY-5,9,1,'#d63b3b');R(c,x-3,GY-11,7,1,'#34343f');if(s.hatCard){R(c,x-3,GY-22,7,11,'#1a1a22');R(c,x-2,GY-21,5,9,'#ffffff');ptext(c,'7',x-2,GY-20,'#d63b3b','#ffffff');}}
   else if(d.t==='villa')drawVilla(c,x,d.v,s.t);
   else if(d.t==='mdoor'){const y=d.y||GY,col=d.roof?'#6a2a3a':'#4a2a1a';R(c,x-8,y-24,16,24,'#d4a83a');R(c,x-6,y-22,12,22,col);R(c,x-5,y-21,4,9,shade(col,0.15));R(c,x+1,y-21,4,9,shade(col,0.15));R(c,x+3,y-11,1,2,'#f5c451');}
+  else if(d.t==='trex'){const b='#e9e1c9';R(c,x-30,GY-4,60,4,'#5a3a2a');R(c,x-30,GY-4,60,1,'#7a5234');
+    lineP(c,x+3,GY-27,x+1,GY-14,b);lineP(c,x+1,GY-14,x+4,GY-5,b);R(c,x+1,GY-5,8,2,b);lineP(c,x+11,GY-27,x+10,GY-14,b);lineP(c,x+10,GY-14,x+13,GY-5,b);R(c,x+10,GY-5,8,2,b);
+    const sp=[[30,-20],[22,-25],[14,-29],[6,-31],[-2,-32],[-8,-35],[-12,-40]];for(let i=0;i<sp.length-1;i++){lineP(c,x+sp[i][0],GY+sp[i][1],x+sp[i+1][0],GY+sp[i+1][1],b);lineP(c,x+sp[i][0],GY+sp[i][1]+1,x+sp[i+1][0],GY+sp[i+1][1]+1,b);}
+    for(let i=0;i<6;i++){const rx=x-4+i*3;R(c,rx,GY-31+Math.floor(i/3),1,8-Math.abs(i-2),b);}
+    R(c,x-27,GY-47,15,7,b);R(c,x-24,GY-45,3,2,'#2f4a3e');R(c,x-27,GY-40,12,2,b);for(let i=0;i<5;i++)R(c,x-26+i*2,GY-41,1,1,'#2f4a3e');lineP(c,x-8,GY-31,x-5,GY-27,b);lineP(c,x-5,GY-27,x-3,GY-28,b);}
+  else if(d.t==='brachio'){const b='#e9e1c9';R(c,x-34,GY-4,72,4,'#5a3a2a');R(c,x-34,GY-4,72,1,'#7a5234');
+    for(const lx of[-12,-6,14,20]){lineP(c,x+lx,GY-38,x+lx,GY-5,b);R(c,x+lx-1,GY-5,4,2,b);}
+    const sp=[[36,-30],[26,-36],[16,-40],[4,-42],[-8,-41],[-14,-48],[-18,-60],[-21,-74],[-24,-86],[-27,-94]];for(let i=0;i<sp.length-1;i++){lineP(c,x+sp[i][0],GY+sp[i][1],x+sp[i+1][0],GY+sp[i+1][1],b);lineP(c,x+sp[i][0]+1,GY+sp[i][1],x+sp[i+1][0]+1,GY+sp[i+1][1],b);}
+    for(let i=0;i<8;i++){const rx=x-8+i*3;R(c,rx,GY-41+Math.round(Math.abs(i-4)*0.3),1,10-Math.abs(i-3),b);}
+    R(c,x-33,GY-98,9,4,b);R(c,x-31,GY-97,2,1,'#2f4a3e');R(c,x-33,GY-95,7,1,b);}
   else if(d.t==='statue'){R(c,x-6,GY-18,12,18,'#d8d2c6');R(c,x-7,GY-19,14,2,'#eee8dc');R(c,x-4,GY-28,8,9,'#e8e2d6');disc(c,x,GY-32,4,'#e8e2d6');R(c,x-2,GY-33,1,1,'#b8b2a6');R(c,x+1,GY-33,1,1,'#b8b2a6');}
   else if(d.t==='catSleep'){const y=d.y||GY;ell(c,x,y-4,11,4,'#22212b',true);R(c,x-11,y-4,22,4,'#22212b');disc(c,x+9,y-6,3,'#22212b');R(c,x+8,y-10,1,2,'#22212b');R(c,x+11,y-10,1,2,'#22212b');R(c,x+8,y-6,2,1,'#5a5a66');if((s.t>>5)%2)ptext(c,'Z',x+12,y-16,'#c9d1e6','#2a2236');}
   else if(d.t==='booth'){R(c,x-22,GY-16,44,16,'#1a1a22');R(c,x-22,GY-17,44,2,'#3a3a48');disc(c,x-11,GY-19,4,'#111111');disc(c,x-11,GY-19,1,'#e0434f');disc(c,x+11,GY-19,4,'#111111');disc(c,x+11,GY-19,1,'#5ab0e0');const lv=(s.t>>3)%6;for(let i=0;i<6;i++)R(c,x-18+i*7,GY-10,4,1+((i+lv)%4)*2,['#ff5ad8','#5ab0e0','#5bd16a'][i%3]);R(c,x-30,GY-26,7,26,'#22222c');disc(c,x-27,GY-18,2,'#555555');R(c,x+23,GY-26,7,26,'#22222c');disc(c,x+26,GY-18,2,'#555555');}
@@ -1006,6 +1083,7 @@ function buildBG(){
   BG.drive={sky:sky('#6fbde8','#d6eef3',118),hills:makeHills(),sag:makeSagrada(),mid:makeEixample(),near:makeAvenue()};
   BG.beach={sky:sky('#58b4ea','#cdeef6',92),far:makeBeachFar(),sand:makeSand(),near:makeBeachNear(),ground:makePromenade(),plaza:makePanotGround()};
   BG.rambla={sky:sky('#86c5e6','#f0e2c0',80),bld:makeGothicNear(23),trees:makeRamblaTrees(),ground:makeRamblaGround()};
+  BG.eixample={sky:BG.drive.sky,ground:makePanotGround()};
 }
 function tileX(c,img,f,cx,y){const w=img.width,o=(((cx*f)%w)+w)%w;for(let x=-Math.floor(o);x<W;x+=w)c.drawImage(img,x,y);}
 function drawBG(c,kind,cx,t,plazaX){
@@ -1015,6 +1093,7 @@ function drawBG(c,kind,cx,t,plazaX){
     R(c,0,128,W,32,'#4a4b55');R(c,0,128,W,2,'#c9c3b5');R(c,0,130,W,1,'#34353d');const o=((cx%28)+28)%28;for(let x=-o;x<W;x+=28)R(c,x,141,14,2,'#e9e3cf');R(c,0,158,W,2,'#34353d');}
   else if(kind==='motorway'){tileX(c,b.far,0.05,cx,0);drawPlane(c,((t*0.45)%560+560)%560-80,24+Math.sin(t*0.01)*4);tileX(c,b.mid,0.35,cx,0);tileX(c,b.near,1,cx,0);road(c,cx);}
   else if(kind==='terminal'){tileX(c,b.far,0.25,cx,0);tileX(c,b.near,1,cx,0);tileX(c,b.ground,1,cx,GY);}
+  else if(kind==='eixample'){const d=BG.drive;tileX(c,d.hills,0.04,cx,0);tileX(c,d.sag,0.1,cx,0);tileX(c,d.mid,0.5,cx,18);tileX(c,d.near,1,cx,8);tileX(c,b.ground,1,cx,GY);}
   else if(kind==='villas'){tileX(c,b.far,0.04,cx,0);tileX(c,b.mid,0.3,cx,0);tileX(c,b.near,1,cx,0);tileX(c,b.ground,1,cx,GY);}
   else if(kind==='mansion'){tileX(c,b.near,1,cx,0);tileX(c,b.ground,1,cx,GY);}
   else if(kind==='roof'){for(const [sx,sy] of STARS)if(((sx*7+sy+(t>>4))%9)!==0)R(c,(((sx-cx*0.02)%W)+W)%W,sy,1,1,'#f4f1ea');disc(c,W-40,22,6,'#f4ecd0');disc(c,W-37,20,5,'#141a40');tileX(c,b.far,0.06,cx,0);tileX(c,b.near,1,cx,0);tileX(c,b.ground,1,cx,GY);}
@@ -1188,7 +1267,7 @@ function* friendEv(s){const b=s.bro,h=s.hero;yield* walkTo(h,986,1.2);h.facing=1
   setQuest('Найдите машину. Она дальше по улице');}
 function* carEv(s){const h=s.hero;yield* walkTo(h,1488,1.2);h.facing=1;
   yield* say('bro','Вот она, наша зелёная красавица!');
-  yield* say('hero','Кира за рулём. Какус, прыгай назад!');
+  yield* say('hero','Федя за рулём. Какус, прыгай назад!');
   yield* say('dog','Гав-гав!');
   sfx.honk();yield* wait(30);
   cardTransition('Эшампле','Уровень 2',()=>setScene(new DriveScene(DRIVE1)));yield* wait(99999);}
@@ -1201,7 +1280,7 @@ function* natCallB(s){if(s.kissed)return;s.hero.facing=1;yield* say('nat','Эй,
 function* filmEv(s){const h=s.hero,m=s.model,f=s.fred;yield* walkTo(h,540,1.2);h.facing=1;
   yield* say('model','Эй, вы! Мой оператор ушёл за паэльей и пропал. Снимете меня?');
   yield* say('hero','Я буду режиссёром. А оператор… Федя, звони Фредди!');
-  yield* say('bro','Уже набираю. Он где-то рядом на скейте.');
+  yield* say('bro','Уже набираю. Он где-то рядом на своём зелёном BMX.');
   f.visible=true;f.board=true;f.follow=false;f.x=s.camX-20;f.y=GY;f.facing=1;sfx.whoosh();
   while(f.x<h.x-46){f.x+=3.4;yield;}
   const x0=f.x,x1=562;sfx.jump();for(let i=1;i<=40;i++){f.x=x0+(x1-x0)*i/40;f.y=GY-Math.sin(i/40*Math.PI)*30;yield;}
@@ -1236,7 +1315,7 @@ function* toiletEv(s){const h=s.hero,p=s.pepe;yield* walkTo(h,1304,1.2);h.facing
   for(let i=0;i<34;i++)s.coins.push({x:rnd(h.x-20,h.x+170),y:-rnd(10,240),got:false,ph:rnd(0,6),fall:true,vy:0});
   yield* wait(40);
   yield* say('bro','Вот это реактивная тяга…');
-  yield* say('hero','Говорят, его потом видели над Тибидабо.');
+  yield* say('hero','Говорят, он долетел до самой Армении.');
   yield* say('','С неба сыплются монетки — это благодарность Аркадика. Собирай!');
   setQuest('Соберите монетки и идите направо');}
 function* endEv(s){
@@ -1284,12 +1363,14 @@ class ArrivalsGame{
 
 function levelH(){const coins=[];
   lineC(coins,110,126,5);lineC(coins,236,94,3);arcC(coins,330,126,5);lineC(coins,880,126,6);lineC(coins,1000,94,3,11);lineC(coins,1240,126,4);arcC(coins,1300,126,5);
-  return{bg:'born',len:1800,startX:28,coins,hazFrom:860,hazTo:1280,lvl:6,
+  return{bg:'born',len:1560,startX:28,coins,hazFrom:860,hazTo:1280,lvl:6,
     platforms:[{x:230,y:104,w:36,t:'awning',c:2},{x:430,y:104,w:40,t:'awning',c:0},{x:500,y:74,w:30,t:'balcony'},{x:620,y:104,w:44,t:'awning',c:3},{x:690,y:72,w:30,t:'balcony'},{x:760,y:104,w:36,t:'awning',c:1},{x:996,y:104,w:40,t:'awning',c:0}],
     vinyls:[{id:'P1',x:1132,y:124,hidden:true}],pigeons:[180,900],
-    decor:[{t:'hat',x:578},{t:'pot',x:1132},{t:'cafe',x:1200},{t:'bar',x:1448},{t:'hq',x:1580}],pashaNpc:560,
+    decor:[{t:'hat',x:578},{t:'pot',x:1132},{t:'cafe',x:1200}],pashaNpc:560,
     nat:{x:1214,y:GY,line:'Вы снимаете рекламу в HQ? Я приду посмотреть. Цмок!'},kissQuest:'Найди Нэт в кафе и поцелуй',
-    events:[{x:0,run:introH},{x:470,run:pashaEv},{x:1360,run:hqEv,needPasha:true,needKiss:true}]};}
+    events:[{x:0,run:introH},{x:470,run:pashaEv},{x:1380,run:toEixEv,needPasha:true,needKiss:true}]};}
+function levelE(){const coins=[];lineC(coins,100,126,5);arcC(coins,220,126,5);lineC(coins,360,126,6);arcC(coins,500,126,5);lineC(coins,600,126,4);
+  return{bg:'eixample',len:900,startX:28,coins,hazFrom:180,hazTo:560,lvl:6,platforms:[],vinyls:[],pigeons:[160,450],decor:[{t:'hq',x:780}],events:[{x:0,run:introE},{x:700,run:hqArriveEv}]};}
 function levelV(){const coins=[];lineC(coins,120,126,5);arcC(coins,250,126,5);lineC(coins,560,126,6);arcC(coins,660,126,5);lineC(coins,960,126,6);arcC(coins,1060,126,5);
   return{bg:'villas',len:1400,startX:28,coins,hazFrom:9999,hazTo:0,lvl:7,platforms:[],vinyls:[],pigeons:[200,940],
     decor:[{t:'villa',x:420,v:0},{t:'villa',x:800,v:1},{t:'villa',x:1220,v:2}],
@@ -1300,7 +1381,7 @@ function levelM(){const coins=[];lineC(coins,110,126,4);lineC(coins,176,114,3,10
     platforms:[{x:170,y:124,w:40,t:'sofa'},{x:256,y:112,w:30,t:'piano'},{x:292,y:88,w:24,t:'shelf'},{x:740,y:96,w:22,t:'shelf'},{x:860,y:122,w:16,t:'step'},{x:876,y:108,w:16,t:'step'},{x:892,y:94,w:16,t:'step'},{x:908,y:80,w:14,t:'step'},{x:922,y:72,w:370,t:'gallery'}],
     cats:[{x0:380,x1:560,y:GY,k:'panther'},{x0:990,x1:1180,y:72,k:'jaguar'}],
     doors:[{x:470,y:GY,label:'ОТКРЫТЬ',run:mDoorWardrobe},{x:1110,y:72,label:'ОТКРЫТЬ',run:mDoorJaguar},{x:1262,y:72,label:'ОТКРЫТЬ',run:mDoorRoof}],
-    decor:[{t:'mdoor',x:470,y:GY},{t:'mdoor',x:1110,y:72},{t:'mdoor',x:1262,y:72,roof:1},{t:'catSleep',x:190,y:124},{t:'statue',x:660},{t:'statue',x:1340}],
+    decor:[{t:'mdoor',x:470,y:GY},{t:'mdoor',x:1110,y:72},{t:'mdoor',x:1262,y:72,roof:1},{t:'catSleep',x:190,y:124},{t:'statue',x:660},{t:'brachio',x:1346},{t:'trex',x:598}],
     vinyls:[{id:'M1',x:672,y:124,hidden:true}],pigeons:[],events:[{x:0,run:introM}]};}
 function levelR(){const coins=[];lineC(coins,60,126,4);
   return{bg:'roof',len:700,startX:28,coins,hazFrom:9999,hazTo:0,lvl:7,platforms:[],vinyls:[],pigeons:[],
@@ -1335,23 +1416,104 @@ function* revealEv(s){const h=s.hero,p=s.pasha;yield* wait(20);
   addCoins(30,p.x-s.camX,GY-40);
   yield* say('pasha','Спасибо, ассистенты! Я с вами в HQ — там без магии никак.');
   p.follow=true;G.pasha=true;sfx.join();toast(NAME.pasha+' в команде!');
-  setQuest('Идите к HQ. По дороге найди Нэт в кафе');}
-function* hqEv(s){const h=s.hero,b=1390;
-  s.mini={kind:'stage',lockCam:true,bLabel:'…',update(){},draw(){}};s.camX=clamp(b,0,s.len-W);
-  for(const a of[s.bro,s.fred,s.pasha])a.follow=false;s.dog.mode='script';
-  s.decor.push({t:'cam',x:b+28});
-  const own=new Actor(PASS[7].set,b+200,GY);own.facing=-1;const bt=new Actor(PASS[4].set,b+64,GY);bt.facing=1;s.npcs.push(own,bt);
-  yield* walkTo(h,b+48,1.4);h.facing=1;
-  s.fred.x=b+16;s.fred.y=GY;s.fred.facing=1;s.bro.x=b+36;s.bro.y=GY;s.bro.facing=1;s.dog.x=b+116;s.dog.y=GY;s.dog.facing=1;
-  if(s.pasha.x<b+60)s.pasha.x=b+60;s.pasha.y=GY;yield* walkTo(s.pasha,b+156,1.6);s.pasha.facing=-1;
-  yield* say('owner','Добро пожаловать в HQ! Нам нужна реклама, от которой все захотят к нам.');
-  yield* say('hero','Фредди — камера. Паша, Какус — вы в кадре. Я командую. Мотор!');
-  yield* say('','Четыре кадра. Подсказка к каждому появится на экране.');
-  setQuest('Сними рекламу HQ: 4 кадра');
-  s.mini=new AdGame(s,b);yield* until(()=>s.mini.done);const sc=s.mini.score;
-  s.mini={kind:'stage',lockCam:true,bLabel:'…',update(){},draw(){}};
-  yield* say('owner',sc>=9?'Это лучшая реклама в истории HQ! Держите гонорар.':'Неплохо! Фредди смонтирует — будет огонь. Держите гонорар.');
-  addCoins(sc*6+12,b+200-s.camX,GY-40);
+  setQuest('Идите дальше. По дороге найди Нэт в кафе');}
+function* toEixEv(s){yield* say('fred','HQ в Эшампле. Пара кварталов — и мы на месте!');cardTransition('Эшампле','HQ',()=>setScene(new WalkScene(levelE())));yield* wait(99999);}
+function* introE(s){setQuest('Эшампле');yield* wait(20);yield* say('fred','Вот и Эшампле. HQ — в конце квартала.');setQuest('Дойдите до HQ');}
+function* hqArriveEv(s){const h=s.hero;yield* walkTo(h,744,1.2);h.facing=1;const own=new Actor(PASS[7].set,800,GY);own.facing=-1;s.npcs.push(own);
+  yield* say('owner','Вы съёмочная группа? Заходите, площадка внутри!');
+  yield* say('hero','Заходим. Мотор будет там.');
+  cardTransition('HQ','Съёмочная площадка',()=>setScene(new StudioScene()));yield* wait(99999);}
+function lineP(c,x0,y0,x1,y1,col){x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);const n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))||1;c.fillStyle=col;for(let i=0;i<=n;i++)c.fillRect(Math.round(x0+(x1-x0)*i/n),Math.round(y0+(y1-y0)*i/n),1,1);}
+function drawDummyHead(c,x,y){disc(c,x,y,5,'#ead2ae');R(c,x-3,y-2,2,1,'#3a2a20');R(c,x+2,y-2,2,1,'#3a2a20');R(c,x-2,y+2,5,1,'#c8102e');R(c,x-2,y-6,5,1,'#c9a26a');}
+function drawDummy(c,x,y,headless){x=Math.round(x);R(c,x-9,y-3,18,2,'#5a5e68');disc(c,x-6,y-1,1,'#222222');disc(c,x+6,y-1,1,'#222222');R(c,x-1,y-12,3,9,'#5a5e68');R(c,x-5,y-24,11,12,'#6a6a7a');R(c,x-5,y-24,11,1,'#8a8a9a');R(c,x-1,y-24,3,5,'#f4f1ea');R(c,x,y-23,1,4,'#c8302a');R(c,x-7,y-23,2,9,'#ead2ae');R(c,x+6,y-23,2,9,'#ead2ae');R(c,x-1,y-27,3,3,'#ead2ae');if(!headless)drawDummyHead(c,x,y-32);else R(c,x-1,y-28,3,1,'#c8102e');}
+function makeWood(){const c=cvs(32,24),x=c.getContext('2d');R(x,0,0,32,24,'#a8723a');R(x,0,0,32,2,'#c89050');for(let yy=6;yy<24;yy+=6)R(x,0,yy,32,1,'#8a5a2a');for(let k=0;k<4;k++)R(x,(k*9+3)%32,2+k*6,1,4,'#8a5a2a');return c;}
+class StudioScene{
+  constructor(){this.kind='studio';this.t=0;this.parts=[];this.att=[];this.count=0;this.goal=12;this.spawnT=50;this.take=1;this.hitT=0;this.slash=0;this.slashDir=1;this.yuJ=0;this.phase='intro';this.meter=null;this.head=null;this.dummy=null;this.clap=0;this.fount=0;this.flash=0;this.doneT=0;this.aLabel='ПРЫЖОК';
+    this.gry=new Actor(SPR.gry,0,GY);this.yu=new Actor(SPR.yu,0,GY);this.hero=new Actor(SPR.hero,0,GY);this.bro=new Actor(SPR.bro,0,GY);this.fred=new Actor(SPR.fred,0,GY);this.pasha=new Actor(SPR.pasha,0,GY);this.dog=new Dog(0,GY);this.owner=new Actor(PASS[7].set,0,GY);
+    if(!BG.studio)BG.studio={floor:makeWood()};this.place();this.script=studioIntro(this);}
+  place(){const c=Math.round(W/2);this.cx=c;this.gry.x=c;this.yu.x=c+3;this.yu.facing=-1;this.fred.x=14;this.fred.facing=1;this.hero.x=42;this.hero.facing=1;this.bro.x=56;this.bro.facing=1;this.owner.x=W-54;this.owner.facing=-1;this.pasha.x=W-24;this.pasha.facing=-1;this.dog.x=W-10;this.dog.facing=-1;}
+  kill(a){a.dead=1;a.dvx=a.side*2.6;a.dvy=-3.2;a.rot=0;this.count++;sfx.hit();sparkle(this.parts,a.x,a.fly?a.y:GY-14,8,['#ffffff','#bfe8ff','#f5c451']);}
+  update(){this.t++;this.place();
+    if(this.script){const r=this.script.next();if(r.done)this.script=null;}
+    if(this.slash>0)this.slash--;if(this.yuJ>0)this.yuJ--;if(this.flash>0)this.flash--;if(this.clap>0)this.clap--;
+    for(const a of[this.hero,this.bro,this.fred,this.pasha,this.gry,this.yu,this.owner])if(a.hop>0)a.hop--;if(this.dog.bark>0)this.dog.bark--;
+    if(this.phase==='fight')this.fight();else if(this.phase==='finale')this.finale();
+    if(this.doneT>0&&--this.doneT===0)this.phase='done';
+    for(const a of this.att)if(a.dead){a.x+=a.dvx;a.y+=a.dvy;a.dvy+=0.22;a.rot+=0.25*Math.sign(a.dvx);}
+    this.att=this.att.filter(a=>!a.dead||(a.y<H+30&&a.x>-30&&a.x<W+30));
+    if(this.head&&!this.head.landed){const hd=this.head;hd.x+=hd.vx;hd.y+=hd.vy;hd.vy+=0.12;hd.rot+=0.22;if(hd.vy>0&&hd.y>=GY-27){hd.landed=true;hd.x=W-60;hd.y=GY-27;sfx.bonk();sparkle(this.parts,hd.x,hd.y,14,['#ff5a7a','#ffffff','#f5c451']);}}
+    if(this.fount>0){this.fount--;for(let i=0;i<3;i++)this.parts.push({x:this.dummy.x,y:GY-29,vx:rnd(-1.1,1.1),vy:rnd(-4,-2),g:0.15,life:60,col:['#e8243c','#ff4a5a','#c8102e','#ffffff'][ri(0,3)],size:ri(1,2)});}
+    this.parts=parts(this.parts);
+    if(Dlg.open)setB('ДАЛЬШЕ');else if(this.phase==='finale'&&this.meter)setB('РУБИ!');else setB('…');
+    this.aLabel=this.phase==='fight'?'Ю!':'ПРЫЖОК';}
+  fight(){const c=this.cx,hy=GY-30;
+    if(this.hitT>0){this.hitT--;return;}
+    const alive=this.att.filter(a=>!a.dead).length;if(--this.spawnT<=0&&alive<3&&this.count+alive<this.goal){const fly=this.count>=3&&Math.random()<0.32,side=Math.random()<0.5?-1:1,sp=Math.min(1.6,rnd(0.85,1.15)+this.count*0.04);
+      if(fly){const sx=c+side*(W/2+6),sy=GY-76,dx=c-sx,dy=hy-sy,L=Math.hypot(dx,dy);this.att.push({side,fly:1,x:sx,y:sy,vx:dx/L*sp,vy:dy/L*sp,anim:0});}
+      else this.att.push({side,fly:0,x:c+side*(W/2+10),y:GY,vx:-side*sp,anim:0});
+      this.spawnT=Math.max(32,ri(52,82)-this.count*3);}
+    for(const a of this.att){if(a.dead)continue;a.x+=a.vx;if(a.fly)a.y+=a.vy;a.anim++;}
+    const strike=dir=>{this.slash=9;this.slashDir=dir;this.gry.facing=dir;sfx.swish();let best=null,bd=99;for(const a of this.att){if(a.dead||a.fly||a.side!==dir)continue;const d=Math.abs(a.x-c);if(d<bd){bd=d;best=a;}}if(best&&bd<=38)this.kill(best);};
+    if(consume('left'))strike(-1);if(consume('right'))strike(1);
+    if(consume('a')){this.yuJ=22;sfx.swish();let best=null,bd=99;for(const a of this.att){if(a.dead||!a.fly)continue;const d=Math.hypot(a.x-c,a.y-hy);if(d<bd){bd=d;best=a;}}if(best&&bd<42)this.kill(best);}
+    for(const a of this.att){if(a.dead)continue;const hit=a.fly?Math.hypot(a.x-c,a.y-hy)<9:Math.abs(a.x-c)<7;
+      if(hit){this.hitT=60;this.take++;this.count=Math.max(0,this.count-3);toast('Стоп! Дубль '+this.take+'!',1200);sfx.bonk();this.hero.hop=12;for(const b of this.att)if(!b.dead){b.dead=1;b.dvx=b.side*1.5;b.dvy=-2;b.rot=0;}break;}}
+    if(this.count>=this.goal&&!this.att.some(a=>!a.dead)){this.phase='wait';this.script=studioFinale(this);}}
+  finale(){const m=this.meter;if(!m)return;m.ph+=0.04+m.miss*0.008;m.p=0.5-0.5*Math.cos(m.ph);if(m.cool>0)m.cool--;
+    if(consume('b')&&!m.cool){m.cool=24;if(m.p>=m.zone.a&&m.p<=m.zone.b){this.meter=null;this.chop();}else{m.miss++;sfx.bonk();toast('Мимо! Ещё раз',800);}}}
+  chop(){this.flash=12;this.slash=16;this.slashDir=1;this.gry.facing=1;sfx.swish();sfx.hit();G.shake=10;
+    const hx=this.dummy.x,tx=W-60,T=72;this.head={x:hx,y:GY-32,vx:(tx-hx)/T,vy:-4.3,rot:0,landed:false};this.dummy.headless=true;this.fount=70;this.yu.hop=20;this.doneT=150;}
+  draw(c){const cX=this.cx;
+    R(c,0,0,W,GY,'#1e1418');for(let x=0;x<W;x+=12)R(c,x,0,1,GY,'#271b20');
+    for(let x=0;x<W;x++){const y=12+Math.round(Math.sin((x/W)*Math.PI)*8);R(c,x,y,1,1,'#3a2a2a');if(x%28===14){ell(c,x,y+6,4,5,'#e8502a');R(c,x-1,y+4,3,4,'#ffb04a');}}
+    drawHQ(c,cX-12,30,2);
+    R(c,W-82,44,54,2,'#5a3a24');R(c,W-82,60,54,2,'#5a3a24');for(let i=0;i<8;i++){R(c,W-80+i*6,36,3,8,['#5bd16a','#f5c451','#e35a96','#5ab0e0'][i%4]);R(c,W-79+i*6,52,2,8,['#c84a3a','#f4f1ea','#5bd16a'][i%3]);}
+    for(const [lx,dir] of[[6,1],[W-6,-1]]){c.fillStyle='rgba(255,220,140,0.09)';c.beginPath();c.moveTo(lx,GY-42);c.lineTo(cX-dir*14,GY);c.lineTo(cX+dir*44,GY);c.closePath();c.fill();R(c,lx,GY-40,1,40,'#555555');R(c,lx-3,GY-45,7,5,'#2a2a30');R(c,lx-2,GY-44,5,3,'#fff1a8');}
+    tileX(c,BG.studio.floor,1,0,GY);
+    this.owner.draw(c,0);R(c,W-78,GY-15,46,3,'#9a6a40');R(c,W-76,GY-12,42,12,'#6a4228');
+    for(let i=0;i<7;i++)R(c,W-66+i,GY-36+i,13-2*i,1,'#cfeaf6');R(c,W-60,GY-29,1,8,'#cfeaf6');R(c,W-63,GY-21,7,1,'#cfeaf6');R(c,W-63,GY-35,7,2,'#ff5a7a');
+    if(this.head&&this.head.landed){drawDummyHead(c,Math.round(this.head.x),Math.round(this.head.y)-4);for(let i=0;i<7;i++)R(c,W-66+i,GY-36+i,13-2*i,1,'rgba(207,234,246,.45)');}
+    drawFilmCam(c,28,GY,this.t,this.phase==='fight'||this.phase==='finale');
+    if(this.clap>0){const o=this.clap>12?-3:0;R(c,44,GY-46+o,12,3,'#111111');for(let i=0;i<12;i+=3)R(c,44+i,GY-46+o,1,3,'#ffffff');R(c,44,GY-43,12,8,'#111111');R(c,46,GY-41,8,1,'#ffffff');}
+    this.fred.draw(c,0);this.hero.draw(c,0);this.bro.draw(c,0);this.pasha.draw(c,0);this.dog.draw(c,0);
+    R(c,cX-7,GY-12,16,12,'#8a5a2a');R(c,cX-7,GY-12,16,1,'#a8743a');R(c,cX-7,GY-7,16,1,'#6a4220');
+    const yj=this.yuJ>0?Math.round(Math.sin(this.yuJ/22*Math.PI)*28):0;this.yu.y=GY-12-yj;this.yu.air=this.yuJ>0;this.yu.draw(c,0);
+    const yx=Math.round(this.yu.x),yy=Math.round(this.yu.y);if(this.yuJ>8){for(let i=0;i<12;i++){const a=-2.6+i*0.2;R(c,Math.round(yx+Math.cos(a)*14),Math.round(yy-14+Math.sin(a)*14),1,1,i%2?'#ffffff':'#bfe8ff');}}else lineP(c,yx-6,yy-10,yx-13,yy-21,'#e8ecf2');
+    if(this.dummy)drawDummy(c,this.dummy.x,GY,this.dummy.headless);
+    this.gry.draw(c,0);const gf=this.gry.facing;if(this.slash<=0)lineP(c,cX+gf*5,GY-12,cX+gf*15,GY-22,'#e8ecf2');
+    for(const a of this.att){const fi=a.side<0?0:1,img=a.fly||a.dead?SPR.extra.jump[fi]:SPR.extra[(a.anim>>3)%2?'pass':'stride'][fi];
+      if(a.dead){c.save();c.translate(Math.round(a.x),Math.round(a.y-12));c.rotate(a.rot);c.drawImage(img,-8,-12);c.restore();}
+      else{const ax=Math.round(a.x),ay=Math.round(a.y-(a.fly?12:24));c.drawImage(img,ax-8,ay);lineP(c,ax-a.side*6,ay+14,ax-a.side*12,ay+6,'#c9a26a');}}
+    if(this.head&&!this.head.landed){const hd=this.head;c.save();c.translate(Math.round(hd.x),Math.round(hd.y));c.rotate(hd.rot);drawDummyHead(c,0,0);c.restore();}
+    if(this.slash>0){const dir=this.slashDir,r0=this.slash>10?24:17;for(let i=0;i<15;i++){const a=-1.0+i*0.13;R(c,Math.round(cX+dir*Math.cos(a)*r0),Math.round(GY-14+Math.sin(a)*r0),1,1,i%2?'#ffffff':'#bfe8ff');}}
+    drawParts(c,this.parts,0);
+    if(this.meter){const m=this.meter,x0=Math.round((W-140)/2),w=140,y=24;R(c,x0-2,y-2,w+4,11,'#0b0f22');R(c,x0,y,w,7,'#2b2f4a');R(c,x0+Math.round(m.zone.a*w),y,Math.round((m.zone.b-m.zone.a)*w),7,'#5bd16a');const nx=x0+Math.round(m.p*w);R(c,nx,y-3,1,13,'#ffffff');R(c,nx-1,y-4,3,1,'#ffffff');}
+    if(this.phase==='fight'||this.phase==='finale'){for(const [x,y,dx,dy] of[[3,3,1,1],[W-4,3,-1,1],[3,H-4,1,-1],[W-4,H-4,-1,-1]]){R(c,dx<0?x-5:x,y,6,1,'#ffffff');R(c,x,dy<0?y-5:y,1,6,'#ffffff');}if((this.t>>4)%2)disc(c,W-12,H-12,1,'#ff3b3b');}
+    drawHUD(c);if(this.phase==='fight')ptext(c,this.count+'/'+this.goal,Math.round(W/2-8),15,'#ffffff');
+    if(this.flash>0){c.fillStyle=`rgba(255,255,255,${this.flash/16})`;c.fillRect(0,0,W,H);}}
+}
+function* studioIntro(s){setQuest('HQ: съёмочная площадка');yield* wait(30);
+  yield* say('owner','Площадка готова! Нам нужна реклама, после которой все ломанутся в HQ.');
+  yield* say('gry','Я Грязный. Самурай, каскадёр и лицо этой рекламы.');
+  yield* say('yu','А я Ю. Прикрываю его сверху. Меч бутафорский, но рубит красиво.');
+  yield* say('hero','Снимаем самурайскую сцену! Массовка нападает, Грязный отбивается. В финале — удар по манекену Боре. Фредди, камера!');
+  s.clap=24;sfx.click();
+  yield* say('fred','Камера пишет! Мотор!');
+  yield* say('','◀ ▶ — Грязный рубит влево и вправо. ПРЫЖОК — Ю прыгает и сбивает тех, кто летит сверху. Подпускай поближе!');
+  setQuest('Отбейте 12 нападений массовки');s.phase='fight';}
+function* studioFinale(s){yield* wait(40);
+  yield* say('hero','Отлично! Теперь главный кадр. Паша, вези Борю!');
+  s.dummy={x:W+20,headless:false};sfx.whoosh();while(s.dummy.x>s.cx+30){s.dummy.x-=1.6;yield;}
+  yield* say('gry','Боря, ничего личного. Это просто реклама.');
+  yield* say('','Жми РУБИ!, когда стрелка в зелёной зоне.');
+  setQuest('Главный кадр: руби, когда стрелка в зелёной зоне');
+  s.meter={ph:0,p:0,zone:{a:0.42,b:0.6},cool:0,miss:0};s.phase='finale';
+  yield* until(()=>s.phase==='done');
+  yield* say('gry','HQ. Сносит голову.');
+  yield* say('hero','СТОП! СНЯТО! Это шедевр!');
+  yield* say('yu','Боря, ты был прекрасен.');
+  yield* say('owner','Это лучшая реклама в истории HQ! Держите гонорар.');
+  addCoins(Math.max(20,60-8*(s.take-1)),W-54,GY-40);
   yield* say('fred','Смонтирую к вечеру. Кстати, Кира… завтра же твой день рождения!');
   yield* say('bro','Вашик зовёт всех к себе на крышу. Только адрес не сказал. Где-то на холме.');
   yield* say('hero','Найдём!');
@@ -1390,7 +1552,7 @@ function* candlesEv(s){if(!s.kissed){yield* say('bro','Сначала Нэт, и
   s.fireworks=true;yield* wait(90);
   s.pepe={x:Math.min(s.hero.x+70,s.camX+W-30),inf:0.55,launch:false,oy:-200,vy:0,ox:0,gone:false,noToilet:true,landing:true};sfx.whoosh();
   yield* until(()=>!s.pepe.landing);
-  yield* say('pepe','Я же говорил, что прилечу! С днюхой, Кира!');
+  yield* say('pepe','Я прилетел прямо из Армении! С днюхой, Кира!');
   yield* say('bro','Аркадик?! Вот это гость!');
   yield* say('hero','Лучший день рождения в моей жизни. Спасибо, банда!');
   yield* say('dog','Гав!');
@@ -1465,16 +1627,17 @@ const OB={cone:[8,9],taxi:[34,18],pigeons:[22,7]};
 class DriveScene{
   constructor(cfg=DRIVE1){this.cfg=cfg;this.kind='drive';this.t=0;this.d=0;this.v=0;this.car={y:ROAD,vy:0,air:false,inv:0};this.slow=0;this.honkCd=0;this.parts=[];this.peds=[];this.exited=false;this.endD=cfg.endD;this.state='intro';this.nat=cfg.natX?{x:cfg.natX,kissed:G.hearts.has(cfg.lvl)}:null;
     const r=seeded(cfg.seed);this.objs=[];this.coins=[];let x=380;
-    while(x<this.endD-260){const k=r(),t=x>1440&&x<1560?'taxi':k<0.38?'cone':k<0.7?'taxi':'pigeons';this.objs.push({t,x,hit:false,fly:0});
+    while(x<this.endD-260){const k=r();if(cfg.natX&&Math.abs(x-cfg.natX)<170){x+=200;continue;}
+      const t=x>1440&&x<1560?'taxi':k<0.38?'cone':k<0.7?'taxi':'pigeons';this.objs.push({t,x,hit:false,fly:0});
       const ow=OB[t][0];for(let i=0;i<5;i++)this.coins.push({x:x+ow/2-26+i*13,y:ROAD-22-Math.sin(Math.PI*i/4)*(t==='taxi'?30:24),got:false});
-      const gap=rr(r,180,270);for(let k2=0;k2<4;k2++)this.coins.push({x:x+70+k2*12,y:ROAD-10,got:false});x+=gap;}
+      const gap=rr(r,200,270)+(t==='taxi'?40:0);for(let k2=0;k2<4;k2++)this.coins.push({x:x+70+k2*12,y:ROAD-10,got:false});x+=gap;}
     const tx=this.objs.find(o=>o.t==='taxi'&&o.x>1300);this.vinyl={x:tx?tx.x+60:1500,y:ROAD-60,got:G.vinyls.has(cfg.vinyl),moveWith:tx};
     this.script=cfg.intro(this);}
   crash(o){const car=this.car;car.inv=70;this.slow=45;loseCoins(3,CARX+20,car.y-34);sfx.hit();G.shake=8;sparkle(this.parts,CARX+40,car.y-10,10,['#ffffff','#bbbbbb','#f5c451']);if(o.t==='pigeons')o.fly=1;}
   update(){this.t++;const car=this.car;
     if(this.script){const r=this.script.next();if(r.done)this.script=null;}
-    if(this.state==='drive'){let tv=2.3;if(keys.right)tv=3.5;if(keys.left)tv=1.3;if(this.slow>0){this.slow--;tv=Math.min(tv,1);}this.v+=(tv-this.v)*0.06;
-      if(consume('a')&&!car.air){car.vy=-4.4;car.air=true;sfx.jump();}
+    if(this.state==='drive'){let tv=2.5;if(keys.right)tv=3.5;if(keys.left)tv=1.3;if(this.slow>0){this.slow--;tv=Math.min(tv,1);}this.v+=(tv-this.v)*0.06;
+      if(consume('a')&&!car.air){car.vy=-4.8;car.air=true;sfx.jump();}
       const n=this.nat;this.nearNat=false;if(n&&!n.kissed){const nx=n.x-this.d;this.nearNat=nx>CARX+4&&nx<CARX+52;if(nx<-24){n.x=this.d+W+160;this.endD=Math.max(this.endD,n.x+220);toast('Ты проехал Нэт! Она ждёт на следующей остановке',1800);}}
       if(this.nearNat&&consume('b')){this.state='kiss';this.script=driveKiss(this);}
       else if(consume('b')&&this.honkCd<=0){this.honkCd=26;sfx.honk();for(const o of this.objs){const ox=o.x-this.d;if(o.t==='pigeons'&&!o.fly&&ox>CARX&&ox<CARX+160)o.fly=1;}}
@@ -1484,9 +1647,9 @@ class DriveScene{
     if(this.honkCd>0)this.honkCd--;this.d+=this.v;
     if(car.air){car.vy+=0.2;car.y+=car.vy;if(car.y>=ROAD){car.y=ROAD;car.vy=0;car.air=false;}}
     if(car.inv>0)car.inv--;
-    for(const o of this.objs){if(o.t==='taxi')o.x+=0.7;if(o.fly)o.fly++;
+    for(const o of this.objs){if(o.t==='taxi'&&o.x-this.d<W+40&&!o.hit)o.x+=0.35;if(o.fly)o.fly++;
       if(this.state!=='drive'||car.inv>0||o.hit||o.fly)continue;const ox=o.x-this.d,[ow,oh]=OB[o.t];
-      if(CARX+48>ox+2&&CARX+4<ox+ow-2&&car.y>ROAD-oh+3){o.hit=true;this.crash(o);}}
+      if(CARX+45>ox+3&&CARX+7<ox+ow-3&&car.y>ROAD-oh+4){o.hit=true;this.crash(o);}}
     if(this.vinyl.moveWith)this.vinyl.x=this.vinyl.moveWith.x+60;
     for(const k of this.coins){if(k.got)continue;const kx=k.x-this.d;if(kx>CARX-2&&kx<CARX+52&&k.y>car.y-34&&k.y<car.y+2){k.got=true;G.coins++;sfx.coin();sparkle(this.parts,kx+this.d,k.y,3);}}
     const vx=this.vinyl.x-this.d;if(!this.vinyl.got&&vx>CARX&&vx<CARX+50&&this.vinyl.y>car.y-36&&this.vinyl.y<car.y){this.vinyl.got=true;addVinyl(this.cfg.vinyl);sparkle(this.parts,this.vinyl.x,this.vinyl.y,14);}
@@ -1508,7 +1671,7 @@ class DriveScene{
 function* driveIntro(s){yield* wait(30);
   yield* say('bro','Эта малышка умеет прыгать. Не спрашивай как.');
   yield* say('','▶ — газ, ◀ — тормоз, ПРЫЖОК — перепрыгнуть. БИБИ — распугать голубей на дороге.');
-  yield* say('hero','А на остановке меня ждёт Нэт. Притормозим — и ЦМОК через окно.');
+  yield* say('hero','Федя, на остановке меня ждёт Нэт. Притормози — и ЦМОК через окно.');
   setQuest('Катайтесь по Эшампле. Притормози у Нэт на остановке');s.state='drive';}
 function* driveKiss(s){yield* until(()=>s.v<0.15);s.v=0;kissFx(s.parts,s.nat.x,WALKY-22);s.nat.kissed=true;addHeart(s.cfg.lvl);yield* wait(40);
   yield* say('nat','Не гоняй, ладно? И береги Федю с Какусом.');yield* say('hero','Цмок через окно — новый рекорд!');s.state='drive';setQuest(s.cfg.quest);}
@@ -1598,7 +1761,7 @@ function* catchScript(s){const h=s.hero,rob=s.rob,d=s.dog;yield* wait(8);
   const girl=new Actor(SPR.girlNo,s.camX-12,GY);s.npcs.push(girl);yield* walkTo(girl,h.x-28,2.2);girl.facing=1;girl.set=SPR.girl;sparkle(s.parts,girl.x,GY-14,10);
   yield* say('girl','Вы его поймали! Это бабушкино ожерелье. Держите награду!');
   addCoins(50,girl.x-s.camX,GY-34);
-  yield* say('girl','И вот ещё. Редкая пластинка, мне она всё равно ни к чему.');
+  yield* say('girl','И вот ещё. Пластинка Thriller, мне она всё равно ни к чему.');
   addVinyl('C1');setQuest('Едем на пляж');
   yield* say('hero','Спасибо! День становится всё лучше.');
   const nat=new Actor(SPR.nat,s.camX-12,GY);s.npcs.push(nat);s.natC=nat;yield* walkTo(nat,h.x-56,2.2);nat.facing=1;
@@ -1613,7 +1776,7 @@ class TitleScene{constructor(){this.t=0;this.kind='title';}update(){this.t++;set
 function startGame(){if(G.lock)return;G.coins=0;G.vinyls=new Set();G.hearts=new Set();G.friend=false;G.freddy=false;G.pasha=false;G.pops=[];$('#title').hidden=true;
   cardTransition('Готический квартал','Уровень 1',()=>{setScene(new WalkScene(levelA()));setQuest('…');});}
 function finish(){let best=0;try{best=+localStorage.getItem('bcnbro_best')||0;}catch(e){}if(G.coins>best){best=G.coins;try{localStorage.setItem('bcnbro_best',best);}catch(e){}}
-  $('#stC').textContent=G.coins;$('#stV').textContent=G.vinyls.size+'/'+TOTAL_V;$('#stH').textContent=G.hearts.size+'/'+TOTAL_H;$('#stB').textContent=best;sfx.win();setQuest('Игра пройдена!');setTimeout(()=>{$('#end').hidden=false;},500);}
+  $('#stC').textContent=G.coins;$('#stV').textContent=G.vinyls.size+'/'+TOTAL_V;$('#stH').textContent=G.hearts.size+'/'+TOTAL_H;$('#stB').textContent=best;$('#stR').innerHTML='';for(const id of G.vinyls){const li=document.createElement('li');li.textContent=RECORDS[id]||id;$('#stR').appendChild(li);}$('#stRW').hidden=!G.vinyls.size;sfx.win();setQuest('Игра пройдена!');setTimeout(()=>{$('#end').hidden=false;},500);}
 
 // ================= layout & loop =================
 let low,lctx,dcv,dctx;
@@ -1627,18 +1790,18 @@ function layout(){const app=$('#app'),vw=app.clientWidth,vh=app.clientHeight;con
   root.setProperty('--u',(ch/160).toFixed(3)+'px');root.setProperty('--bs',Math.max(46,Math.floor(bs))+'px');
   if(low&&low.width!==W){low.width=W;lctx.imageSmoothingEnabled=false;}
   const dpr=window.devicePixelRatio||1,k=Math.max(1,Math.min(6,Math.round(ch/H*dpr)));if(dcv.width!==W*k||dcv.height!==H*k){dcv.width=W*k;dcv.height=H*k;}}
-function step(){G.t++;if(Dlg.open){Dlg.update();if(consume('a')||consume('b')||consume('tap'))Dlg.advance();}if(!G.lock&&G.scene)G.scene.update();
+function step(){G.t++;if(Dlg.open){Dlg.update();if(consume('a')||consume('b')||consume('tap'))Dlg.advance();}if(!G.lock&&G.scene)G.scene.update();setA(G.scene&&G.scene.aLabel||'ПРЫЖОК');
   for(const p of G.pops){p.y-=0.5;p.life--;}G.pops=G.pops.filter(p=>p.life>0);}
 function render(){const c=lctx;c.save();if(G.shake>0){c.translate(ri(-2,2),ri(-1,1));G.shake--;}if(G.scene)G.scene.draw(c);c.restore();
   for(const p of G.pops)ptext(lctx,p.txt,Math.round(p.x-p.txt.length*2),Math.round(p.y),p.col);
   dctx.imageSmoothingEnabled=false;dctx.drawImage(low,0,0,dcv.width,dcv.height);}
 let last=0,acc=0;
-function frame(now){requestAnimationFrame(frame);if(!last)last=now;let dt=(now-last)/1000;last=now;if(dt>0.25)dt=0.25;acc+=dt;let n=0;while(acc>=1/60&&n<5){step();acc-=1/60;n++;}if(n)render();edge.a=edge.b=edge.tap=false;}
+function frame(now){requestAnimationFrame(frame);if(!last)last=now;let dt=(now-last)/1000;last=now;if(dt>0.25)dt=0.25;acc+=dt;let n=0;while(acc>=1/60&&n<5){step();acc-=1/60;n++;}if(n)render();edge.a=edge.b=edge.tap=edge.left=edge.right=false;}
 function boot(){low=cvs(W,H);lctx=low.getContext('2d');lctx.imageSmoothingEnabled=false;dcv=$('#cv');dctx=dcv.getContext('2d');
   buildSprites();buildBG();bindInput();bindUI();layout();addEventListener('resize',layout);
   if(window.visualViewport)visualViewport.addEventListener('resize',layout);
   setScene(new TitleScene());setQuest('Нажми «Играть»');requestAnimationFrame(frame);}
-window.BCN={levelH,levelV,levelM,levelR,AdGame,get W(){return W;},G,setScene,WalkScene,DriveScene,ChaseScene,levelA,levelB,levelT,DRIVE1,DRIVE2,ArrivalsGame,STAR,FilmGame,PokeGame,Phone,keys,press,release,edge,Dlg,startGame,SPR,cardTransition};
+window.BCN={levelE,StudioScene,levelH,levelV,levelM,levelR,AdGame,get W(){return W;},G,setScene,WalkScene,DriveScene,ChaseScene,levelA,levelB,levelT,DRIVE1,DRIVE2,ArrivalsGame,STAR,FilmGame,PokeGame,Phone,keys,press,release,edge,Dlg,startGame,SPR,cardTransition};
 boot();
 })();
 
