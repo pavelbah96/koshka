@@ -518,7 +518,7 @@ PAL.jaguar={K:'#d9a040',k:'#9a6a28',E:'#3a8a3a',n:'#4a2a1a',o:'#3a2410'};
 'use strict';
 // ================= constants =================
 let W=240;const H=160,GY=136,ROAD=152,WALKY=127,CARX=40,TOTAL_V=10,TOTAL_H=7;
-const NAME={hero:'Кира',bro:'Федя',dog:'Какус',nat:'Нэт',star:'Селеста',girl:'Лаура',rob:'Воришка',cop:'Полиция',model:'Валерия',pepe:'Аркадик',fred:'Фредди',pasha:'Паша',vash:'Вашик',owner:'Хозяин HQ',granny:'Соседка',dj:'Сосед',tourist:'Туристка',all:'Все'};
+const NAME={hero:'Кира',bro:'Федя',dog:'Какус',nat:'Нэт',star:'Дева Кассель',girl:'Лаура',rob:'Воришка',cop:'Полиция',model:'Валерия',pepe:'Аркадик',fred:'Фредди',pasha:'Паша',vash:'Вашик',owner:'Хозяин HQ',granny:'Соседка',dj:'Сосед',tourist:'Туристка',all:'Все'};
 const $=s=>document.querySelector(s);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v, rnd=(a,b)=>a+Math.random()*(b-a), ri=(a,b)=>Math.floor(rnd(a,b+1));
 function seeded(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -1160,7 +1160,7 @@ class WalkScene{
     if(this.nat){this.nat.draw(c,cx);if(!this.kissed&&(this.t>>4)%2)heart(c,this.nat.x-cx-2,this.nat.y-31,'#ff5a7a');}
     this.dog.draw(c,cx);this.pasha.draw(c,cx);this.fred.draw(c,cx);this.bro.draw(c,cx);this.hero.draw(c,cx);
     for(const d of this.front)drawDecor(c,d,cx,this);
-    if(this.sign){const hx=Math.round(this.hero.x-cx),hy=Math.round(this.hero.y);R(c,hx,hy-28,1,8,'#8a6a44');R(c,hx-15,hy-38,31,10,'#2a2d33');R(c,hx-14,hy-37,29,8,'#ffffff');ptext(c,'CELESTE',hx-13,hy-35,'#1a1a1a','#ffffff');}
+    if(this.sign){const hx=Math.round(this.hero.x-cx),hy=Math.round(this.hero.y);R(c,hx,hy-28,1,8,'#8a6a44');R(c,hx-23,hy-38,47,10,'#2a2d33');R(c,hx-22,hy-37,45,8,'#ffffff');ptext(c,'DEVA CASSEL',hx-21,hy-35,'#1a1a1a','#ffffff');}
     if(this.pin>0||(this.mini&&this.mini.kind==='poke')){const h=this.hero,px=Math.round(h.x-cx+8+(h.lunge>0?5:0)),py=Math.round(h.y-12);R(c,px,py,7,1,'#d8dce4');R(c,px-1,py-1,2,3,'#e2453c');}
     for(const z of this.haz){const dz=z.t==='cart'?drawCart:drawScooter;if(z.dead){if((z.dead>>1)%2)dz(c,z.x-cx,GY-z.dead,this.t);}else dz(c,z.x-cx,GY,this.t);}
     drawParts(c,this.parts,cx);
@@ -1242,7 +1242,7 @@ function* toiletEv(s){const h=s.hero,p=s.pepe;yield* walkTo(h,1304,1.2);h.facing
 function* endEv(s){
   yield* say('bro','Ну что, неплохой денёк?');
   yield* say('hero','Монетки есть, пластинки есть. Можно и отдохнуть.');
-  yield* say('bro','Ой. Мне звонили из агентства. Через час в аэропорт прилетает Селеста, звезда из Парижа. Встречать её — нам!');
+  yield* say('bro','Ой. Мне написала Дева Кассель: через час прилетает из Парижа. Встречать её — нам!');
   yield* say('dog','Гав!');
   cardTransition('Аэропорт Эль-Прат','Уровень 5',()=>setScene(new DriveScene(DRIVE2)));yield* wait(99999);}
 function* introT(s){setQuest('Терминал 1');yield* wait(24);
@@ -1251,9 +1251,9 @@ function* introT(s){setQuest('Терминал 1');yield* wait(24);
   setQuest('Найди Нэт и иди к зоне прилёта');}
 function* arrivalsEv(s){const h=s.hero;yield* walkTo(h,1214,1.2);h.facing=1;s.sign=true;
   yield* say('bro','Вот зона прилёта. Держи табличку повыше!');
-  yield* say('hero','Мне сказали: у Селесты длинные тёмные волосы, большие чёрные очки и красный чемодан.');
-  yield* say('','Жми ВОТ ОНА!, когда Селеста проходит мимо таблички. Не перепутай!');
-  setQuest('Найди Селесту: длинные тёмные волосы, чёрные очки, красный чемодан');
+  yield* say('hero','Мне сказали: у Девы длинные тёмные волосы, большие чёрные очки и красный чемодан.');
+  yield* say('','Жми ВОТ ОНА!, когда Дева проходит мимо таблички. Не перепутай!');
+  setQuest('Найди Деву Кассель: длинные тёмные волосы, чёрные очки, красный чемодан');
   s.mini=new ArrivalsGame(s);yield* until(()=>s.mini.done);const st=s.mini.found;s.mini=null;st.case=STAR.k;s.npcs.push(st);
   yield* walkTo(st,h.x+18,0.8);st.facing=-1;
   yield* say('star','Bonjour! Вы мои встречающие? Какая милая табличка!');
@@ -1263,7 +1263,7 @@ function* arrivalsEv(s){const h=s.hero;yield* walkTo(h,1214,1.2);h.facing=1;s.si
   yield* say('bro','Машина у входа. Добро пожаловать в Барселону!');
   addCoins(40,h.x-s.camX,h.y-38);yield* wait(30);
   yield* say('fred','Ребята, пока вы тут: нам заказали рекламу для HQ! Снимаем в Борне.');
-  yield* say('hero','Отлично. Селесту — в отель, а мы — снимать!');
+  yield* say('hero','Отлично. Деву — в отель, а мы — снимать!');
   cardTransition('Эль Борн','Уровень 6',()=>setScene(new WalkScene(levelH())));yield* wait(99999);}
 class ArrivalsGame{
   constructor(s){this.kind='arr';this.lockCam=true;this.bLabel='ВОТ ОНА!';this.s=s;this.active=[];this.spawnT=30;this.done=false;this.found=null;this.cool=0;this.gx=1330;this.queue=this.build(ri(3,5));}
